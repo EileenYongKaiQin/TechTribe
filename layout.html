@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexMatch</title>
+    <style>
+        /* General styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            justify-content: center; /* Center title */
+            align-items: center;
+            position: relative;
+        }
+
+        /* Sidebar toggle button */
+        .toggle-btn {
+            background-color: #444;
+            border: none;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            position: absolute;
+            left: 10px; /* Align toggle button to the left */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #555;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: -250px; /* Start hidden */
+            height: 100%;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            padding-top: 60px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        /* Close button in sidebar */
+        .close-btn {
+            background-color: #444;
+            border: none;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Main content */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Active sidebar styles */
+        .sidebar-visible .sidebar {
+            left: 0; /* Show sidebar */
+        }
+
+        .sidebar-visible .content {
+            margin-left: 250px; /* Shift content */
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                left: -200px;
+            }
+
+            .sidebar-visible .content {
+                margin-left: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <h1>FlexMatch</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">×</button>
+        <ul>
+            <li>Home</li>
+            <li>About</li>
+            <li>Services</li>
+            <li>Contact</li>
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content" id="content">
+        <h2>Main Content Area</h2>
+        <p>This is the main content area. Click the ☰ button in the header to open and close the sidebar, or use the × button inside the sidebar to close it.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Responsive Layout</p>
+    </footer>
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-visible');
+        }
+    </script>
+</body>
+</html>
