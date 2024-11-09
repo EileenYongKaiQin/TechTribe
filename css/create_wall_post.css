@@ -1,0 +1,151 @@
+/* Full-page form styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('../images/background.jpg');
+}
+
+h2{
+    color:#fff;
+}
+
+/* Close button styling */
+.close-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #629af5; /* Optional hover effect */
+}
+
+/* Adjust position within the form */
+.full-page-form {
+    position: relative; /* Allows close button to be positioned absolutely */
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* Heading styling */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid black;
+    padding: 50px;
+    background-color: #ffff;
+}
+
+/* Form elements styling */
+form label, form input, form button {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Input fields styling */
+form input[type="time"], form input[type="text"] {
+    box-sizing: border-box;
+}
+
+/* Submit button styling */
+button[type="submit"] {
+    background-color: #2357e7;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin: 0 auto;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Availability slots styling */
+.availability-slots .availability-slot {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.availability-slot label {
+    width: 20%;
+    padding-top: 8px;
+}
+
+.availability-slot input {
+    width: 35%;
+}
+
+/* Select fields styling */
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* Responsive design using media queries */
+@media screen and (max-width: 768px) {
+    .full-page-form {
+        width: 90%; /* Make the form take up more space on smaller screens */
+    }
+
+    form {
+        padding: 20px; /* Reduce padding on smaller screens */
+    }
+
+    .availability-slot {
+        flex-direction: column; /* Stack the availability time slots vertically */
+        align-items: flex-start;
+    }
+
+    .availability-slot input {
+        width: 80%; /* Make input fields more narrow */
+        margin-bottom: 10px;
+    }
+
+    .availability-slot label {
+        width: 100%; /* Make labels stack above inputs */
+        margin-bottom: 5px;
+    }
+
+    button[type="submit"] {
+        padding: 12px; /* Increase button padding for better touch targets */
+    }
+
+    /* Adjust the form for even smaller screens like mobile devices */
+    @media screen and (max-width: 480px) {
+        form {
+            padding: 10px; /* Further reduce padding for small screens */
+        }
+
+        .availability-slot input {
+            width: 100%; /* Make input fields take full width */
+        }
+
+        .availability-slot label {
+            text-align: left; /* Left-align the labels */
+        }
+    }
+}
