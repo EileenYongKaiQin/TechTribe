@@ -40,7 +40,6 @@ if (!$conn) {
     
     <div class="jobDescription">
       <p>Job title: </p>
-      <p>Company name: </p>
       <p>Location: </p>
       <p>Salary: </p>
       <p>Job Description: </p>
