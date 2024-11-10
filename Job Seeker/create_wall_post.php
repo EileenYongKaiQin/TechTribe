@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job-Seeker Wall Post</title>
     <link rel="stylesheet" href="../css/create_wall_post.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <?php 
@@ -13,7 +14,7 @@
     <div class="full-page-form">
         <a href="job_seeker_wall.php" class="close-button">&times;</a>
         <h2>Create Wall Post</h2>
-        <form id="createPostForm" onsubmit="submitPost(event)" action="../php/submit_post.php" method="POST">
+        <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="../php/submit_post.php" method="POST">
             <label for="skills">Skill:</label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
@@ -157,6 +158,27 @@
                 });
             }
         }
+
+         // Confirm form submission
+        function confirmSubmit() {
+            event.preventDefault(); // Prevent form from submitting immediately
+
+            Swal.fire({
+                title: 'Are you sure you want to submit this post?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Submit',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if user confirmed
+                    document.getElementById("createPostForm").submit();
+                }
+            });
+        }
+
 
     </script>
 
