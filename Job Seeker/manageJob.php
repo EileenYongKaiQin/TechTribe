@@ -10,23 +10,10 @@
     <script src="../js/manageJob.js" defer></script>   
 </head>
 <body>
-
-    <!-- Header -->
-    <header>
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-        <h1>FlexMatch</h1>
-    </header>
-
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <button class="close-btn" onclick="toggleSidebar()">×</button>
-        <ul>
-            <li>+ Create Job</li>
-            <li>Job Application</li>
-            <li>Job-Seeker Wall</li>
-        </ul>
-    </nav>
-
+    <?php 
+        include('../database/config.php');
+        include('jobSeeker.php'); 
+    ?>
      <!-- Main content -->
      <div class="content" id="content">
         <h2>APPLY JOB!</h2>
@@ -43,11 +30,7 @@
     <button id="applyButton">Apply</button>
   </div>
 
-  <?php
-        echo '<footer>
-            <p>&copy; 2024 Copyright: <b>FlexMatch</b>. All rights reserved.</p>
-        </footer>'
-    ?>
+  <?php include('../footer/footer.php'); ?>
 
     <!-- JavaScript for Sidebar Toggle -->
     <script>

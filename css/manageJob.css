@@ -16,100 +16,12 @@ body {
     background-image: url('TechTribe/images/background.jpg');
 }
 
-/* Header */
-header {
-    background-color: black;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-    display: flex;
-    justify-content: center; /* Center title */
-    align-items: center;
-    position: relative;
-}
-
-/* Sidebar toggle button */
-.toggle-btn {
-    background: linear-gradient(135deg, #555555, #333333, #212121);
-    border: none;
-    color: #fff;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    position: absolute;
-    left: 10px; /* Align toggle button to the left */
-    top: 40%; /* Center vertically if needed */
-    transform: translateY(-50%);
-    font-size: 1rem;
-    max-width: 40px; /* Set a max-width to prevent stretching */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background-color: black;
-    color: #fff;
-    position: fixed;
-    top: 0;
-    left: -250px; /* Start hidden */
-    height: 100%;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    padding-top: 60px;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    padding: 1rem;
-    text-align: center;
-    border-bottom: 1px solid #e5e8eb;
-}
-
-/* Close button in sidebar */
-.close-btn {
-    background: linear-gradient(135deg, #555555, #333333, #212121);
-    border: none;
-    color: #fff;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1rem;
-    max-width: 40px; /* Set a max-width */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* Main content */
 .content {
     flex: 1;
     padding: 2rem;
     margin-left: 0;
     transition: margin-left 0.3s ease;
-}
-
-/* Active sidebar styles */
-.sidebar-visible .sidebar {
-    left: 0; /* Show sidebar */
-}
-
-.sidebar-visible .content {
-    margin-left: 250px; /* Shift content */
-}
-
-footer {
-    background-color: black;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
 }
 
 /* Responsive design */
