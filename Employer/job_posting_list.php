@@ -40,7 +40,7 @@
         include('../database/config.php');
         include('employer.php');
 
-        $sql = "SELECT * FROM job_postings";
+        $sql = "SELECT job_title, job_type, location, salary, start_date, end_date, created_at FROM job_postings";
         $result = mysqli_query($con, $sql);
 
         if (mysqli_num_rows($result) > 0) {
@@ -50,10 +50,11 @@
             echo '<thead>';
             echo '<tr>';
             echo '<th>Job Title</th>';
-            echo '<th>Company Name</th>';
+            echo '<th>Job Type</th>';
             echo '<th>Location</th>';
-            echo '<th>Salary(RM)</th>';
-            echo '<th>Description</th>';
+            echo '<th>Salary per hour(RM)</th>';
+            echo '<th>Start Date</th>';
+            echo '<th>End Date</th>';
             echo '<th>Created Date</th>';
             echo '</tr>';
             echo '</thead>';
@@ -61,12 +62,13 @@
 
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
-                echo '<td>' . $row['job_title'] . '</td>';
-                echo '<td>' . $row['company_name'] . '</td>';
-                echo '<td>' . $row['location'] . '</td>';
-                echo '<td>' . $row['salary'] . '</td>';
-                echo '<td>' . $row['description'] . '</td>';
-                echo '<td>' . $row['created_at'] . '</td>';
+                echo '<td>' . htmlspecialchars($row['job_title']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['job_type']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['location']) . '</td>';
+                echo '<td>' . number_format($row['salary'], 2) . '</td>';
+                echo '<td>' . htmlspecialchars($row['start_date']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['end_date']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['created_at']) . '</td>';
                 echo '</tr>';
             }
 
@@ -82,8 +84,8 @@
         <a href="job_posting_form.php" class="btn btn-primary btn-block">Create New Job Posting</a>
     </div>
 
-<?php include('../footer/footer.php'); ?>
-    
+    <?php include('../footer/footer.php'); ?>
+
 </body>
 </html>
 
