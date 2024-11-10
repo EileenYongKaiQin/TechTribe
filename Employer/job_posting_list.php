@@ -40,11 +40,9 @@
         include('../database/config.php');
         include('employer.php');
 
-        // SQL query to fetch all job postings
         $sql = "SELECT * FROM job_postings";
         $result = mysqli_query($con, $sql);
 
-        // Check if there are any job postings
         if (mysqli_num_rows($result) > 0) {
             echo '<div class="container mt-5">';
             echo '<h2>Job Postings List</h2>';
@@ -61,7 +59,6 @@
             echo '</thead>';
             echo '<tbody>';
 
-            // Loop through each job posting and display it
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
                 echo '<td>' . $row['job_title'] . '</td>';
@@ -81,7 +78,6 @@
         }
     ?>
 
-    <!-- Button to navigate to job posting form -->
     <div class="container mt-3">
         <a href="job_posting_form.php" class="btn btn-primary btn-block">Create New Job Posting</a>
     </div>
@@ -92,6 +88,5 @@
 </html>
 
 <?php
-// Close the database connection at the end of the file
 mysqli_close($con);
 ?>

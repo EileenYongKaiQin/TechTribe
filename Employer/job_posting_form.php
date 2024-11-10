@@ -13,15 +13,12 @@
     <?php 
         include('../database/config.php');
         include('employer.php');
-        
-        // Flag to determine if the form was successfully submitted
+
         $formSubmitted = false;
         $errorMessage = '';
 
-        // Check if form is submitted
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
-            // Check if the fields are set and sanitize input
             $job_title = isset($_POST['jobTitle']) ? mysqli_real_escape_string($con, $_POST['jobTitle']) : '';
             $company_name = isset($_POST['companyName']) ? mysqli_real_escape_string($con, $_POST['companyName']) : '';
             $location = isset($_POST['location']) ? mysqli_real_escape_string($con, $_POST['location']) : '';
@@ -30,20 +27,18 @@
             $requirements = isset($_POST['requirements']) ? mysqli_real_escape_string($con, $_POST['requirements']) : '';
             $responsibilities = isset($_POST['responsibilities']) ? mysqli_real_escape_string($con, $_POST['responsibilities']) : '';
         
-            // Replace with actual employer ID based on logged-in user (e.g., $_SESSION['employer_id'])
-            $employer_id = 'E001'; // Placeholder: Update with actual session or dynamic value
-        
-            // Validate required fields
+            // Place virtual employer ID
+            $employer_id = 'E001';
+
             if (empty($job_title) || empty($company_name) || empty($location) || empty($salary) || empty($description)) {
                 $errorMessage = "All required fields must be filled!";
             } else {
-                // SQL query to insert the job posting into the database
+                // Store into the database
                 $sql = "INSERT INTO job_postings (employer_id, job_title, company_name, location, salary, description, requirements, responsibilities) 
                         VALUES ('$employer_id', '$job_title', '$company_name', '$location', '$salary', '$description', '$requirements', '$responsibilities')";
-        
-                // Execute query and check for success
+
                 if (mysqli_query($con, $sql)) {
-                    $formSubmitted = true; // Set flag to true when form submission is successful
+                    $formSubmitted = true; 
                 } else {
                     $errorMessage = "Error: " . mysqli_error($con);
                 }
@@ -54,7 +49,7 @@
     <div class="container mt-5">
         <h2>Create Job Posting</h2>
 
-        <!-- Success Message Display (Only when form is successfully submitted) -->
+        <!-- Success Message -->
         <?php if ($formSubmitted): ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Job posting created successfully.
@@ -67,7 +62,6 @@
                 <strong>Error!</strong> <?php echo $errorMessage; ?>
             </div>
         <?php else: ?>
-            <!-- Form to create a new job posting -->
             <form id="jobPostingForm" action="job_posting_form.php" method="post">
                 <div class="form-group">
                     <label for="jobTitle">Job Title:</label>
@@ -126,7 +120,7 @@
             </form>
         <?php endif; ?>
         
-        <!-- Decorative Image -->
+        <!-- Decorative with Image -->
         <div class="text-center mt-5">
             <img src="../images/partTimeJob.jpg" alt="Job Search" class="img-fluid">
         </div>
@@ -137,6 +131,6 @@
 </html>
 
 <?php
-// Close the database connection at the end of the file
+// Close the database connection
 mysqli_close($con);
 ?>
