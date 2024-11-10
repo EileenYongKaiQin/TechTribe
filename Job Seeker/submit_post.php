@@ -20,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contactEmail = $_POST['contactEmail'];
     $contactPhone = $_POST['contactPhone'];
 
-    $stmt = $conn->prepare("INSERT INTO wall_posts (user_name, skill_category, skill_details, availability, state, district, job_preferences, contact_email, contact_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $con->prepare("INSERT INTO wall_posts (user_name, skill_category, skill_details, availability, state, district, job_preferences, contact_email, contact_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssssssss", $username, $skillCategory, $skillDetails, $availability, $state, $district, $jobPreferences, $contactEmail, $contactPhone);    
     $stmt->execute();
     $stmt->close();
-    $conn->close();
+    $con->close();
 
     header("Location: job_seeker_wall.php");
     exit();

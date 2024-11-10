@@ -2,7 +2,7 @@
     include('../database/config.php');
 
     // Query to retrieve wall posts ordered by publish date (newest first)
-    $result = $conn->query("SELECT * FROM wall_posts ORDER BY created_at DESC");
+    $result = $con->query("SELECT * FROM wall_posts ORDER BY created_at DESC");
 
     if ($result->num_rows > 0) {
         echo '<div class="post-grid">';
@@ -51,7 +51,7 @@
         echo '<p>No posts available.</p>';
     }
 
-    $conn->close();
+    $con->close();
 
 
 
