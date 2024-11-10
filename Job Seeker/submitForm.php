@@ -5,7 +5,7 @@ include('../database/config.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $conn->begin_transaction();
+        $con->begin_transaction();
 
         // Insert report data
         $reportReason = $_POST['report_reason'];
@@ -14,14 +14,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $reporterType = $_SESSION['user_type'];
     
 
-        $stmt = $conn->prepare("INSERT INTO reports (reporter_type, reporter_id,  
+        $stmt = $con->prepare("INSERT INTO reports (reporter_type, reporter_id,  
                                 report_reason, description) 
                                VALUES (?, ?, ?, ?, ?, ?)");
         
         $stmt->bind_param("ssssss", $reporterType, $reporterId, $reportReason, $description);
         $stmt->execute();
         
-        $reportId = $conn->insert_id;
+        $reportId = $con->insert_id;
 
         // Handle file uploads
         if (isset($_FILES['evidence']) && !empty($_FILES['evidence']['name'][0])) {
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $fileContent = file_get_contents($tmp_name);
                     
                     // Insert file into database
-                    $stmt = $conn->prepare("INSERT INTO report_evidence (report_id, file_name, 
+                    $stmt = $con->prepare("INSERT INTO report_evidence (report_id, file_name, 
                                           file_data, file_type, file_size) 
                                           VALUES (?, ?, ?, ?, ?)");
                     
@@ -46,11 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        $conn->commit();
+        $con->commit();
         echo json_encode(['status' => 'success', 'message' => 'Report submitted successfully']);
         
     } catch (Exception $e) {
-        $conn->rollback();
+        $con->rollback();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
