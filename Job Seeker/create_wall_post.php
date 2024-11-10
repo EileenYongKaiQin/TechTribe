@@ -14,7 +14,7 @@
     <div class="full-page-form">
         <a href="job_seeker_wall.php" class="close-button">&times;</a>
         <h2>Create Wall Post</h2>
-        <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="../php/submit_post.php" method="POST">
+        <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
             <label for="skills">Skill:</label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
