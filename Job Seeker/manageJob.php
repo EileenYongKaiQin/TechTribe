@@ -1,3 +1,23 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "flexmatch_db";
+
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $database);
+
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+    echo "Connected successfully";
+    
+    $sql = "INSERT INTO job_application_status (status) VALUES ('Pending')";
+    $conn->query($sql);
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
