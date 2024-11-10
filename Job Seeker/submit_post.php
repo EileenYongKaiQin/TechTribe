@@ -1,5 +1,5 @@
 <?php
-    include('../sql/config.php');
+    include('../database/config.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = "Ali";
