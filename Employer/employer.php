@@ -137,7 +137,8 @@
     <nav class="sidebar" id="sidebar">
         <button class="close-btn" onclick="toggleSidebar()">×</button>
         <ul>
-        <li onclick="location.href='job_posting_form.php'">+ Create Job</li>
+            <li onclick="location.href='job_posting_form.php'">+ Create Job</li>
+            <li onclick="location.href='job_posting_list.php'">Posted Job</li>
             <li>Job Application</li>
             <li>Job-Seeker Wall</li>
         </ul>
