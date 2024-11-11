@@ -36,7 +36,7 @@
         </form>
     </div>
 
-    <footer><?php include('footer.php'); ?></footer>
+    <footer><?php include('../footer/footer.php'); ?></footer>
 </div>
 
 <!-- Grey Overlay -->
@@ -51,7 +51,7 @@
 </div>
 
 <!-- Link to external JavaScript file -->
-<script src="chat.js"></script>
+<script src="../js/chat.js"></script>
 
 </body>
 </html>

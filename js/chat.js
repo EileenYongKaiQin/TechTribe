@@ -25,7 +25,7 @@ function sendMessage(event, senderRole) {
     chatInput.value = "";
 
     // Send message to server
-    fetch("chat.php", {
+    fetch("../database/chat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `sender_role=${senderRole}&message=${encodeURIComponent(message)}`
@@ -42,7 +42,7 @@ function sendMessage(event, senderRole) {
               setTimeout(() => {
                   addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer");
 
-                  fetch("chat.php", {
+                  fetch("../database/chat.php", {
                       method: "POST",
                       headers: { "Content-Type": "application/x-www-form-urlencoded" },
                       body: `sender_role=${senderRole === "employer" ? "job_seeker" : "employer"}&message=${encodeURIComponent(autoResponse)}`
@@ -67,7 +67,7 @@ function addMessageToChat(message, senderRole) {
 }
 
 function loadChatHistory() {
-    fetch("chat.php")
+    fetch("../database/chat.php")
         .then(response => response.json())
         .then(chats => {
             if (Array.isArray(chats)) {
