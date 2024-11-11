@@ -1,6 +1,6 @@
 <?php
     include('../database/config.php');
-
+    //haha
     // Query to retrieve wall posts ordered by publish date (newest first)
     $result = $con->query("SELECT * FROM wall_posts ORDER BY created_at DESC");
 
