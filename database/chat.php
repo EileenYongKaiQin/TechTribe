@@ -63,6 +63,21 @@ else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         echo json_encode(['status' => 'error', 'message' => 'Failed to update message']);
     }
     $stmt->close();
+} 
+// Handle DELETE request (for deleting a message)
+else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    parse_str(file_get_contents("php://input"), $_DELETE);
+    $messageId = $_DELETE['message_id'];
+
+    $stmt = $conn->prepare("DELETE FROM messages WHERE id = ?");
+    $stmt->bind_param("i", $messageId);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to delete message']);
+    }
+    $stmt->close();
 }
 
 // Close the connection
