@@ -256,7 +256,7 @@ if(!empty($_POST))
 
     else {
         echo "<script>
-        alert('Sorry, your profile created unsuccessfully. Please contact ADmin.')
+        alert('Sorry, your profile created unsuccessfully. Please contact Admin.')
         window.history.back();
         </script>";
     } 
