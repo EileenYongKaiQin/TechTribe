@@ -226,7 +226,7 @@ if(!empty($_POST))
     $softski1=$_POST['SoftSkill1'];
     $softski2=$_POST['SoftSkill2'];
 
-    include('config.php');
+    include('../database/config.php');
 
     $name = mysqli_real_escape_string($con,$name);
     $email = mysqli_real_escape_string($con,$email);
