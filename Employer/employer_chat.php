@@ -50,15 +50,6 @@
     </div>
 </div>
 
-<!-- Edit Message Modal -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
-        <textarea id="editMessageInput" class="chat-input" rows="3"></textarea>
-        <button onclick="saveEditedMessage()">Save</button>
-        <button onclick="closeEditModal()">Cancel</button>
-    </div>
-</div>
-
 <script src="../js/chat.js"></script>
 
 </body>

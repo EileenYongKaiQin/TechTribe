@@ -23,7 +23,7 @@
 <div class="content">
     <header>
         <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-        <span class="flexmatch-title">FlexMatch</span>
+        <span class="flexmatch-title">FlexMatch</span>  
     </header>
 
     <div class="container">
@@ -45,12 +45,11 @@
 <!-- Notification Modal -->
 <div id="notificationModal" class="modal">
     <div class="modal-content">
-        <p>You have sent a message. The employer will respond soon.</p>
+        <p>Your message has been sent to the employer.</p>
         <button onclick="closeNotification()">Ok</button>
     </div>
 </div>
 
-<!-- Link to external JavaScript file -->
 <script src="../js/chat.js"></script>
 
 </body>

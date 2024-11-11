@@ -1,9 +1,9 @@
 <?php
-// Database connection (update with your own DB connection settings)
+// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "flexMatch_db";
+$dbname = "flexMatch_db";  // Replace with your database name
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -12,24 +12,43 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle POST request (for saving a message)
+// Handle the POST request (for saving a message)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $senderRole = $_POST['sender_role'];
-    $message = $_POST['message'];
+    $senderRole = $_POST['sender_role'];  // job_seeker or employer
+    $message = $_POST['message'];  // The message content
+    $messageId = isset($_POST['message_id']) ? $_POST['message_id'] : null;
+    $delete = isset($_POST['delete']) ? $_POST['delete'] : null;
 
-    // Insert message into the database
-    $stmt = $conn->prepare("INSERT INTO messages (sender_role, message) VALUES (?, ?)");
-    $stmt->bind_param("ss", $senderRole, $message);
+    if ($delete) {
+        // Delete message
+        $stmt = $conn->prepare("DELETE FROM messages WHERE id = ? AND sender_role = ?");
+        $stmt->bind_param("is", $messageId, $senderRole);
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to delete message']);
+        }
+        $stmt->close();
+    } elseif ($messageId) {
+        // Update message (edit message)
+        $stmt = $conn->prepare("UPDATE messages SET message = ? WHERE id = ?");
+        $stmt->bind_param("si", $message, $messageId);
+    } else {
+        // Insert new message
+        $stmt = $conn->prepare("INSERT INTO messages (sender_role, message) VALUES (?, ?)");
+        $stmt->bind_param("ss", $senderRole, $message);
+    }
 
+    // Execute the query
     if ($stmt->execute()) {
         echo json_encode(['status' => 'success']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Failed to save message']);
     }
+
     $stmt->close();
-} 
-// Handle GET request (for loading chat history)
-else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Handle the GET request (for loading chat history)
     $sql = "SELECT id, sender_role, message, timestamp FROM messages ORDER BY timestamp ASC";
     $result = $conn->query($sql);
 
@@ -46,40 +65,9 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }
+
     echo json_encode($messages);
-} 
-// Handle PUT request (for editing a message)
-else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    parse_str(file_get_contents("php://input"), $_PUT);
-    $messageId = $_PUT['message_id'];
-    $newMessageContent = $_PUT['message'];
-
-    $stmt = $conn->prepare("UPDATE messages SET message = ? WHERE id = ?");
-    $stmt->bind_param("si", $newMessageContent, $messageId);
-
-    if ($stmt->execute()) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update message']);
-    }
-    $stmt->close();
-} 
-// Handle DELETE request (for deleting a message)
-else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    parse_str(file_get_contents("php://input"), $_DELETE);
-    $messageId = $_DELETE['message_id'];
-
-    $stmt = $conn->prepare("DELETE FROM messages WHERE id = ?");
-    $stmt->bind_param("i", $messageId);
-
-    if ($stmt->execute()) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to delete message']);
-    }
-    $stmt->close();
 }
 
-// Close the connection
 $conn->close();
 ?>
