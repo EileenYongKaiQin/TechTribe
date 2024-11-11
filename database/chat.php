@@ -3,45 +3,41 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "flexMatch_db";  // Replace with your database name
+$dbname = "flexMatch_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
-//hi
+
 // Check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle the POST request (for saving a message)
+// Handle POST request (for saving a message)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $senderRole = $_POST['sender_role'];  // job_seeker or employer
-    $message = $_POST['message'];  // The message content
+    $senderRole = $_POST['sender_role'];
+    $message = $_POST['message'];
 
-    // Prepare SQL query to insert the message into the database
+    // Insert message into the database
     $stmt = $conn->prepare("INSERT INTO messages (sender_role, message) VALUES (?, ?)");
     $stmt->bind_param("ss", $senderRole, $message);
 
-    // Execute the query
     if ($stmt->execute()) {
         echo json_encode(['status' => 'success']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Failed to save message']);
     }
-
-    // Close the prepared statement
     $stmt->close();
-} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Handle the GET request (for loading chat history)
-    $sql = "SELECT sender_role, message, timestamp FROM messages ORDER BY timestamp ASC";
+} 
+// Handle GET request (for loading chat history)
+else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $sql = "SELECT id, sender_role, message, timestamp FROM messages ORDER BY timestamp ASC";
     $result = $conn->query($sql);
 
-    // Initialize an array to store messages
     $messages = array();
-
     if ($result->num_rows > 0) {
-        // Fetch each message and add it to the array
         while($row = $result->fetch_assoc()) {
             $messages[] = [
+                'id' => $row['id'],
                 'sender_role' => $row['sender_role'],
                 'message' => $row['message'],
                 'timestamp' => $row['timestamp']
@@ -50,9 +46,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }
-
-    // Return the messages as a JSON response
     echo json_encode($messages);
+} 
+// Handle PUT request (for editing a message)
+else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    parse_str(file_get_contents("php://input"), $_PUT);
+    $messageId = $_PUT['message_id'];
+    $newMessageContent = $_PUT['message'];
+
+    $stmt = $conn->prepare("UPDATE messages SET message = ? WHERE id = ?");
+    $stmt->bind_param("si", $newMessageContent, $messageId);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update message']);
+    }
+    $stmt->close();
 }
 
 // Close the connection
