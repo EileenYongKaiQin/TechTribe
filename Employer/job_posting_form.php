@@ -35,7 +35,7 @@
                 $errorMessage = "All required fields must be filled!";
             } else {
                 // Store into the database
-                $sql = "INSERT INTO job_postings (employer_id, job_title, location, salary, description, requirements, job_type, start_date, end_date) 
+                $sql = "INSERT INTO jobPost (employer_id, job_title, location, salary, description, requirements, job_type, start_date, end_date) 
                         VALUES ('$employer_id', '$job_title', '$location', '$salary', '$description', '$requirements', '$job_type', '$start_date', '$end_date')";
 
                 if (mysqli_query($con, $sql)) {

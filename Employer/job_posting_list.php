@@ -40,7 +40,7 @@
         include('../database/config.php');
         include('employer.php');
 
-        $sql = "SELECT job_title, job_type, location, salary, start_date, end_date, created_at FROM job_postings";
+        $sql = "SELECT job_title, job_type, location, salary, start_date, end_date, created_at FROM jobPost";
         $result = mysqli_query($con, $sql);
 
         if (mysqli_num_rows($result) > 0) {
