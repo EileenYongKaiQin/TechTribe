@@ -14,8 +14,9 @@
 
     <!-- Main content -->
     <div class="content" id="content">
-        <h1>Job-Seeker Wall</h1>
-        <?php include 'display_post.php'; ?>
+        <h1>My Posts</h1>
+        <?php include 'display_my_post.php'; ?>
+        <button>Edit</button>
     </div>
        
     <div class="button-section">
