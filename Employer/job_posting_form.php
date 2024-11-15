@@ -18,28 +18,42 @@
         $errorMessage = '';
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
             $job_title = isset($_POST['jobTitle']) ? mysqli_real_escape_string($con, $_POST['jobTitle']) : '';
             $location = isset($_POST['location']) ? mysqli_real_escape_string($con, $_POST['location']) : '';
             $salary = isset($_POST['salary']) && is_numeric($_POST['salary']) ? floatval($_POST['salary']) : 0;
             $description = isset($_POST['description']) ? mysqli_real_escape_string($con, $_POST['description']) : '';
             $requirements = isset($_POST['requirements']) ? mysqli_real_escape_string($con, $_POST['requirements']) : '';
-            $job_type = isset($_POST['jobType']) ? mysqli_real_escape_string($con, $_POST['jobType']) : '';
+            $working_hour = isset($_POST['working_hour']) ? mysqli_real_escape_string($con, $_POST['working_hour']) : '';  // Changed to working_hour
             $start_date = isset($_POST['startDate']) ? mysqli_real_escape_string($con, $_POST['startDate']) : '';
             $end_date = isset($_POST['endDate']) ? mysqli_real_escape_string($con, $_POST['endDate']) : '';
 
             // Example employer ID for testing
             $employer_id = 'E001';
 
-            if (empty($job_title) || empty($location) || empty($salary) || empty($description) || empty($job_type) || empty($start_date) || empty($end_date)) {
+            if (empty($job_title) || empty($location) || empty($salary) || empty($description) || empty($working_hour) || empty($start_date) || empty($end_date)) {
                 $errorMessage = "All required fields must be filled!";
             } else {
-                // Store into the database
-                $sql = "INSERT INTO jobPost (employer_id, job_title, location, salary, description, requirements, job_type, start_date, end_date) 
-                        VALUES ('$employer_id', '$job_title', '$location', '$salary', '$description', '$requirements', '$job_type', '$start_date', '$end_date')";
+                // Make sure jobPostID will fill the deleted vacancies
+                $sql_find_id = "SELECT MIN(t1.job_posting_id + 1) AS next_available_id
+                                FROM jobPost t1
+                                WHERE NOT EXISTS (SELECT t2.job_posting_id 
+                                                  FROM jobPost t2 
+                                                  WHERE t2.job_posting_id = t1.job_posting_id + 1)";
+                $result = mysqli_query($con, $sql_find_id);
+                $row = mysqli_fetch_assoc($result);
 
-                if (mysqli_query($con, $sql)) {
-                    $formSubmitted = true; 
+                $nextAvailableId = $row['next_available_id'] ?? null;
+
+                if ($nextAvailableId) {
+                    $sql_insert = "INSERT INTO jobPost (job_posting_id, employer_id, job_title, location, salary, description, requirements, working_hour, start_date, end_date)
+                                   VALUES ($nextAvailableId, '$employer_id', '$job_title', '$location', $salary, '$description', '$requirements', '$working_hour', '$start_date', '$end_date')";
+                } else {
+                    $sql_insert = "INSERT INTO jobPost (employer_id, job_title, location, salary, description, requirements, working_hour, start_date, end_date)
+                                   VALUES ('$employer_id', '$job_title', '$location', $salary, '$description', '$requirements', '$working_hour', '$start_date', '$end_date')";
+                }
+
+                if (mysqli_query($con, $sql_insert)) {
+                    $formSubmitted = true;
                 } else {
                     $errorMessage = "Error: " . mysqli_error($con);
                 }
@@ -94,7 +108,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="salary">Salary per hour(RM):</label>
+                    <label for="salary">Salary per hour (RM):</label>
                     <input type="number" class="form-control" id="salary" name="salary" required>
                 </div>
 
@@ -108,14 +122,11 @@
                     <input type="date" class="form-control" id="endDate" name="endDate" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required>
                 </div>
 
-
                 <div class="form-group">
-                    <label for="jobType">Job Type:</label>
-                    <select class="form-control" id="jobType" name="jobType" required>
-                        <option value="" disabled selected>Select Job Type</option>
-                        <option value="Event Work">Event Crew</option>
-                        <option value="Weekend Work">Weekend Job</option>
-                        <option value="Seasonal">Promoter</option>
+                    <label for="working_hour">Working Hour:</label>
+                    <select class="form-control" id="working_hour" name="working_hour" required>
+                        <option value="Day Shift">Day Shift</option>
+                        <option value="Night Shift">Night Shift</option>
                     </select>
                 </div>
 
