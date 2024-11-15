@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Posts</title>
-    <link rel="stylesheet" href="../css/my_posts.css">
+    <link rel="stylesheet" href="../css/my_post.css">
 </head>
 
 <?php 
@@ -16,12 +16,8 @@
     <div class="content" id="content">
         <h1>My Posts</h1>
         <?php include 'display_my_post.php'; ?>
-        <button>Edit</button>
     </div>
        
-    <div class="button-section">
-        <button onclick="window.location.href='create_wall_post.php'" class="create-post-btn">+ Create Post</button>
-    </div>
 
     <?php include('../footer/footer.php'); ?>
 
