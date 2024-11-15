@@ -43,6 +43,9 @@
             echo '<p><strong>Email:</strong> ' . htmlspecialchars($row['contact_email']) . '</p>';
             echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contact_phone']) . '</p>';
             
+            // Add the button with post_id
+            $postId = $row['id']; // Assuming post_id is the column name for the ID
+            echo "<a href='edit_wall_post.php?post_id=$postId' class='edit-button'>Edit</a>";
             echo '</div>';
             
         }
