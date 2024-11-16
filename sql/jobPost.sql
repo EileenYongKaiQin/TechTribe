@@ -14,3 +14,6 @@ CREATE TABLE jobPost (
     userID VARCHAR(10) NOT NULL, -- ID of the employer who posted the job
     FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Link to login table
 );
+
+INSERT INTO jobPost (jobPostID, jobTitle, location, salary, startDate, endDate, workingHour, jobDescription, jobRequirement, createTime, updateTime, userID)
+VALUES ('JP001', 'Test Job Title', 'Kuala Lumpur', 5000.00, '2024-01-01', '2024-12-31', '9AM-5PM', 'Test Job Description', 'Test Job Requirement', NOW(), NOW(), 'EP001');
