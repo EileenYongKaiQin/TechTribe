@@ -1,5 +1,5 @@
 CREATE TABLE jobPost (
-    job_posting_id INT AUTO_INCREMENT PRIMARY KEY,
+    jobPostID INT AUTO_INCREMENT PRIMARY KEY,
     employer_id VARCHAR(10),
     job_title VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
