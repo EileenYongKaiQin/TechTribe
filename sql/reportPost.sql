@@ -1,7 +1,7 @@
 -- SQLBook: Code
 -- Create reportPost table --
 CREATE TABLE reportPost (
-    reportID VARCHAR(10) NOT NULL,
+    reportID VARCHAR(10) PRIMARY KEY,
     description TEXT NOT NULL,
     reason VARCHAR(255) NOT NULL,
     evidence LONGBLOB,
