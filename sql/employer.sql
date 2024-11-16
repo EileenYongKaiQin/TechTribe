@@ -10,11 +10,5 @@ CREATE TABLE employer (
     FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );
 
-INSERT INTO employer (employer_id, name, email, password, company_name, phone_number)
-VALUES 
-    ('E001', 'Chua Ern Qi', 'chua@example.com', MD5('chua123'), 'FlexMatch', '0123456789'),
-    ('E002', 'Eileen Yong Kai Qin', 'eileen@example.com', MD5('eileen123'), 'FlexMatch', '0123456789'),
-    ('E003', 'Jessie Chang', 'jessie@example.com', MD5('jessie123'), 'FlexMatch', '0123456789'),
-    ('E004', 'Oh Kai Xuan', 'oh@example.com', MD5('oh123'), 'FlexMatch', '0123456789'),
-    ('E005', 'Tam Jia Hao', 'tam@example.com', MD5('tam123'), 'FlexMatch', '0123456789'),
-    ('E006', 'Tan You Chun', 'tan@example.com', MD5('tan123'), 'FlexMatch', '0123456789');
+INSERT INTO employer (userID, contactNo, fullName, profilePic, companyName, companyAddress, accountStatus, warningHistory)
+VALUES ('EP001', '0123456789', 'Eileen Yong Kai Qin', NULL, 'FlexMatch', '123 Jalan Bukit, KL', 'Active', 0);

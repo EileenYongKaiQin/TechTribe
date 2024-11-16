@@ -15,3 +15,10 @@ CREATE TABLE jobSeeker (
     language VARCHAR(255), -- Languages known
     FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );
+
+INSERT INTO jobSeeker (userID, contactNo, fullName, profilePic, gender, race, accountStatus, location, state, district, skill, workExperience, warningHistory, language) 
+VALUES (
+    'JS001', '0123456789', 'Oh Kai Xuan', NULL, 'Male', 'Cina', 'Active', 
+    'Kuala Lumpur', 'Selangor', 'District 1', 'Java, C++, Python', 
+    '2 years experience in IT', 0, 'English, Malay, Mandarin'
+);
