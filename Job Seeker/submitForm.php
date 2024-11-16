@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $evidence = implode(",", $uploadedFiles);
 
     // Insert the report into the database
-    $stmt = $conn->prepare("INSERT INTO reportPost (reason, description, evidence, userID, jobPostID) 
+    $stmt = $con->prepare("INSERT INTO reportPost (reason, description, evidence, userID, jobPostID) 
                             VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $report_reason, $description, $evidence, $userID, $jobPostID);
 
@@ -50,5 +50,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->close();
 }
 
-$conn->close();
+$con->close();
 ?>
