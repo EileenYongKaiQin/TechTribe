@@ -1,10 +1,11 @@
 <?php
 // Include database configuration
+include('admin.php');
 include('../database/config.php');
 
 // Fetch all reports from the database
 $sql = "SELECT * FROM reportPost";
-$result = $conn->query($sql);
+$result = $con->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -69,5 +70,7 @@ $result = $conn->query($sql);
             <?php endif; ?>
         </tbody>
     </table>
+    <br><br><br>
+    <?php include('../footer/footer.php'); ?>
 </body>
 </html>
