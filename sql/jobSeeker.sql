@@ -1,19 +1,12 @@
-CREATE TABLE `jobSeeker` (
-  `JobSeekerID` varchar(10) NOT NULL PRIMARY KEY,
-  `Name` varchar(255) NOT NULL,
-  `Email` varchar(255) NOT NULL,
-  `ContactNo` varchar(255) NOT NULL,
-  `City` varchar(255) NOT NULL,
-  `State` varchar(255) NOT NULL,
-  `Hobby` varchar(255) DEFAULT NULL,
-  `StudyField` varchar(255) DEFAULT NULL,
-  `YearGraduate` year(4) DEFAULT NULL,
-  `Institution` varchar(255) DEFAULT NULL,
-  `Position` varchar(255) DEFAULT NULL,
-  `YearExperience` int(3) DEFAULT NULL,
-  `Company` varchar(255) DEFAULT NULL,
-  `HardSkill` varchar(255) DEFAULT NULL,
-  `SoftSkill` varchar(255) DEFAULT NULL,
-  `ProfilePic` varchar(255) DEFAULT NULL,
-  `Resume` varchar(255) DEFAULT NULL
-)
+-- SQLBook: Code
+CREATE TABLE jobSeeker (
+    userID VARCHAR(10) PRIMARY KEY, -- Matches userID in login table
+    fullName VARCHAR(100) NOT NULL, -- Job seeker’s full name
+    contactNo VARCHAR(15), -- Contact number
+    gender ENUM('Male', 'Female'), -- Gender
+    location VARCHAR(255), -- Preferred location
+    skills TEXT, -- List of skills
+    experience TEXT, -- Work experience details
+    languageProficiency VARCHAR(255), -- Languages the job seeker is proficient in
+    FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
+);

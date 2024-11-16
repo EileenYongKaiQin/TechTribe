@@ -1,3 +1,4 @@
+-- SQLBook: Code
 CREATE TABLE employers (
     employer_id VARCHAR(10) PRIMARY KEY,  
     name VARCHAR(255) NOT NULL,

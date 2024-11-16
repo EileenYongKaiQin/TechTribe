@@ -1,15 +1,16 @@
+-- SQLBook: Code
 CREATE TABLE jobPost (
-    jobPostID INT AUTO_INCREMENT PRIMARY KEY,
-    employer_id VARCHAR(10),
-    job_title VARCHAR(255) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    salary DECIMAL(10, 2) NOT NULL,
-    description TEXT NOT NULL,
-    requirements TEXT,
-    working_hour VARCHAR(50) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (employer_id) REFERENCES employers(employer_id)
+    jobPostID VARCHAR(10) PRIMARY KEY, -- Unique ID for the job post (e.g., JP001)
+    jobTitle VARCHAR(255) NOT NULL, -- Title of the job post
+    location VARCHAR(255), -- Location of the job
+    salary DECIMAL(10, 2), -- Salary for the job
+    startDate DATE, -- Start date of the job
+    endDate DATE, -- End date of the job
+    workingHour VARCHAR(50), -- Working hours for the job
+    jobDescription TEXT, -- Description of the job
+    jobRequirement TEXT, -- Requirements for the job
+    createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Job post creation timestamp
+    updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last update timestamp
+    userID VARCHAR(10) NOT NULL, -- ID of the employer who posted the job
+    FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Link to login table
 );
