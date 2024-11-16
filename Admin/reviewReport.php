@@ -17,7 +17,7 @@ $result = $con->query($sql);
     <link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>
-    <h1>Admin Panel - Review Reports</h1>
+    <h1>Review Reports</h1>
     <table border="1">
         <thead>
             <tr>
@@ -70,7 +70,7 @@ $result = $con->query($sql);
             <?php endif; ?>
         </tbody>
     </table>
-    <br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br>
     <?php include('../footer/footer.php'); ?>
 </body>
 </html>
