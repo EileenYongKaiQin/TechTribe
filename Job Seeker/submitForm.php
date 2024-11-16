@@ -13,12 +13,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Handle file uploads
     $uploadedFiles = [];
-    if (isset($_FILES["evidence"]) && $_FILES["evidence"]["error"][0] == 0) {
-        $targetDir = "../uploads/reports/";
+    $targetDir = "../uploads/reports/";
+
+    // Ensure the target directory exists
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true); // Create the directory if it doesn't exist
+    }
+
+    if (isset($_FILES["evidence"]["name"])) {
         foreach ($_FILES["evidence"]["name"] as $key => $fileName) {
-            $targetFile = $targetDir . basename($fileName);
-            if (move_uploaded_file($_FILES["evidence"]["tmp_name"][$key], $targetFile)) {
-                $uploadedFiles[] = $targetFile; // Save file paths for storage
+            if ($_FILES["evidence"]["error"][$key] == 0) { // Check for upload errors
+                $targetFile = $targetDir . basename($fileName);
+                if (move_uploaded_file($_FILES["evidence"]["tmp_name"][$key], $targetFile)) {
+                    $uploadedFiles[] = $targetFile; // Save file paths for storage
+                } else {
+                    echo "<script>alert('Failed to upload file: $fileName');</script>";
+                }
             }
         }
     }
