@@ -2,9 +2,9 @@
 // Include database configuration
 include('../database/config.php');
 
-// Hardcoded placeholders for userID and jobPostID
+// Hardcoded placeholders for userID and jobPostID for testing
 $userID = "JS001"; // Temporary user ID
-$jobPostID = "JP001"; // Temporary job post ID
+$jobPostID = "JP001"; // Ensure this exists in the jobPost table
 
 // Process the submitted form
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -36,18 +36,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Join all uploaded file paths into a single string (separated by commas)
     $evidence = implode(",", $uploadedFiles);
 
-    // Insert the report into the database
-    $stmt = $con->prepare("INSERT INTO reportPost (reason, description, evidence, userID, jobPostID) 
-                            VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $report_reason, $description, $evidence, $userID, $jobPostID);
+    // Check if the jobPostID exists in the jobPost table
+    $checkJobPost = $con->prepare("SELECT jobPostID FROM jobPost WHERE jobPostID = ?");
+    $checkJobPost->bind_param("s", $jobPostID);
+    $checkJobPost->execute();
+    $checkJobPost->store_result();
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Report submitted successfully!'); window.location.href = 'report_form.php';</script>";
+    if ($checkJobPost->num_rows > 0) {
+        // Insert the report into the database
+        $stmt = $con->prepare("INSERT INTO reportPost (reason, description, evidence, userID, jobPostID) 
+                                VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $report_reason, $description, $evidence, $userID, $jobPostID);
+
+        if ($stmt->execute()) {
+            echo "<script>alert('Report submitted successfully!'); window.location.href = 'report_form.php';</script>";
+        } else {
+            echo "<script>alert('Error submitting report. Please try again.'); history.back();</script>";
+        }
+
+        $stmt->close();
     } else {
-        echo "<script>alert('Error submitting report. Please try again.'); history.back();</script>";
+        echo "<script>alert('Invalid Job Post ID. Please try again.'); history.back();</script>";
     }
 
-    $stmt->close();
+    $checkJobPost->close();
 }
 
 $con->close();
