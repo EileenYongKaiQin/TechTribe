@@ -1,57 +1,44 @@
 <?php
-session_start();
+// Include database configuration
 include('../database/config.php');
 
+// Hardcoded placeholders for userID and jobPostID
+$userID = "JS001"; // Temporary user ID
+$jobPostID = "JP001"; // Temporary job post ID
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    try {
-        $con->begin_transaction();
+// Process the submitted form
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $report_reason = isset($_POST["report_reason"]) ? $_POST["report_reason"] : null;
+    $description = isset($_POST["description"]) ? $_POST["description"] : null;
 
-        // Insert report data
-        $reportReason = $_POST['report_reason'];
-        $description = $_POST['description'];
-        $reporterId = $_SESSION['user_id'];
-        $reporterType = $_SESSION['user_type'];
-    
-
-        $stmt = $con->prepare("INSERT INTO reports (reporter_type, reporter_id,  
-                                report_reason, description) 
-                               VALUES (?, ?, ?, ?, ?, ?)");
-        
-        $stmt->bind_param("ssssss", $reporterType, $reporterId, $reportReason, $description);
-        $stmt->execute();
-        
-        $reportId = $con->insert_id;
-
-        // Handle file uploads
-        if (isset($_FILES['evidence']) && !empty($_FILES['evidence']['name'][0])) {
-            foreach ($_FILES['evidence']['tmp_name'] as $key => $tmp_name) {
-                if ($_FILES['evidence']['error'][$key] === UPLOAD_ERR_OK) {
-                    $fileName = $_FILES['evidence']['name'][$key];
-                    $fileType = $_FILES['evidence']['type'][$key];
-                    $fileSize = $_FILES['evidence']['size'][$key];
-                    
-                    // Read file content
-                    $fileContent = file_get_contents($tmp_name);
-                    
-                    // Insert file into database
-                    $stmt = $con->prepare("INSERT INTO report_evidence (report_id, file_name, 
-                                          file_data, file_type, file_size) 
-                                          VALUES (?, ?, ?, ?, ?)");
-                    
-                    $stmt->bind_param("isssi", $reportId, $fileName, $fileContent, 
-                                    $fileType, $fileSize);
-                    $stmt->execute();
-                }
+    // Handle file uploads
+    $uploadedFiles = [];
+    if (isset($_FILES["evidence"]) && $_FILES["evidence"]["error"][0] == 0) {
+        $targetDir = "../uploads/reports/";
+        foreach ($_FILES["evidence"]["name"] as $key => $fileName) {
+            $targetFile = $targetDir . basename($fileName);
+            if (move_uploaded_file($_FILES["evidence"]["tmp_name"][$key], $targetFile)) {
+                $uploadedFiles[] = $targetFile; // Save file paths for storage
             }
         }
-
-        $con->commit();
-        echo json_encode(['status' => 'success', 'message' => 'Report submitted successfully']);
-        
-    } catch (Exception $e) {
-        $con->rollback();
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
+
+    // Join all uploaded file paths into a single string (separated by commas)
+    $evidence = implode(",", $uploadedFiles);
+
+    // Insert the report into the database
+    $stmt = $conn->prepare("INSERT INTO reportPost (reason, description, evidence, userID, jobPostID) 
+                            VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $report_reason, $description, $evidence, $userID, $jobPostID);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Report submitted successfully!'); window.location.href = 'report_form.php';</script>";
+    } else {
+        echo "<script>alert('Error submitting report. Please try again.'); history.back();</script>";
+    }
+
+    $stmt->close();
 }
+
+$conn->close();
 ?>
