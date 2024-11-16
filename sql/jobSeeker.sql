@@ -1,12 +1,17 @@
--- SQLBook: Code
 CREATE TABLE jobSeeker (
     userID VARCHAR(10) PRIMARY KEY, -- Matches userID in login table
-    fullName VARCHAR(100) NOT NULL, -- Job seeker’s full name
     contactNo VARCHAR(15), -- Contact number
+    fullName VARCHAR(100) NOT NULL, -- Job seeker's full name
+    profilePic TEXT, -- Profile picture (optional)
     gender ENUM('Male', 'Female'), -- Gender
+    race VARCHAR(50), -- Race
+    accountStatus ENUM('Active', 'Inactive', 'Suspended') DEFAULT 'Active', -- Account status
     location VARCHAR(255), -- Preferred location
-    skills TEXT, -- List of skills
-    experience TEXT, -- Work experience details
-    languageProficiency VARCHAR(255), -- Languages the job seeker is proficient in
+    state VARCHAR(50), -- State
+    district VARCHAR(50), -- District
+    skill TEXT, -- Skills
+    workExperience TEXT, -- Work experience
+    warningHistory INT DEFAULT 0, -- Count of warnings received
+    language VARCHAR(255), -- Languages known
     FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );

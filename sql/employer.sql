@@ -1,14 +1,16 @@
--- SQLBook: Code
-CREATE TABLE employers (
-    employer_id VARCHAR(10) PRIMARY KEY,  
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    company_name VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(255) NOT NULL
+CREATE TABLE employer (
+    userID VARCHAR(10) PRIMARY KEY, -- Matches userID in login table
+    contactNo VARCHAR(15), -- Contact number
+    fullName VARCHAR(100) NOT NULL, -- Employer's full name
+    profilePic TEXT, -- Profile picture (optional)
+    companyName VARCHAR(255) NOT NULL, -- Employer's company name
+    companyAddress TEXT NOT NULL, -- Address of the company
+    accountStatus ENUM('Active', 'Inactive', 'Suspended') DEFAULT 'Active', -- Account status
+    warningHistory INT DEFAULT 0, -- Count of warnings received
+    FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );
 
-INSERT INTO employers (employer_id, name, email, password, company_name, phone_number)
+INSERT INTO employer (employer_id, name, email, password, company_name, phone_number)
 VALUES 
     ('E001', 'Chua Ern Qi', 'chua@example.com', MD5('chua123'), 'FlexMatch', '0123456789'),
     ('E002', 'Eileen Yong Kai Qin', 'eileen@example.com', MD5('eileen123'), 'FlexMatch', '0123456789'),
