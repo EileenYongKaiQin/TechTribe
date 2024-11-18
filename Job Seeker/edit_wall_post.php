@@ -147,7 +147,7 @@ $post = $result->fetch_assoc();
                 title: 'Are you sure you want to update this post?',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Update',
+                confirmButtonText: 'Yes',
                 cancelButtonText: 'Cancel'
             }).then(result => {
                 if (result.isConfirmed) {
