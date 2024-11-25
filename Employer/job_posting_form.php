@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job Posting</title>
-    <link rel="shortcut icon" href="../images/FlexMatch Logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/job_posting.css">
+    <link rel="stylesheet" type="text/css" href="../css/jobPosting.css">
+
 </head>
 <body>
 
-    <?php
+<?php
 include('../database/config.php');
-include('employer.php');
+include('employerNew.php');
 
 $formSubmitted = false;
 $errorMessage = '';
@@ -53,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<div class="container mt-5">
+<div class="content">
     <h2>Create Job Posting</h2>
 
     <!-- Success Message -->
@@ -131,14 +132,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="requirements">Requirements:</label>
                 <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Create Job Posting</button>
-        </form>
-    <?php endif; ?>
-</div>
-
-    
-    <?php include('../footer/footer.php'); ?>
+            <button type="submit">Submit</button>
+            </form>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
 
