@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Job Posting</title>
-    <link rel="shortcut icon" href="../images/FlexMatch Logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -52,7 +52,8 @@
 
         
         // Fetch all job postings
-        $sql = "SELECT job_posting_id, job_title, working_hour, location, salary, start_date, end_date, created_at FROM jobPost";
+        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, createTime FROM jobPost";
+
         $result = mysqli_query($con, $sql);
 
 
@@ -75,19 +76,20 @@
 
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
-                echo '<td>' . htmlspecialchars($row['job_title']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['working_hour']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['location']) . '</td>';
-                echo '<td>' . number_format($row['salary'], 2) . '</td>';
-                echo '<td>' . htmlspecialchars($row['start_date']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['end_date']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['created_at']) . 
+                echo '<td>' . htmlspecialchars($row['jobTitle']) . '</td>'; // Use 'jobTitle'
+                echo '<td>' . htmlspecialchars($row['workingHour']) . '</td>'; // Use 'workingHour'
+                echo '<td>' . htmlspecialchars($row['location']) . '</td>'; // Use 'location'
+                echo '<td>' . number_format($row['salary'], 2) . '</td>'; // Use 'salary'
+                echo '<td>' . htmlspecialchars($row['startDate']) . '</td>'; // Use 'startDate'
+                echo '<td>' . htmlspecialchars($row['endDate']) . '</td>'; // Use 'endDate'
+                echo '<td>' . htmlspecialchars($row['createTime']) . // Use 'createTime'
                      '<div class="action-buttons" style="float: right;">
-                        <a href="edit_job_posting.php?job_posting_id=' . $row['job_posting_id'] . '" class="btn btn-success btn-sm">Edit</a>
-                        <a href="confirm_delete.php?job_posting_id=' . $row['job_posting_id'] . '" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-success btn-sm">Edit</a>
+                        <a href="confirm_delete.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-danger btn-sm">Delete</a>
                      </div></td>';
                 echo '</tr>';
             }
+            
 
             echo '</tbody>';
             echo '</table>';

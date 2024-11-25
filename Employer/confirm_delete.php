@@ -5,10 +5,10 @@ include('../database/config.php');
 include('employer.php'); 
 
 // Handle delete confirmation request
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['job_posting_id'])) {
-    $jobPostingId = intval($_POST['job_posting_id']);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['jobPostID'])) {
+    $jobPostID = mysqli_real_escape_string($con, $_POST['jobPostID']);
 
-    $deleteQuery = "DELETE FROM jobPost WHERE job_posting_id = $jobPostingId";
+    $deleteQuery = "DELETE FROM jobPost WHERE jobPostID = '$jobPostID'";
     if (mysqli_query($con, $deleteQuery)) {
         header("Location: job_posting_list.php?status=success&message=Job posting deleted successfully");
         exit;
@@ -17,9 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['job_posting_id'])) {
     }
 }
 
-if (isset($_GET['job_posting_id']) && is_numeric($_GET['job_posting_id'])) {
-    $jobPostingId = intval($_GET['job_posting_id']);
-    $sql = "SELECT job_title FROM jobPost WHERE job_posting_id = $jobPostingId";
+if (isset($_GET['jobPostID'])) {
+    $jobPostID = mysqli_real_escape_string($con, $_GET['jobPostID']);
+    $sql = "SELECT jobTitle FROM jobPost WHERE jobPostID = '$jobPostID'";
     $result = mysqli_query($con, $sql);
     
     if ($result && mysqli_num_rows($result) > 0) {
@@ -32,6 +32,7 @@ if (isset($_GET['job_posting_id']) && is_numeric($_GET['job_posting_id'])) {
     echo "Invalid job posting ID.";
     exit;
 }
+
 
 mysqli_close($con);
 
@@ -80,14 +81,14 @@ ob_end_flush();
         <h3 class="text-center text-danger">Confirmation </h3>
         <p class="text-center">Are you sure you want to delete the following job posting?</p>
         <div class="alert alert-warning text-center">
-            <strong>Job Title: </strong><?php echo htmlspecialchars($job['job_title']); ?>
+            <strong>Job Title: </strong><?php echo htmlspecialchars($job['jobTitle']); ?>
         </div>
         <p class="text-center">This action cannot be undone.</p>
 
         <!-- Confirm deletion form -->
         <div class="text-center mt-4">
             <form action="confirm_delete.php" method="POST">
-                <input type="hidden" name="job_posting_id" value="<?php echo $jobPostingId; ?>">
+                <input type="hidden" name="jobPostID" value="<?php echo $jobPostID; ?>">
                 <button type="submit" class="btn btn-danger btn-lg mx-3">Delete</button>
                 <a href="job_posting_list.php" class="btn btn-secondary btn-lg mx-3">Cancel</a>
             </form>
