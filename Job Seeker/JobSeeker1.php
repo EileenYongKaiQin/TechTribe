@@ -260,6 +260,7 @@
     <section class="content">
     </section>
 
+    </div>    
     <script>
         // Function to toggle the submenu visibility
         function toggleSubmenu() {

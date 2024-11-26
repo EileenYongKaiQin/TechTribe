@@ -1,17 +1,42 @@
-/* Full-page form styling */
-body {
-    font-family: Arial, sans-serif;
+/* Reset and Box Sizing */
+* {
     margin: 0;
     padding: 0;
-    background-image: url('../images/background.jpg');
+    box-sizing: border-box;
 }
 
+/* Body and Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Main Content */
+.main-content {
+    padding: 20px;
+    margin: 0 auto;
+}
+
+/* Full-page form wrapper */
+.full-page-form {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    /* width: calc(100% - 180px); */
+    width: 100%;
+    background-color: #51c151;
+}
+
+.header-bar h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
 
 /* Close button styling */
 .header-bar .close-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    margin-left: 20%;
     font-size: 24px;
     text-decoration: none;
     color: rgb(0, 0, 0);
@@ -25,24 +50,9 @@ body {
     color: #002e79; /* Optional hover effect */
 }
 
-/* Adjust position within the form */
-.full-page-form {
-    position: relative; /* Allows close button to be positioned absolutely */
-    width: 60%;
-    margin: auto;
-    padding: 20px;
-}
-
-
-/* Heading styling */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color:#000000;
-}
-
-/* Form styling */
+/* Centered form styling */
 form {
+    width: 60%; /* Form takes 60% of the full-page-form width */
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -50,16 +60,21 @@ form {
     padding: 50px;
     background-color: #ffff;
     border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
 }
 
 /* Form elements styling */
-form label, form input, form button {
+form label,
+form input,
+form button {
     width: 100%;
     margin-bottom: 15px;
 }
 
 /* Input fields styling */
-form input[type="time"], form input[type="text"] {
+form input[type="time"],
+form input[type="text"] {
     box-sizing: border-box;
 }
 
@@ -106,12 +121,8 @@ select {
 
 /* Responsive design using media queries */
 @media screen and (max-width: 768px) {
-    .full-page-form {
-        width: 90%; /* Make the form take up more space on smaller screens */
-    }
-
     form {
-        padding: 20px; /* Reduce padding on smaller screens */
+        width: 80%; /* Increase form width on smaller screens */
     }
 
     .availability-slot {
@@ -131,20 +142,5 @@ select {
 
     button[type="submit"] {
         padding: 12px; /* Increase button padding for better touch targets */
-    }
-
-    /* Adjust the form for even smaller screens like mobile devices */
-    @media screen and (max-width: 480px) {
-        form {
-            padding: 10px; /* Further reduce padding for small screens */
-        }
-
-        .availability-slot input {
-            width: 100%; /* Make input fields take full width */
-        }
-
-        .availability-slot label {
-            text-align: left; /* Left-align the labels */
-        }
     }
 }

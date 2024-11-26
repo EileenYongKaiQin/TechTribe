@@ -14,6 +14,7 @@
     ?>
 
     <div class="main-content">
+        <h1>Job Seeker Wall</h1>
         <!-- Search and Filter Bar -->
         <div class="search-filter-bar">
             <input type="text" placeholder="Enter Job title">
@@ -22,13 +23,9 @@
             <button>Filter</button>
         </div>
 
-        <h1>Job Seeker Wall</h1>
-
         <!-- Display posts -->
         <div class="job-seeker-wall">
-            <div class="job-post">
-                <?php include 'display_post.php'; ?>
-            </div>            
+            <?php include 'display_post.php'; ?>
         </div>
     </div>
 
@@ -39,3 +36,4 @@
 
 </body>
 </html>
+

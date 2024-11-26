@@ -20,9 +20,9 @@ body {
 
 /* Search and Filter Bar */
 .search-filter-bar {
+    margin-left: 5%;
     display: flex;
     justify-content: left;
-    margin-bottom: 20px;
     gap: 20px;
 }
 
@@ -48,53 +48,71 @@ body {
 
 h1{
     margin-bottom: 20px;
+    margin-left: 5%;
 }
 
-/* Job Seeker Wall */
+/* Job-Seeker Wall */
 .job-seeker-wall {
-    width: 100%;
-    background-color: #333;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Create 2 equal-width columns */
-    grid-gap: 20px; /* Add spacing between posts */
-    padding: 20px; /* Add padding around the container */
+    grid-gap: 50px; /* Space between posts */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    padding: 20px; /* Padding around the wall */
+    background-color: #ffffff;
+    width: 90%;
+    margin: 10px auto;
+    padding: 30px;
 }
 
-/* Individual Job Post */
-.job-post {
+/* Individual Post Container */
+.post-container {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #b2f1f3;
+    justify-content: space-between;
+    width: 100%; 
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+
+/* Styling for the user info */
+.user-info {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    gap: 10px; /* Space between the profile picture and the name */
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.profile-pic {
+    width: 60px; /* Set the size of the profile picture */
+    height: 60px;
+    border-radius: 50%; /* Makes the profile picture circular */
+    background-color:  #fff;
+}
+
+h3{
+    margin: 0;
+    font-size: 18px;
+    width:fit-content;
+}
+
+
+.post {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Ensure posts stretch vertically */
+    width: 100%; /* 2 posts per row */
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
-.job-post:hover {
-    transform: scale(1.03);
-}
-
-/* Job Post Title and Info */
-.job-post h3 {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.job-post p {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.job-post ul {
-    list-style-type: none;
-    margin-left: 0;
-}
-
-.job-post ul li {
-    margin-bottom: 5px;
+.post .published-time{
+    font-style: italic;
+    text-align: center;
 }
 
 /* Chat Button */
@@ -137,26 +155,24 @@ h1{
 }
 
 
-/* Create Post Button */
-.button-section {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
 .create-post-btn {
-    background-color: #2357e7;
+    position: fixed; /* Fixed positioning */
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+    padding: 15px 25px;
+    background-color: #007bff; /* Button color */
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
     font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 999; /* Ensure it's above other elements */
     transition: background-color 0.3s ease;
 }
 
 .create-post-btn:hover {
-    background-color: #236c3a;
+    background-color: #0056b3; /* Change color on hover */
 }
 
 /* Responsive Design */
