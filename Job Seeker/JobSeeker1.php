@@ -35,20 +35,16 @@
         .logo-section {
             text-align: center;
             margin-bottom: 30px;
-            margin-top: -10px;
-            position: relative;
         }
 
         .logo-image {
             width: 70px;
-            height: auto;
         }
 
         .logo-text {
             font-weight: bold;
             font-size: 20px;
             color: #FFFFFF;
-            margin-top: 0px;
         }
 
         .menu {
@@ -90,8 +86,14 @@
 
         .logout {
             margin-top: auto;
-            margin-bottom: 80px;
-            text-align: center;
+            margin-bottom: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .logout-text {
@@ -247,14 +249,16 @@
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
-            <img src="../images/employer.png" alt="User Image" class="profile-image">
+            <img src="../images/JobSeeker.png" alt="User Image" class="profile-image">
             <div class="user-info">
-                <span class="user-name">User</span>
+                <span class="user-name">Karry Wang</span>
                 <span class="user-role">Job Seeker</span>
             </div>
         </div>
         <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
     </header>
+    <section class="content">
+    </section>
 
     <script>
         // Function to toggle the submenu visibility
