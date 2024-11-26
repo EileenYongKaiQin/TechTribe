@@ -8,47 +8,122 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            color: white; 
-            background-color: #333; 
+        font-family: 'Arial', sans-serif;
+        font-weight: 500;
+        background-color: #F0FDFF;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        }
+
+        .container {
+            margin-left: 250px;
+            margin-right: auto;
+            padding: 40px;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 20px;
+            margin-top: -80px;
         }
 
         table {
-            color: white;
             width: 100%;
+            border-collapse: collapse;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            
         }
 
-        table th {
-            color: #555; 
-            background-color: white; 
+        thead {
+            background-color: #F7F6FE;
         }
 
-        table td {
-            color: white; 
+        thead th {
+            text-align: left;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            padding: 16px;
+            border-bottom: 2px solid #EAEAEA;
         }
 
-        table, th, td {
-            border: 1px solid white; 
+        tbody tr {
+            border-bottom: 1px solid #EAEAEA;
+            transition: background 0.3s ease;
         }
 
-        table tbody tr:hover {
-            background-color: rgba(45, 140, 255, 0.2); 
+        tbody tr:hover {
+            background: rgba(45, 140, 255, 0.1);
         }
 
+        tbody td {
+            font-size: 14px;
+            font-weight: 400;
+            color: #4D4D4D;
+            padding: 16px;
+            text-align: left;
+        }
+
+        tbody td:last-child {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Action Buttons Container */
         .action-buttons {
-            display: inline-flex;
-            gap: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
         .action-buttons .btn {
-            width: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .action-buttons .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .action-buttons .icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            display: inline-block;
+            vertical-align: middle;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .action-buttons .btn:hover .icon {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
-<body>
 
+<body>
     <?php
         include('../database/config.php');
-        include('employer.php');
+        include('employerNew.php');
 
         
         // Fetch all job postings
@@ -70,41 +145,40 @@
             echo '<th>Start Date</th>';
             echo '<th>End Date</th>';
             echo '<th>Created Date</th>';
-            echo '</tr>';
+            echo '<th>Action</th>';
             echo '</thead>';
             echo '<tbody>';
 
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
-                echo '<td>' . htmlspecialchars($row['jobTitle']) . '</td>'; // Use 'jobTitle'
-                echo '<td>' . htmlspecialchars($row['workingHour']) . '</td>'; // Use 'workingHour'
-                echo '<td>' . htmlspecialchars($row['location']) . '</td>'; // Use 'location'
-                echo '<td>' . number_format($row['salary'], 2) . '</td>'; // Use 'salary'
-                echo '<td>' . htmlspecialchars($row['startDate']) . '</td>'; // Use 'startDate'
-                echo '<td>' . htmlspecialchars($row['endDate']) . '</td>'; // Use 'endDate'
-                echo '<td>' . htmlspecialchars($row['createTime']) . // Use 'createTime'
-                     '<div class="action-buttons" style="float: right;">
-                        <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-success btn-sm">Edit</a>
-                        <a href="confirm_delete.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-danger btn-sm">Delete</a>
-                     </div></td>';
+                echo '<td>' . htmlspecialchars($row['jobTitle']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['workingHour']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['location']) . '</td>';
+                echo '<td>' . number_format($row['salary'], 2) . '</td>';
+                echo '<td>' . htmlspecialchars($row['startDate']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['endDate']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['createTime']) .
+                     '<td>
+                        <div class="action-buttons">
+                            <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-edit">
+                                <img src="../images/edit.png" alt="Edit" class="icon">
+                            </a>
+                            <a href="confirm_delete.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-delete">
+                                <img src="../images/trash.png" alt="Delete" class="icon">
+                            </a>
+                        </div>
+                    </td>
+                    ';
                 echo '</tr>';
             }
-            
 
             echo '</tbody>';
             echo '</table>';
             echo '</div>';
         } else {
-            echo '<div class="container mt-5"><p>No job postings found.</p></div>';
+            echo '<div class="content"><p>No job postings found.</p></div>';
         }
     ?>
-
-    <div class="container mt-3">
-        <a href="job_posting_form.php" class="btn btn-primary btn-block">Create New Job Posting</a>
-    </div>
-
-    <?php include('../footer/footer.php'); ?>
-
 </body>
 </html>
 
