@@ -9,11 +9,15 @@
 </head>
 <body>
     <?php 
-        include('header.php');
+        include('JobSeeker1.php');
     ?>
     <div class="full-page-form">
-        <a href="job_seeker_wall.php" class="close-button">&times;</a>
-        <h2>Create Wall Post</h2>
+        
+        <div class="header-bar">
+            <a href="job_seeker_wall.php" class="close-button">&times;</a>
+            <h2>Create Wall Post</h2>            
+        </div>
+
         <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
             <label for="skills">Skill:</label>
             <select id="skills" name="skills" required>
@@ -45,7 +49,7 @@
             <label for="skillDetails">Skill Details:</label><br>
             <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="250" placeholder="Describe your skills in this category (max 50 words)" required></textarea><br>
 
-            <label>Availability:</label>
+            <label>Available Time:</label>
             <div class="availability-slots">
                 <div class="availability-slot">
                     <label>Monday</label>
@@ -111,13 +115,6 @@
             <label for="jobPreferences">Job Preferences (max 50 words):</label>
             <textarea id="jobPreferences" name="jobPreferences" rows="3" maxlength="250"></textarea><br>
 
-            <label for="contactEmail">Email:</label>
-            <input type="email" id="contactEmail" name="contactEmail" style="height:30px" placeholder="example@gmail.com" required><br>
-
-            <label for="contactPhone" >Phone Number:</label>
-            <input type="tel" id="contactPhone" name="contactPhone" style="height:30px" placeholder="e.g., 0123456789" required pattern="\d{10,11}" 
-            maxlength="11" minlength="10" required ><br>
-
             <button type="submit">Submit Post</button>
         </form>
         
@@ -181,8 +178,5 @@
 
 
     </script>
-
-     
-    <?php include('../footer/footer.php'); ?>
 </body>
 </html>

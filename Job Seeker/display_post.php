@@ -1,57 +1,81 @@
 <?php
-    include('../database/config.php');
-    //haha
-    // Query to retrieve wall posts ordered by publish date (newest first)
-    $result = $con->query("SELECT * FROM wall_posts ORDER BY created_at DESC");
+include('../database/config.php');
 
-    if ($result->num_rows > 0) {
-        echo '<div class="post-grid">';
+// Set the current page number (default is 1)
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$postsPerPage = 10;  // Display 10 posts per page
+$offset = ($page - 1) * $postsPerPage;
 
-        while ($row = $result->fetch_assoc()) {
-            // Display each post
-            echo '<div class="post">';
-            
-            // User name as the title and publish date/time
-            echo '<h3>' . htmlspecialchars($row['user_name']) . '</h3>';
-            echo '<p>Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['created_at']))) . '</p>';
-            
-            // Display job-seeking post details
-            echo '<p><strong>Skills:</strong> ' . htmlspecialchars($row['skill_category']) . '</p>';
-            echo '<p><strong>Details:</strong> ' . htmlspecialchars($row['skill_details']) . '</p>';
-            
-            // Decode JSON availability data
-            $availability = json_decode($row['availability'], true);
+// Query to retrieve wall posts along with user data from jobSeeker
+$sql = "SELECT wp.*, js.fullName, js.contactNo 
+        FROM wallPost wp
+        INNER JOIN jobSeeker js ON wp.userID = js.userID
+        ORDER BY wp.createdAt DESC
+        LIMIT $postsPerPage OFFSET $offset";
 
-            // Display only filled availability times
-            echo '<p><strong>Availability:</strong></p>';
-            echo '<ul>';
+$result = $con->query($sql);
 
-            // Check each day in the decoded availability array
-            foreach ($availability as $day => $times) {
-                // Check if both start and end times are filled for that day
-                if (!empty($times[0]) && !empty($times[1])) {
-                    echo '<li>' . ucfirst($day) . ': ' . htmlspecialchars($times[0]) . ' - ' . htmlspecialchars($times[1]) . '</li>';
-                }
+if ($result->num_rows > 0) {
+    echo '<div class="post-grid">';
+
+    // Display each post
+    while ($row = $result->fetch_assoc()) {
+        // Display post data
+        echo '<div class="post">';
+        
+        // User name and publish date
+        echo '<h3>' . htmlspecialchars($row['fullName']) . '</h3>';
+        echo '<p>Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['createdAt']))) . '</p>';
+        
+        // Skill and details
+        echo '<p><strong>Skills:</strong> ' . htmlspecialchars($row['skillCategory']) . '</p>';
+        echo '<p><strong>Details:</strong> ' . htmlspecialchars($row['skillDetails']) . '</p>';
+        
+        // Decode availability JSON data
+        $availability = json_decode($row['availableTime'], true);
+
+        // Display availability times
+        echo '<p><strong>Available Time:</strong></p>';
+        echo '<ul>';
+        foreach ($availability as $day => $times) {
+            if (!empty($times[0]) && !empty($times[1])) {
+                echo '<li>' . ucfirst($day) . ': ' . htmlspecialchars($times[0]) . ' - ' . htmlspecialchars($times[1]) . '</li>';
             }
-
-            echo '</ul>';
-            
-            // Display location
-            echo '<p><strong>Location:</strong> ' . htmlspecialchars($row['district']) . ', ' . htmlspecialchars($row['state']) . '</p>';
-            
-            // Contact details
-            echo '<p><strong>Email:</strong> ' . htmlspecialchars($row['contact_email']) . '</p>';
-            echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contact_phone']) . '</p>';
-            
-            echo '</div>';
         }
-       
+        echo '</ul>';
+
+        // Location
+        echo '<p><strong>Location:</strong> ' . htmlspecialchars($row['district']) . ', ' . htmlspecialchars($row['state']) . '</p>';
+        
+        // Contact details from jobSeeker
+        echo '<p><strong>Email:</strong> ' . 'example@gmail.com'. '</p>';
+        echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contactNo']) . '</p>';
+        
+        // Add Chat Button below each post
+        echo '<button class="chat-btn">Chat</button>';
+        
         echo '</div>';
-    } else {
-        echo '<p>No posts available.</p>';
     }
 
-    $con->close();
+    echo '</div>';
 
+    // Pagination: Display "Previous" and "Next" links
+    $sqlTotalPosts = "SELECT COUNT(*) AS total FROM wallPost";
+    $resultTotalPosts = $con->query($sqlTotalPosts);
+    $totalPosts = $resultTotalPosts->fetch_assoc()['total'];
+    $totalPages = ceil($totalPosts / $postsPerPage);
 
+    echo '<div class="pagination">';
+    if ($page > 1) {
+        echo '<a href="display_post.php?page=' . ($page - 1) . '">Previous</a>';
+    }
+    if ($page < $totalPages) {
+        echo '<a href="display_post.php?page=' . ($page + 1) . '">Next</a>';
+    }
+    echo '</div>';
+} else {
+    echo '<p>No posts available.</p>';
+}
+
+$con->close();
 
