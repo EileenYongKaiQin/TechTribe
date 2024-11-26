@@ -234,8 +234,8 @@
                 <span>Job Seeker Wall</span>
             </div>
             <div class="submenu">
-                <div class="submenu-item" onclick="location.href='job_seeker_wall_page.php'">View Posts</div>
-                <div class="submenu-item" onclick="location.href='create_post.php'">My Posts</div>
+                <div class="submenu-item" onclick="location.href='job_seeker_wall.php'">View Posts</div>
+                <div class="submenu-item" onclick="location.href='my_posts.php'">My Posts</div>
             </div>
         </nav>
         <div class="logout" onclick="location.href='login.php'">

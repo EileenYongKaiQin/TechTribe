@@ -6,9 +6,6 @@ body {
     background-image: url('../images/background.jpg');
 }
 
-.full-page-form h2{
-    color:#000000;
-}
 
 /* Close button styling */
 .header-bar .close-button {
@@ -49,9 +46,10 @@ form {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    border: 1px solid black;
+    border: 1px solid gray;
     padding: 50px;
     background-color: #ffff;
+    border-radius: 5px;
 }
 
 /* Form elements styling */

@@ -15,7 +15,6 @@ body {
 /* Main Content */
 .main-content {
     padding: 20px;
-    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -47,21 +46,31 @@ body {
     background-color: #236c3a;
 }
 
-/* Job Seeker Wall */
-.job-seeker-wall {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+h1{
+    margin-bottom: 20px;
 }
 
+/* Job Seeker Wall */
+.job-seeker-wall {
+    width: 100%;
+    background-color: #333;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create 2 equal-width columns */
+    grid-gap: 20px; /* Add spacing between posts */
+    padding: 20px; /* Add padding around the container */
+}
+
+/* Individual Job Post */
 .job-post {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
-    width: 48%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure posts stretch vertically */
 }
 
 .job-post:hover {
@@ -126,6 +135,7 @@ body {
     background-color: #2357e7;
     color: #fff;
 }
+
 
 /* Create Post Button */
 .button-section {
