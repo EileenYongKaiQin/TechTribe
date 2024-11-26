@@ -11,7 +11,7 @@
 <body>
 <?php 
     include('../database/config.php');
-    include('employer.php');
+    include('employerNew.php');
 ?>
 <div class="content">
     <form  id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
