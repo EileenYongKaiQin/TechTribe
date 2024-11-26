@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="shortcut icon" href="images/FlexMatchLogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="login-logo">
+            <img src="images/FlexMatchLogo.png" alt="FlexMatch Logo">
+        </div>
+
+        <!-- Welcome Text -->
+        <h1>Welcome to FlexMatch</h1>
+
+        <!-- Sliding Toggle Button -->
+        <div class="toggle-container">
+            <div class="slider-btn" id="slider"></div>
+            <div class="toggle-option active" id="login-toggle" onclick="toggleOption('login')">Login</div>
+            <div class="toggle-option" id="register-toggle" onclick="toggleOption('register')">Register</div>
+        </div>
+
+        <!-- Login Form -->
+        <form action="login.php" method="POST">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="input-field" placeholder="Enter your Username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="input-field" placeholder="Enter your Password" required>
+                <div id="toggle" onclick="showHide();"></div>
+            </div>
+
+            <!-- Remember Me and Forgot Password -->
+            <div class="options">
+                <label>
+                    <input type="checkbox" name="remember"> Remember Me
+                </label>
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+    <script>
+        function toggleOption(option) {
+        const slider = document.getElementById('slider');
+        const loginToggle = document.getElementById('login-toggle');
+        const registerToggle = document.getElementById('register-toggle');
+
+        if (option === 'login') {
+            slider.style.transform = 'translateX(0%)'; // Slide to the left
+            loginToggle.classList.add('active');
+            registerToggle.classList.remove('active');
+        } else if (option === 'register') {
+            slider.style.transform = 'translateX(100%)'; // Slide to the right
+            registerToggle.classList.add('active');
+            loginToggle.classList.remove('active');
+        }
+    }
+
+    const password = document.getElementById('password');
+        const toggle = document.getElementById('toggle');
+        function showHide(){
+            if(password.type === 'password'){
+                password.setAttribute('type','text');
+                toggle.classList.add('hide')
+            }
+            else{
+                password.setAttribute('type','password');
+                toggle.classList.remove('hide')
+            }
+        }
+
+    </script>
+</body>
+</html>

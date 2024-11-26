@@ -17,7 +17,7 @@
             <h1>Welcome to <br><span class="highlight">FlexMatch!</span></h1>
             <p class="subtitle">"Your Bridge to Flexible Work"</p>
             <div class="action-buttons">
-                <button class="btn btn-review">Review Report</button>
+                <button class="btn btn-review" onclick="location.href='reviewReport.php'">Review Report</button>
             </div>
         </div>
       <div class="illustration">
