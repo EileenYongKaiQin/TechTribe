@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FlexMatch - Job Seeker</title>
+  <title>FlexMatch</title>
+  <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
   <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
