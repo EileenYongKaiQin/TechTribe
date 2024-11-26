@@ -6,26 +6,26 @@ body {
     background-image: url('../images/background.jpg');
 }
 
-h2{
-    color:#fff;
+.full-page-form h2{
+    color:#000000;
 }
 
 /* Close button styling */
-.close-button {
+.header-bar .close-button {
     position: absolute;
     top: 20px;
     left: 20px;
     font-size: 24px;
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-weight: bold;
     border: none;
     background: none;
     cursor: pointer;
 }
 
-.close-button:hover {
-    color: #629af5; /* Optional hover effect */
+.header-bar .close-button:hover {
+    color: #002e79; /* Optional hover effect */
 }
 
 /* Adjust position within the form */
@@ -41,6 +41,7 @@ h2{
 h2 {
     text-align: center;
     margin-bottom: 20px;
+    color:#000000;
 }
 
 /* Form styling */
