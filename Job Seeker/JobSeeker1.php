@@ -256,6 +256,7 @@
         <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
     </header>
 
+    </div>    
     <script>
         // Function to toggle the submenu visibility
         function toggleSubmenu() {

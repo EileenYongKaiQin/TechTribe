@@ -8,10 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <?php 
+    <?php   
         include('JobSeeker1.php');
     ?>
-    <div class="full-page-form">
+    <div class="main-content">
         
         <div class="header-bar">
             <a href="job_seeker_wall.php" class="close-button">&times;</a>
