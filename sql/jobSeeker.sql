@@ -18,7 +18,7 @@ CREATE TABLE jobSeeker (
 
 INSERT INTO jobSeeker (userID, contactNo, fullName, profilePic, gender, race, accountStatus, location, state, district, skill, workExperience, warningHistory, language) 
 VALUES (
-    'JS001', '0123456789', 'Oh Kai Xuan', NULL, 'Male', 'Cina', 'Active', 
+    'JS001', '0123456789', 'Chua Ern Qi', NULL, 'Female', 'Cina', 'Active', 
     'Kuala Lumpur', 'Selangor', 'District 1', 'Java, C++, Python', 
     '2 years experience in IT', 0, 'English, Malay, Mandarin'
 );

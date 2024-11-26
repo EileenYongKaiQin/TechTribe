@@ -8,4 +8,4 @@ CREATE TABLE admin (
 
 
 INSERT INTO admin (userID, contactNo, fullName, profilePic) 
-VALUES ('AD001', '0987654321', 'Chua Ern Qi', NULL);
+VALUES ('AD001', '0987654321', 'Oh Kai Xuan', NULL);

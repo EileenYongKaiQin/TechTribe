@@ -1,0 +1,174 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background-color: #AAE1DE; /* Light teal background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.login-container {
+    background: #FFFFFF; /* White box for the form */
+    width: 400px; /* Adjust based on your preference */
+    padding: 40px;
+    border-radius: 50px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25); /* Subtle shadow */
+    text-align: center; /* Center all text */
+    position: relative;
+}
+
+/* Logo Styling */
+.login-logo img {
+    width: 120px; /* Logo size */
+    margin-bottom: 20px;
+}
+
+/* Welcome Title */
+h1 {
+    font-size: 20px;
+    font-weight: 400;
+    color: #374A49; /* Dark grayish-green */
+    margin-bottom: 30px;
+}
+
+#toggle{
+    position: absolute;
+    right: 55px;
+    top: 72.5%;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 25px;
+    background: url(../images/show.png) no-repeat center;
+    background-size: cover;
+    cursor: pointer;
+}
+#toggle.hide{
+    background: url(../images/hide.png) no-repeat center;
+    background-size: cover;
+}
+
+/* Toggle Container */
+.toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 330px;
+    height: 50px;
+    background: #F0FDFF; /* Light background */
+    border-radius: 33px;
+    margin: 0 auto 30px; /* Center and add bottom margin */
+    position: relative; /* To position the sliding button */
+    overflow: hidden;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+}
+
+/* Sliding Button */
+.slider-btn {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #AAE1DE; /* Teal color for active section */
+    border-radius: 33px;
+    transition: all 0.3s ease; /* Smooth sliding animation */
+    z-index: 1; /* Place behind text */
+}
+
+/* Button Text */
+.toggle-option {
+    position: relative;
+    z-index: 2; /* Place above the slider */
+    width: 50%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    color: #819E9D; /* Inactive text color */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Active Text */
+.toggle-option.active {
+    color: #FFFFFF; /* Active text is white */
+    font-weight: 500;
+}
+
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left; /* Align labels to the left */
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000; /* Black text */
+    margin-bottom: 8px;
+    display: block;
+}
+
+.input-field {
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    border: 1px solid #97BEBC; /* Light border */
+    border-radius: 40px; /* Rounded input fields */
+    color: black; /* Placeholder text color */
+}
+
+.input-field:focus {
+    border-color: #80ADAB; /* Focus color */
+    outline: none; /* Remove default outline */
+}
+
+/* Remember Me & Forgot Password */
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.options label {
+    cursor: pointer;
+}
+
+.options a {
+    text-decoration: none;
+    color: #80ADAB; /* Link color */
+    transition: color 0.3s ease;
+}
+
+.options a:hover {
+    color: #005f8b; /* Darker teal on hover */
+}
+
+/* Login Button */
+.login-btn {
+    background: #AAE1DE; /* Button background color */
+    color: #FFFFFF; /* White text */
+    font-size: 16px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 40px; /* Rounded button */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition */
+    width: 100%; /* Full-width button */
+}
+
+.login-btn:hover {
+    background: #87CFD1; /* Slightly darker teal */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}

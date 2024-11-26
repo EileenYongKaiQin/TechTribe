@@ -1,3 +1,36 @@
+<?php
+session_start(); // Start the session
+
+// Include the database configuration file
+include '../database/config.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['userID'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php');
+    exit();
+}
+
+// Fetch the logged-in employer's full name from the employer table
+$userID = $_SESSION['userID'];
+$query = $con->prepare("
+    SELECT employer.fullName 
+    FROM employer 
+    INNER JOIN login ON employer.userID = login.userID 
+    WHERE employer.userID = ?
+");
+$query->bind_param("s", $userID);
+$query->execute();
+$result = $query->get_result();
+
+if ($result && $result->num_rows > 0) {
+    $employer = $result->fetch_assoc();
+    $fullName = $employer['fullName']; // Get the full name
+} else {
+    $fullName = "Employer"; // Default fallback if user not found
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -210,7 +243,7 @@
                 <span>Job Seeker Wall</span>
             </div>
         </nav>
-        <div class="logout" onclick="location.href='login.php'">
+        <div class="logout" onclick="location.href='../login.html'">
     <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
     <span class="logout-text">Logout</span>
 </div>
@@ -223,11 +256,11 @@
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
                     <img src="../images/employer.png" alt="User Image" class="profile-image">
                     <div class="user-info">
-                        <span class="user-name">User</span>
+                        <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                         <span class="user-role">Employer</span>
                     </div>
                 </div>
-                <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
+                <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
             </div>
         </header>
         <section class="content">
