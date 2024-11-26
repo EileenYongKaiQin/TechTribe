@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job-Seeker Wall</title>
     <link rel="stylesheet" href="../css/job_seeker_wall.css">
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
 </head>
 <body>
 

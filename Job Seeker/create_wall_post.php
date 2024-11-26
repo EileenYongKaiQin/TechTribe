@@ -6,6 +6,7 @@
     <title>Create Job-Seeker Wall Post</title>
     <link rel="stylesheet" href="../css/create_wall_post.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
 </head>
 <body>
     <?php   
@@ -19,7 +20,7 @@
         </div>
 
         <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
-            <label for="skills">Skill:</label>
+            <label for="skills"><b>Skill:</b></label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
                 <option value="Customer Service">Customer Service</option>
@@ -46,73 +47,79 @@
             </select><br>
             
 
-            <label for="skillDetails">Skill Details:</label><br>
+            <label for="skillDetails"><b>Skill Details:</b></label>
             <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="250" placeholder="Describe your skills in this category (max 50 words)" required></textarea><br>
 
-            <label>Available Time:</label>
+            <label><b>Available Time:</b></label>
             <div class="availability-slots">
                 <div class="availability-slot">
                     <label>Monday</label>
-                    <input type="time" name="mondayStart" placeholder="Start Time">
-                    <input type="time" name="mondayEnd" placeholder="End Time">
+                    <input type="time" name="mondayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="mondayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Tuesday</label>
-                    <input type="time" name="tuesdayStart" placeholder="Start Time">
-                    <input type="time" name="tuesdayEnd" placeholder="End Time">
+                    <input type="time" name="tuesdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="tuesdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Wednesday</label>
-                    <input type="time" name="wednesdayStart" placeholder="Start Time">
-                    <input type="time" name="wednesdayEnd" placeholder="End Time">
+                    <input type="time" name="wednesdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="wednesdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Thursday</label>
-                    <input type="time" name="thursdayStart" placeholder="Start Time">
-                    <input type="time" name="thursdayEnd" placeholder="End Time">
+                    <input type="time" name="thursdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="thursdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Friday</label>
-                    <input type="time" name="fridayStart" placeholder="Start Time">
-                    <input type="time" name="fridayEnd" placeholder="End Time">
+                    <input type="time" name="fridayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="fridayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Saturday</label>
-                    <input type="time" name="saturdayStart" placeholder="Start Time">
-                    <input type="time" name="saturdayEnd" placeholder="End Time">
+                    <input type="time" name="saturdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="saturdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Sunday</label>
-                    <input type="time" name="sundayStart" placeholder="Start Time">
-                    <input type="time" name="sundayEnd" placeholder="End Time">
+                    <input type="time" name="sundayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="sundayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
                 </div>
             </div>
 
-            <label for="state">State:</label>
-            <select id="state" name="state" required onchange="updateDistricts()">
-                <option value="">Select a State</option>
-                <option value="Johor">Johor</option>
-                <option value="Kedah">Kedah</option>
-                <option value="Kelantan">Kelantan</option>
-                <option value="Kuala Lumpur">Kuala Lumpur</option>
-                <option value="Melaka">Melaka</option>
-                <option value="Negeri Sembilan">Negeri Sembilan</option>
-                <option value="Pahang">Pahang</option>
-                <option value="Penang">Penang</option>
-                <option value="Perak">Perak</option>
-                <option value="Perlis">Perlis</option>
-                <option value="Sabah">Sabah</option>
-                <option value="Sarawak">Sarawak</option>
-                <option value="Selangor">Selangor</option>
-                <option value="Terengganu">Terengganu</option>
-            </select>
 
-            <label for="district">District:</label>
-            <select id="district" name="district" required>
-                <option value="">Select a District</option>
-            </select>
+        <!-- Location section -->
+        <div class="location-section">
+            <label for="state"><b>Location:</b></label><br>
+            <div class="location-selects">
+                <select id="state" name="state" required onchange="updateDistricts()">
+                    <option value="">Select a State</option>
+                    <option value="Johor">Johor</option>
+                    <option value="Kedah">Kedah</option>
+                    <option value="Kelantan">Kelantan</option>
+                    <option value="Kuala Lumpur">Kuala Lumpur</option>
+                    <option value="Melaka">Melaka</option>
+                    <option value="Negeri Sembilan">Negeri Sembilan</option>
+                    <option value="Pahang">Pahang</option>
+                    <option value="Penang">Penang</option>
+                    <option value="Perak">Perak</option>
+                    <option value="Perlis">Perlis</option>
+                    <option value="Sabah">Sabah</option>
+                    <option value="Sarawak">Sarawak</option>
+                    <option value="Selangor">Selangor</option>
+                    <option value="Terengganu">Terengganu</option>
+                </select>
 
-            <label for="jobPreferences">Job Preferences (max 50 words):</label>
+                <select id="district" name="district" required>
+                    <option value="">Select a District</option>
+                </select>
+            </div>
+        </div>
+
+
+            <label for="jobPreferences"><b>Job Preferences (max 50 words):</b></label>
             <textarea id="jobPreferences" name="jobPreferences" rows="3" maxlength="250"></textarea><br>
 
             <button type="submit">Submit Post</button>
@@ -174,6 +181,24 @@
                     document.getElementById("createPostForm").submit();
                 }
             });
+        }
+
+        function validateTime(input) {
+            const slot = input.closest('.availability-slot');
+            const startInput = slot.querySelector('input[name$="Start"]');
+            const endInput = slot.querySelector('input[name$="End"]');
+            
+            // Check if both start and end times are filled
+            if (startInput.value && endInput.value) {
+                const startTime = new Date(`1970-01-01T${startInput.value}Z`);
+                const endTime = new Date(`1970-01-01T${endInput.value}Z`);
+
+                // Check if end time is earlier or equal to start time
+                if (endTime <= startTime) {
+                    alert("End time must be after start time.");
+                    input.value = ""; // Clear invalid value
+                }
+            }
         }
 
 
