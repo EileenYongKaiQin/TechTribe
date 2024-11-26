@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-  <?php include 'jobSeeker1.php'; ?>
+  <?php include 'admin.php'; ?>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -17,8 +17,7 @@
             <h1>Welcome to <br><span class="highlight">FlexMatch!</span></h1>
             <p class="subtitle">"Your Bridge to Flexible Work"</p>
             <div class="action-buttons">
-                <button class="btn btn-apply">Apply Job</button>
-                <button class="btn btn-create">Create Post</button>
+                <button class="btn btn-review">Review Report</button>
             </div>
         </div>
       <div class="illustration">

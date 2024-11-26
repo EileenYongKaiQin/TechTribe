@@ -3,151 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <title>FlexMatch</title>
     <style>
         /* General styles */
-        @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Reem+Kufi:wght@400..700&display=swap');
         * {
-            font-family: "Poppins", sans-serif;
-            font-weight: 500;
-            font-style: normal;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
         
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-image: url('../images/background.jpg');
+            background: #F0FDFF;
         }
 
-        /* Header */
-        header {
-            background-color: black;
-            color: #fff;
-            padding: 1rem;
+        .sidebar {
+            position: fixed;
+            width: 180px;
+            height: 100%;
+            background: #AAE1DE;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-image {
+            width: 70px;
+        }
+
+        .logo-text {
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFFFFF;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu-item, .logout {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Cabin', sans-serif;
+            font-weight: 400;
+            gap: 18px;
+            border-radius: 8px; 
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Hover effect */
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        /* Hover effect for both menu items and logout */
+        .menu-item:hover,
+        .logout:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            color: #FFFFFF;
+        }
+
+        .logout {
+            margin-top: auto;
+            margin-bottom: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-text {
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            font-weight: 400;
+        }
+
+        .main-content {
+            margin-left: 180px;
+            width: calc(100% - 180px);
+        }
+
+        .header {
+            background: #FFFFFF;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: sticky;
+            z-index: 1000;
+            left: 180px;
+            top: 0;
+            width: calc(100% - 180px)
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px; 
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 0.1px solid #000000;
+            cursor: pointer;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            color: #000000;
+        }
+
+        .user-role {
+            font-size: 14px;
+            color: #A8AAB0;
+        }
+
+        .logout-button {
+            font-size: 14px;
+            color: #000000;
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin-left: 80px;
+            transition: color 0.3s ease; 
+        }
+
+        /* Hover effect */
+        .logout-button:hover {
+            color: #AAE1DE;
+        }
+
+        .content {
+            padding: 20px;
             text-align: center;
             display: flex;
-            justify-content: center; /* Center title */
-            align-items: center;
-            position: relative;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center; 
+            justify-content: flex-start; 
         }
 
-        /* Sidebar toggle button */
-        .toggle-btn {
-            background: linear-gradient(135deg, #555555, #333333, #212121);
-            border: none;
-            color: #fff;
-            padding: 0.4rem 0.8rem;
+        /* Hidden submenu styles */
+        .submenu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            padding-left: 20px;
+        }
+
+        .submenu-item {
+            padding: 10px;
             cursor: pointer;
-            position: absolute;
-            left: 10px; /* Align toggle button to the left */
-            top: 40%; /* Center vertically if needed */
-            transform: translateY(-50%);
-            font-size: 1rem;
-            max-width: 40px; /* Set a max-width to prevent stretching */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Cabin', sans-serif;
+            font-weight: 400;
+            border-radius: 8px; 
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: black;
-            color: #fff;
-            position: fixed;
-            top: 0;
-            left: -250px; /* Start hidden */
-            height: 100%;
-            overflow-y: auto;
-            transition: left 0.3s ease;
-            padding-top: 60px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid #e5e8eb;
-        }
-
-        /* Close button in sidebar */
-        .close-btn {
-            background: linear-gradient(135deg, #555555, #333333, #212121);
-            border: none;
-            color: #fff;
-            padding: 0.4rem 0.8rem;
+        .submenu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
             cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1rem;
-            max-width: 40px; /* Set a max-width */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Main content */
-        .content {
-            flex: 1;
-            padding: 2rem;
-            margin-left: 0;
-            transition: margin-left 0.3s ease;
-        }
-
-        /* Active sidebar styles */
-        .sidebar-visible .sidebar {
-            left: 0; /* Show sidebar */
-        }
-
-        .sidebar-visible .content {
-            margin-left: 250px; /* Shift content */
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-                left: -200px;
-            }
-
-            .sidebar-visible .content {
-                margin-left: 200px;
-            }
         }
     </style>
 </head>
 <body>
-
-    <!-- Header -->
-    <header>
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-        <h1>FlexMatch</h1>
+    <div class="sidebar">
+        <div class="logo-section">
+            <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
+            <h1 class="logo-text">FlexMatch</h1>
+        </div>
+        <nav class="menu">
+            <div class="menu-item">
+                <img src="../images/content_paste_search.png" alt="Review Report Icon" class="menu-icon">
+                <span onclick="location.href='reviewReport.php'">Report</span>
+            </div>
+        </nav>
+        <div class="logout" onclick="location.href='login.php'">
+            <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
+            <span class="logout-text">Logout</span>
+        </div>
+    </div>        
+    <header class="header">
+        <div class="header-right">
+            <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
+            <img src="../images/Admin.png" alt="User Image" class="profile-image">
+            <div class="user-info">
+                <span class="user-name">User</span>
+                <span class="user-role">Admin</span>
+            </div>
+        </div>
+        <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
     </header>
+    <section class="content">
+    </section>
 
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-        <button class="close-btn" onclick="toggleSidebar()">×</button>
-        <ul>
-            <li>Home</li>
-            <li>About</li>
-            <li>Services</li>
-            <li>Contact</li>
-        </ul>
-    </nav>
-
-    <!-- JavaScript for Sidebar Toggle -->
+    </div>    
     <script>
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-visible');
+        // Function to toggle the submenu visibility
+        function toggleSubmenu() {
+            const submenu = document.querySelector('.submenu');
+            submenu.style.display = submenu.style.display === 'flex' ? 'none' : 'flex';
         }
     </script>
 </body>
