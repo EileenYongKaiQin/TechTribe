@@ -1,56 +1,69 @@
 <?php
     include('../database/config.php');
-    //haha
-    // Query to retrieve wall posts ordered by publish date (newest first)
-    $result = $con->query("SELECT * FROM wall_posts ORDER BY created_at DESC");
+    $userID="JS001";
+    $sql = "SELECT wp.*, js.fullName, js.contactNo 
+        FROM wallPost wp
+        INNER JOIN jobSeeker js ON wp.userID = js.userID
+        WHERE wp.userID = '$userID'
+        ORDER BY wp.createdAt DESC";
+    $result = $con->query($sql);
 
     if ($result->num_rows > 0) {
-        echo '<div class="post-grid">';
-
+    
+    
+        // Display each post
         while ($row = $result->fetch_assoc()) {
-            // Display each post
+            echo '<div class="post-container">';
+            // Convert times to 12-hour format
+            $availability = json_decode($row['availableTime'], true);
+            echo '<div class="user-info">';
+                // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
+                echo '<img src="../images/employer.png" alt="Profile Picture" class="profile-pic">';
+                echo '<h3>' . htmlspecialchars($row['fullName']) . '</h3>';
+            echo '</div>';
+    
+            // Display individual post
             echo '<div class="post">';
             
-            // User name as the title and publish date/time
-            echo '<h3>' . htmlspecialchars($row['user_name']) . '</h3>';
-            echo '<p>Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['created_at']))) . '</p>';
+            // User name and publish date
+    
             
-            // Display job-seeking post details
-            echo '<p><strong>Skills:</strong> ' . htmlspecialchars($row['skill_category']) . '</p>';
-            echo '<p><strong>Details:</strong> ' . htmlspecialchars($row['skill_details']) . '</p>';
             
-            // Decode JSON availability data
-            $availability = json_decode($row['availability'], true);
-
-            // Display only filled availability times
-            echo '<p><strong>Availability:</strong></p>';
+            // Skill and details
+            echo '<p><strong>Skills:</strong> ' . htmlspecialchars($row['skillCategory']) . '</p>';
+            echo '<p><strong>Details:</strong> ' . htmlspecialchars($row['skillDetails']) . '</p>';
+            
+            // Display availability times
+            echo '<p><strong>Available Time:</strong></p>';
             echo '<ul>';
-
-            // Check each day in the decoded availability array
             foreach ($availability as $day => $times) {
-                // Check if both start and end times are filled for that day
                 if (!empty($times[0]) && !empty($times[1])) {
-                    echo '<li>' . ucfirst($day) . ': ' . htmlspecialchars($times[0]) . ' - ' . htmlspecialchars($times[1]) . '</li>';
+                    // Convert 24-hour format to 12-hour format
+                    $start = date("g:i a", strtotime($times[0]));
+                    $end = date("g:i a", strtotime($times[1]));
+                    echo '<li>' . ucfirst($day) . ': ' . htmlspecialchars($start) . ' - ' . htmlspecialchars($end) . '</li>';
                 }
             }
-
             echo '</ul>';
-            
-            // Display location
+    
+            // Location
             echo '<p><strong>Location:</strong> ' . htmlspecialchars($row['district']) . ', ' . htmlspecialchars($row['state']) . '</p>';
             
-            // Contact details
-            echo '<p><strong>Email:</strong> ' . htmlspecialchars($row['contact_email']) . '</p>';
-            echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contact_phone']) . '</p>';
+            // Contact details from jobSeeker
+            echo '<p><strong>Email:</strong> ' . 'example@gmail.com' . '</p>';
+            echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contactNo']) . '</p><br>';
             
-            // Add the button with post_id
-            $postId = $row['id']; // Assuming post_id is the column name for the ID
-            echo "<a href='edit_wall_post.php?post_id=$postId' class='edit-button'>Edit</a>";
+           
+            echo '<p class="published-time">Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['createdAt']))) . '</p>';
+            echo '</div>'; 
+            // Add Chat Button below each post
+            echo '<div class="action-button">';
+                echo '<button class="edit-btn">Edit</button>';
+                echo '<button class="delete-btn">Delete</button>';
+             echo '</div>';  
             echo '</div>';
-            
         }
-       
-        echo '</div>';
+    
     } else {
         echo '<p>No posts available.</p>';
     }
