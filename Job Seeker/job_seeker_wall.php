@@ -10,26 +10,32 @@
 
     <?php 
         include('../database/config.php');
-        include('jobSeeker.php');
+        include('jobSeeker1.php');  // Include header and side menu here
     ?>
 
-    <!-- Main content -->
-    <div class="content" id="content">
-        <h1>Job-Seeker Wall</h1>
-        <?php include 'display_post.php'; ?>
+    <div class="main-content">
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-bar">
+            <input type="text" placeholder="Enter Job title">
+            <input type="text" placeholder="Enter location">
+            <button>Search</button>
+            <button>Filter</button>
+        </div>
+
+        <h1>Job Seeker Wall</h1>
+
+        <!-- Display posts -->
+        <div class="job-seeker-wall">
+            <div class="job-post">
+                <?php include 'display_post.php'; ?>
+            </div>            
+        </div>
     </div>
-       
+
+    <!-- Create Post Button Section -->
     <div class="button-section">
-        <button onclick="window.location.href='create_wall_post.php'" class="create-post-btn">+ Create Post</button>
+        <button onclick="window.location.href='create_wall_post.php'" class="create-post-btn">Create Post</button>
     </div>
 
-    <?php include('../footer/footer.php'); ?>
-
-    <!-- JavaScript for Sidebar Toggle -->
-    <script>
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-visible');
-        }
-    </script>
 </body>
 </html>
