@@ -115,22 +115,32 @@ h3{
     text-align: center;
 }
 
-.action-button{
+.action-button {
     display: flex;
     gap: 20px;
     width: 100%;
+    margin-top: 15px; /* Add spacing above buttons */
+    justify-content: space-between; /* Align buttons with equal space */
 }
-/* Chat Button */
-.edit-btn, .delete-btn{
+
+.action-button a {
+    display: inline-block; /* Ensure the anchor behaves like a block for styling */
+    width: 48%; /* Ensure buttons take equal width */
+    text-decoration: none; /* Remove underline */
+}
+
+.edit-btn, .delete-btn {
+    display: block; /* Ensure the buttons fill the anchor */
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 14px;
+    cursor: pointer;
+    text-align: center; /* Center text inside the button */
     transition: background-color 0.3s ease;
-    margin-top: 15px;
-    width: 48%;
+    width: 100%; /* Ensure buttons are responsive inside the anchor */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .edit-btn {
@@ -144,8 +154,9 @@ h3{
 .delete-btn {
     background-color: #ff0000;
 }
+
 .delete-btn:hover {
-    background-color: #d76460;
+    background-color: #d76460
 }
 
 /* Responsive Design */

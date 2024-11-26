@@ -58,8 +58,9 @@
             echo '</div>'; 
             // Add Chat Button below each post
             echo '<div class="action-button">';
-                echo '<button class="edit-btn">Edit</button>';
-                echo '<button class="delete-btn">Delete</button>';
+                echo '<a href="edit_wall_post.php?postID=' . htmlspecialchars($row['postID']) . '"><button class="edit-btn">Edit</button></a>';
+                // Delete button with postID in the URL and confirmation
+                echo '<a href="delete_wall_post.php?postID=' . htmlspecialchars($row['postID']) . '" onclick="return confirm(\'Are you sure you want to delete this post?\');"><button class="delete-btn">Delete</button></a>';
              echo '</div>';  
             echo '</div>';
         }
