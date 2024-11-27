@@ -6,6 +6,7 @@
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         .jobDescription{
             margin: 30px 500px;
@@ -32,18 +33,9 @@
             color: white;
             background: #216ce7;
             border: 2px solid rgb(243, 243, 243);
+            letter-spacing: 3px;
         }
-
-        #cancelButton{
-            float: right;
-            padding:15px 20px;
-            margin: 30px 500px;
-            border-radius: 0.5rem;
-            color: white;
-            background: #216ce7;
-            border: 2px solid rgb(243, 243, 243);
-        }
-
+        
     </style>
 </head>
 <body>
@@ -51,9 +43,11 @@
         include('../database/config.php');
         include('jobSeeker1.php'); 
 
+        $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : '';
+
            // Fetch job details from the database
           
-           $sql = "SELECT * FROM jobPost WHERE jobPostID = 'JP001'"; // Example jobPostID, adjust dynamically
+           $sql = "SELECT * FROM jobPost WHERE jobPostID = '$jobPostID'"; // Example jobPostID, adjust dynamically
            $result = $con->query($sql);
 
             if ($result->num_rows > 0) {
@@ -76,12 +70,12 @@
         <h1>APPLY JOB!</h1>
     
     <div class="jobDescription">
-        <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p>
-        <p><strong>Location:</strong> <?php echo $location; ?></p>
-        <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p>
-        <p><strong>Job Description:</strong> <?php echo $jobDescription; ?></p>
-        <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p>
-        <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p>
+        <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p><br>
+        <p><strong>Location:</strong> <?php echo $location; ?></p><br>
+        <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p><br>
+        <p><strong>Job Description:</strong> <?php echo $jobDescription; ?></p><br>
+        <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p><br>
+        <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p><br>
     </div>
     <button id="applyButton" data-job-id="<?php echo $job['jobPostID']; ?>">Apply</button>
   </div>
