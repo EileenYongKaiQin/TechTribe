@@ -1,14 +1,16 @@
-// Attach event listener to the submit button
-document.getElementById("submitBtn").addEventListener("click", function(event) {
-    event.preventDefault(); // Prevent the form from submitting immediately
-    openFirstModal();       // Show the first modal
-});
+let isFormValid = false;
 
 // Open the first modal and display selected report reason
-function openFirstModal() {
-    const reportReason = document.getElementById("report_reason").value;
-    document.getElementById("reportReasonText").textContent = reportReason;
-    document.getElementById("firstModal").style.display = "block";
+function openFirstModal(event) {
+    event.preventDefault();
+
+    if (validateForm()) {
+        const reportReason = document.getElementById("report_reason").value;
+
+        // Update the modal fields
+        document.getElementById("reportReasonText").textContent = reportReason;
+        document.getElementById("firstModal").style.display = "block";
+    }
 }
 
 // Close the first modal
@@ -20,12 +22,16 @@ function closeFirstModal() {
 function submitFirstModal() {
     closeFirstModal();
     document.getElementById("secondModal").style.display = "block";
+    isFormValid = true; // Ensure that the form is submitted only once
 }
 
 // Close the second modal and submit the form
 function finalSubmit() {
-    closeSecondModal();
-    document.getElementById("reportForm").submit(); // Submit the form
+    if (isFormValid) {
+        document.getElementById("reportForm").submit();
+    } else {
+        alert("Please fill out the form and review it before submitting.");
+    }
 }
 
 // Close the second modal without submission
@@ -33,5 +39,33 @@ function closeSecondModal() {
     document.getElementById("secondModal").style.display = "none";
 }
 
-// Attach finalSubmit to the "Done" button in the second modal
-document.querySelector('#finalSubmitBtn').addEventListener("click", finalSubmit);
+// Validation function
+function validateForm() {
+    const requiredFields = document.querySelectorAll("#reportForm [required]");
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        if (field.value.trim() === "") {
+            isValid = false;
+        }
+    });
+
+    return isValid;
+}
+
+// Attach event listener to the submit button
+document.getElementById("submitBtn").addEventListener("click", openFirstModal);
+
+// Enable the submit button when form fields are filled
+document.querySelectorAll("#reportForm [required]").forEach(field => {
+    field.addEventListener("input", function () {
+        const submitBtn = document.getElementById("submitBtn");
+        if (validateForm()) {
+            submitBtn.classList.add("active");
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.classList.remove("active");
+            submitBtn.disabled = true;
+        }
+    });
+});
