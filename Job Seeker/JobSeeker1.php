@@ -258,11 +258,11 @@ if ($result && $result->num_rows > 0) {
         <nav class="menu">
             <div class="menu-item">
                 <img src="../images/add_circle.png" alt="Apply Job Icon" class="menu-icon">
-                <span onclick="location.href='job_posting_form.php'">Apply Job</span>
+                <span onclick="location.href='jobSeeker_posting_list.php'">Apply Job</span>
             </div>
             <div class="menu-item">
                 <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
-                <span>My Application</span>
+                <span onclick="location.href='my_application.php'">My Application</span>
             </div>
             <div class="menu-item" onclick="toggleSubmenu()">
                 <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
