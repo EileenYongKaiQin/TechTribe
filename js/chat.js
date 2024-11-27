@@ -17,18 +17,18 @@ document.addEventListener("DOMContentLoaded", loadChatHistory);
 function sendMessage(event, senderRole) {
     event.preventDefault();
     const chatInput = document.getElementById("chatInput");
-    const message = chatInput.value.trim();
-    if (!message) return;
+    const messageContents = chatInput.value.trim();
+    if (!messageContents) return;
 
     // Add message
-    addMessageToChat(message, senderRole);
+    addMessageToChat(messageContents, senderRole);
     chatInput.value = "";
 
     // Send message to server
     fetch("../database/chat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `sender_role=${senderRole}&message=${encodeURIComponent(message)}`
+        body: `senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}`
     }).then(response => response.json())
       .then(data => {
           if (data.status === "success") {
@@ -45,7 +45,7 @@ function sendMessage(event, senderRole) {
                   fetch("../database/chat.php", {
                       method: "POST",
                       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                      body: `sender_role=${senderRole === "employer" ? "job_seeker" : "employer"}&message=${encodeURIComponent(autoResponse)}`
+                      body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}`
                   }).then(response => response.json())
                     .then(data => { 
                         if (data.status !== "success") {
@@ -57,25 +57,25 @@ function sendMessage(event, senderRole) {
       });
 }
 
-function addMessageToChat(message, senderRole, messageId = null) {
+function addMessageToChat(messageContents, senderRole, messageID = null) {
     const chatSection = document.getElementById("chatSection");
     const messageElement = document.createElement("div");
     messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
-    messageElement.innerText = message;
+    messageElement.innerText = messageContents;
 
     // Add edit button for both job seekers' and employers' messages
     if (senderRole === "job_seeker" || senderRole === "employer") {
         const editButton = document.createElement("button");
         editButton.innerText = "Edit";
         editButton.classList.add("edit-button");
-        editButton.onclick = () => editMessage(messageId, messageElement);
+        editButton.onclick = () => editMessage(messageID, messageElement);
         messageElement.appendChild(editButton);
 
         // Add delete button for both job seekers' and employers' messages
         const deleteButton = document.createElement("button");
         deleteButton.innerText = "Delete";
         deleteButton.classList.add("delete-button");
-        deleteButton.onclick = () => deleteMessage(messageId, messageElement);
+        deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole); // Pass senderRole
         messageElement.appendChild(deleteButton);
     }
 
@@ -83,7 +83,7 @@ function addMessageToChat(message, senderRole, messageId = null) {
     chatSection.scrollTop = chatSection.scrollHeight;
 }
 
-function editMessage(messageId, messageElement) {
+function editMessage(messageID, messageElement) {
     const newMessage = prompt("Edit your message:", messageElement.innerText.replace("Edit", "").replace("Delete", "").trim());
     
     if (newMessage && newMessage !== messageElement.innerText) {
@@ -91,7 +91,7 @@ function editMessage(messageId, messageElement) {
         fetch("../database/chat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `sender_role=job_seeker&message=${encodeURIComponent(newMessage)}&message_id=${messageId}`
+            body: `senderRole=job_seeker&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
         }).then(response => response.json())
           .then(data => {
               if (data.status === "success") {
@@ -100,14 +100,14 @@ function editMessage(messageId, messageElement) {
                   const editButton = document.createElement("button");
                   editButton.innerText = "Edit";
                   editButton.classList.add("edit-button");
-                  editButton.onclick = () => editMessage(messageId, messageElement);
+                  editButton.onclick = () => editMessage(messageID, messageElement);
                   messageElement.appendChild(editButton);
                   
                   // Re-add delete button after editing
                   const deleteButton = document.createElement("button");
                   deleteButton.innerText = "Delete";
                   deleteButton.classList.add("delete-button");
-                  deleteButton.onclick = () => deleteMessage(messageId, messageElement);
+                  deleteButton.onclick = () => deleteMessage(messageID, messageElement, "job_seeker");
                   messageElement.appendChild(deleteButton);
               } else {
                   alert("Failed to edit message.");
@@ -116,7 +116,7 @@ function editMessage(messageId, messageElement) {
     }
 }
 
-function deleteMessage(messageId, messageElement) {
+function deleteMessage(messageID, messageElement, senderRole) {
     const confirmation = confirm("Are you sure you want to delete this message?");
     
     if (confirmation) {
@@ -124,7 +124,7 @@ function deleteMessage(messageId, messageElement) {
         fetch("../database/chat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `sender_role=job_seeker&message_id=${messageId}&delete=true`
+            body: `senderRole=${senderRole}&messageID=${messageID}&delete=true`
         }).then(response => response.json())
           .then(data => {
               if (data.status === "success") {
@@ -143,10 +143,10 @@ function loadChatHistory() {
         .then(chats => {
             if (Array.isArray(chats)) {
                 chats.forEach(chat => {
-                    addMessageToChat(chat.message, chat.sender_role, chat.id);
+                    addMessageToChat(chat.messageContents, chat.senderRole, chat.id);
                 });
             } else {
-                console.error(chats.message);
+                console.error(chats.messageContents);
             }
         });
 }

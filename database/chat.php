@@ -14,29 +14,29 @@ if ($conn->connect_error) {
 
 // Handle the POST request (for saving a message)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $senderRole = $_POST['sender_role'];  // job_seeker or employer
-    $message = $_POST['message'];  // The message content
-    $messageId = isset($_POST['message_id']) ? $_POST['message_id'] : null;
+    $senderRole = $_POST['senderRole'];  // job_seeker or employer
+    $messageContents = $_POST['messageContents'];  // The message content
+    $messageID = isset($_POST['messageID']) ? $_POST['messageID'] : null;
     $delete = isset($_POST['delete']) ? $_POST['delete'] : null;
 
     if ($delete) {
         // Delete message
-        $stmt = $conn->prepare("DELETE FROM messages WHERE id = ? AND sender_role = ?");
-        $stmt->bind_param("is", $messageId, $senderRole);
+        $stmt = $conn->prepare("DELETE FROM messages WHERE id = ? AND senderRole = ?");
+        $stmt->bind_param("is", $messageID, $senderRole);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to delete message']);
         }
         $stmt->close();
-    } elseif ($messageId) {
+    } elseif ($messageID) {
         // Update message (edit message)
-        $stmt = $conn->prepare("UPDATE messages SET message = ? WHERE id = ?");
-        $stmt->bind_param("si", $message, $messageId);
+        $stmt = $conn->prepare("UPDATE messages SET messageContents = ? WHERE id = ?");
+        $stmt->bind_param("si", $messageContents, $messageID);
     } else {
         // Insert new message
-        $stmt = $conn->prepare("INSERT INTO messages (sender_role, message) VALUES (?, ?)");
-        $stmt->bind_param("ss", $senderRole, $message);
+        $stmt = $conn->prepare("INSERT INTO messages (senderRole, messageContents) VALUES (?, ?)");
+        $stmt->bind_param("ss", $senderRole, $messageContents);
     }
 
     // Execute the query
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Handle the GET request (for loading chat history)
-    $sql = "SELECT id, sender_role, message, timestamp FROM messages ORDER BY timestamp ASC";
+    $sql = "SELECT id, senderRole, messageContents, timestamp FROM messages ORDER BY timestamp ASC";
     $result = $conn->query($sql);
 
     $messages = array();
@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         while($row = $result->fetch_assoc()) {
             $messages[] = [
                 'id' => $row['id'],
-                'sender_role' => $row['sender_role'],
-                'message' => $row['message'],
+                'senderRole' => $row['senderRole'],
+                'messageContents' => $row['messageContents'],
                 'timestamp' => $row['timestamp']
             ];
         }
