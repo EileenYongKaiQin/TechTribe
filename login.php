@@ -8,7 +8,6 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = md5($_POST['password']); // Hash the entered password using MD5
-
     // Prepare the SQL statement
     $stmt = $con->prepare("SELECT * FROM login WHERE username = ? AND password = ?");
     $stmt->bind_param("ss", $username, $password);

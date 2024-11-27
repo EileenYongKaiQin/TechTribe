@@ -60,7 +60,7 @@
             echo '<div class="action-button">';
                 echo '<a href="edit_wall_post.php?postID=' . htmlspecialchars($row['postID']) . '"><button class="edit-btn">Edit</button></a>';
                 // Delete button with postID in the URL and confirmation
-                echo '<a href="delete_wall_post.php?postID=' . htmlspecialchars($row['postID']) . '" onclick="return confirm(\'Are you sure you want to delete this post?\');"><button class="delete-btn">Delete</button></a>';
+                echo '<button class="delete-btn" onclick="confirmDelete(\'' . htmlspecialchars($row['postID']) . '\')">Delete</button>';
              echo '</div>';  
             echo '</div>';
         }
@@ -70,6 +70,25 @@
     }
 
     $con->close();
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(postID) {
+    Swal.fire({
+        title: 'Are you sure you want to delete this post?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect to the delete script with the postID
+            window.location.href = 'delete_wall_post.php?postID=' + postID;
+        }
+    });
+}
+</script>
 
 
 
