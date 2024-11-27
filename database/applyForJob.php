@@ -1,37 +1,23 @@
 <?php
-header('Content-Type: application/json');
+session_start();
+include('../database/config.php');
 
-// Database connection variables
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "flexmatch_db";
-
-// Connect to the database
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    echo json_encode(["success" => false, "message" => "Database connection failed."]);
-    exit;
+// Check if user is logged in and jobPostID is provided
+if (isset($_SESSION['userID']) && isset($_POST['jobPostID'])) {
+    $userID = $_SESSION['userID']; // Get logged-in user ID from session
+    $jobPostID = $_POST['jobPostID']; // Get jobPostID from frontend (AJAX)
+    
+    // Generate application ID
+    $applicationID = "A" . rand(100, 999); // Example: A123
+    
+    // Prepare and execute the insert query
+    $sql = "INSERT INTO jobApplication (applicationID, jobPostID, applicantID, applyDate, applyStatus) 
+            VALUES ('$applicationID', '$jobPostID', '$userID', CURRENT_TIMESTAMP, 'Pending')";
+    
+    if ($con->query($sql) === TRUE) {
+        echo json_encode(["message" => "Application submitted successfully!"]);
+    } else {
+        echo json_encode(["message" => "Error submitting application: " . $con->error]);
+    }
 }
-
-// Retrieve data from the POST request
-$data = json_decode(file_get_contents("php://input"), true);
-$status = $data['status'] ?? 'Pending';  // Default to 'Pending' if no status is provided
-
-// Insert into the database
-$sql = "INSERT INTO job_application_status (status) VALUES (?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $status);
-
-if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Application submitted successfully!"]);
-} else {
-    echo json_encode(["success" => false, "message" => "Failed to submit application."]);
-}
-
-// Close the connection
-$stmt->close();
-$conn->close();
 ?>
