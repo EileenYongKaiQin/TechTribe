@@ -5,18 +5,17 @@ CREATE TABLE login (
     password VARCHAR(255) NOT NULL, -- Hashed password for secure authentication
     email VARCHAR(100) UNIQUE NOT NULL, -- User's email address
     role ENUM('jobSeeker', 'employer', 'admin') NOT NULL, -- Role of the user
-    accountstatus ENUM('active','inactive') DEFAULT 'active',
-    lastlogin TIMESTAMP NULL DEFAULT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Account creation timestamp
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Account creation timestamp
+    lastLogin TIMESTAMP NULL DEFAULT NULL
 );
 
 INSERT INTO login (userID, username, password, email, role)
-VALUES ('JS001', 'qiqi03', 'chuaqi@123', 'chloee031023@gmail.com', 'jobSeeker');
+VALUES ('JS001', 'qiqi03', MD5('chuaqi@123'), 'chloee031023@gmail.com', 'jobSeeker');
 
 -- Insert an employer into login
 INSERT INTO login (userID, username, password, email, role)
-VALUES ('EP001', 'eileen', 'eileen@123', 'eileen@gmail.com', 'employer');
+VALUES ('EP001', 'eileen', MD5('eileen@123'), 'eileen@gmail.com', 'employer');
 
 -- Insert an admin into login
 INSERT INTO login (userID, username, password, email, role)
-VALUES ('AD001', 'kaixuan', 'kaixuan@123', 'kaixuan@gmail.com', 'admin');
+VALUES ('AD001', 'kaixuan', MD5('kaixuan@123'), 'kaixuan@gmail.com', 'admin');

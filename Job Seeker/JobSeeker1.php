@@ -1,3 +1,36 @@
+<?php
+session_start(); // Start the session
+
+// Include the database configuration file
+include '../database/config.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['userID'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php');
+    exit();
+}
+
+// Fetch the logged-in user's full name from the jobSeeker table
+$userID = $_SESSION['userID'];
+$query = $con->prepare("
+    SELECT jobSeeker.fullName 
+    FROM jobSeeker 
+    INNER JOIN login ON jobSeeker.userID = login.userID 
+    WHERE jobSeeker.userID = ?
+");
+$query->bind_param("s", $userID);
+$query->execute();
+$result = $query->get_result();
+
+if ($result && $result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    $fullName = $user['fullName']; // Get the full name
+} else {
+    $fullName = "Guest"; // Default fallback if user not found
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -240,7 +273,7 @@
                 <div class="submenu-item" onclick="location.href='my_posts.php'">My Posts</div>
             </div>
         </nav>
-        <div class="logout" onclick="location.href='login.php'">
+        <div class="logout" onclick="location.href='../login.html'">
             <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
             <span class="logout-text">Logout</span>
         </div>
@@ -251,11 +284,11 @@
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
             <img src="../images/JobSeeker.png" alt="User Image" class="profile-image">
             <div class="user-info">
-                <span class="user-name">Karry Wang</span>
+                <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Job Seeker</span>
             </div>
         </div>
-        <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
+        <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
     <section class="content">
     </section>

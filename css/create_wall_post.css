@@ -69,7 +69,7 @@ form label,
 form input,
 form button {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 /* Input fields styling */
@@ -104,7 +104,6 @@ button[type="submit"]:hover {
 
 .availability-slot label {
     width: 20%;
-    padding-top: 8px;
 }
 
 .availability-slot input {
@@ -118,6 +117,30 @@ select {
     margin-bottom: 15px;
     box-sizing: border-box;
 }
+
+/* Style for the location section */
+.location-section {
+    margin-bottom: 10px;
+}
+
+.location-section label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.location-selects {
+    display: flex; /* Arrange the dropdowns in a single line */
+    gap: 10px; /* Add some space between the dropdowns */
+}
+
+.location-selects select {
+    flex: 1; /* Allow dropdowns to adjust their width proportionally */
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 
 /* Responsive design using media queries */
 @media screen and (max-width: 768px) {

@@ -1,3 +1,36 @@
+<?php
+session_start(); // Start the session
+
+// Include the database configuration file
+include '../database/config.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['userID'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php');
+    exit();
+}
+
+// Fetch the logged-in admin's full name from the admin table
+$userID = $_SESSION['userID'];
+$query = $con->prepare("
+    SELECT admin.fullName 
+    FROM admin 
+    INNER JOIN login ON admin.userID = login.userID 
+    WHERE admin.userID = ?
+");
+$query->bind_param("s", $userID);
+$query->execute();
+$result = $query->get_result();
+
+if ($result && $result->num_rows > 0) {
+    $admin = $result->fetch_assoc();
+    $fullName = $admin['fullName']; // Get the full name
+} else {
+    $fullName = "Admin"; // Default fallback if user not found
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -228,7 +261,7 @@
                 <span onclick="location.href='reviewReport.php'">Report</span>
             </div>
         </nav>
-        <div class="logout" onclick="location.href='login.php'">
+        <div class="logout" onclick="location.href='../login.html'">
             <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
             <span class="logout-text">Logout</span>
         </div>
@@ -238,11 +271,11 @@
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
             <img src="../images/Admin.png" alt="User Image" class="profile-image">
             <div class="user-info">
-                <span class="user-name">User</span>
+                <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Admin</span>
             </div>
         </div>
-        <span class="logout-button" onclick="location.href='login.php'">Log Out</span>
+        <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
     <section class="content">
     </section>

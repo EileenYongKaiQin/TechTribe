@@ -6,26 +6,20 @@
     <title>My Posts</title>
     <link rel="stylesheet" href="../css/my_post.css">
 </head>
-
-<?php 
+<body>
+    <?php 
         include('../database/config.php');
-        include('jobSeeker.php');
+        include('jobSeeker1.php');  // Include header and side menu here
     ?>
 
-    <!-- Main content -->
-    <div class="content" id="content">
+    <div class="main-content">
         <h1>My Posts</h1>
-        <?php include 'display_my_post.php'; ?>
+
+        <!-- Display posts -->
+        <div class="job-seeker-wall">
+            <?php include 'display_my_post.php'; ?>
+        </div>
     </div>
-       
 
-    <?php include('../footer/footer.php'); ?>
-
-    <!-- JavaScript for Sidebar Toggle -->
-    <script>
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-visible');
-        }
-    </script>
 </body>
 </html>

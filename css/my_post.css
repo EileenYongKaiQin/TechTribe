@@ -1,45 +1,175 @@
-h1{
-    color: #ffffff;
+/* Reset and Box Sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+/* Body and Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
 }
+
+/* Main Content */
+.main-content {
+    padding: 20px;
+    margin: 0 auto;
+}
+
+/* Search and Filter Bar */
+.search-filter-bar {
+    margin-left: 5%;
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+}
+
+.search-filter-bar input {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-filter-bar button {
+    padding: 10px 20px;
+    background-color: #45a049;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-filter-bar button:hover {
+    background-color: #236c3a;
+}
+
+h1{
+    margin-bottom: 20px;
+    margin-left: 5%;
+}
+
+/* Job-Seeker Wall */
+.job-seeker-wall {
+    display: grid;
+    grid-gap: 50px; /* Space between posts */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    padding: 20px; /* Padding around the wall */
+    background-color: #ffffff;
+    width: 90%;
+    margin: 10px auto;
+    padding: 30px;
+}
+
+/* Individual Post Container */
+.post-container {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #b2f1f3;
+    justify-content: space-between;
+    width: 100%; 
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+
+/* Styling for the user info */
+.user-info {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    gap: 10px; /* Space between the profile picture and the name */
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.profile-pic {
+    width: 60px; /* Set the size of the profile picture */
+    height: 60px;
+    border-radius: 50%; /* Makes the profile picture circular */
+    background-color:  #fff;
+}
+
+h3{
+    margin: 0;
+    font-size: 18px;
+    width:fit-content;
+}
+
 
 .post {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* 2 posts per row */
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
-.post h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #2357e7;
+.post .published-time{
+    font-style: italic;
+    text-align: center;
 }
 
-.post p {
-    margin: 10px 0;
+.action-button {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-top: 15px; /* Add spacing above buttons */
+    justify-content: space-between; /* Align buttons with equal space */
 }
 
+.action-button a {
+    display: inline-block; /* Ensure the anchor behaves like a block for styling */
+    width: 48%; /* Ensure buttons take equal width */
+    text-decoration: none; /* Remove underline */
+}
 
-.edit-button {
-    background-color: #2357e7;
-    color: #fff;
+.edit-btn, .delete-btn {
+    display: block; /* Ensure the buttons fill the anchor */
+    color: white;
     border: none;
     padding: 10px 20px;
-    cursor: pointer;
     border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center; /* Center text inside the button */
+    transition: background-color 0.3s ease;
+    width: 100%; /* Ensure buttons are responsive inside the anchor */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
-.edit-button hover {
-    background-color: #45a049;
+.edit-btn {
+    background-color: #2357e7;
 }
 
+.edit-btn:hover {
+    background-color: #35c863;
+}
+
+.delete-btn {
+    background-color: #ff0000;
+}
+
+.delete-btn:hover {
+    background-color: #d76460
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-filter-bar {
+        flex-direction: column;
+    }
+    
+    .job-post {
+        width: 100%;
+    }
+
+    .chat-btn {
+        width: 100%;
+    }
+}
