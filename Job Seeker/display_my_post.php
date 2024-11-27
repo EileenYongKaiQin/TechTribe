@@ -58,7 +58,7 @@
             echo '</div>'; 
             // Add Chat Button below each post
             echo '<div class="action-button">';
-                echo '<a href="edit_wall_post.php?postID=' . htmlspecialchars($row['postID']) . '"><button class="edit-btn">Edit</button></a>';
+                echo '<button class="edit-btn" onclick="editPost(\'' . htmlspecialchars($row['postID']) . '\')">Edit</button>';
                 // Delete button with postID in the URL and confirmation
                 echo '<button class="delete-btn" onclick="confirmDelete(\'' . htmlspecialchars($row['postID']) . '\')">Delete</button>';
              echo '</div>';  
@@ -74,6 +74,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+function editPost(postID) {
+    // Redirect to the edit page with the postID
+    window.location.href = 'edit_wall_post.php?postID=' + postID;
+}
+
 function confirmDelete(postID) {
     Swal.fire({
         title: 'Are you sure you want to delete this post?',
