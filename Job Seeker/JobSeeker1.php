@@ -257,6 +257,10 @@ if ($result && $result->num_rows > 0) {
         </div>
         <nav class="menu">
             <div class="menu-item">
+                <img src="../images/dashboardIcon.png" alt="Dashboard Icon" class="menu-icon">
+                <span onclick="location.href='jobseeker_dashboard.php'">Dashboard</span>
+            </div>
+            <div class="menu-item">
                 <img src="../images/add_circle.png" alt="Apply Job Icon" class="menu-icon">
                 <span onclick="location.href='jobSeeker_posting_list.php'">Apply Job</span>
             </div>
