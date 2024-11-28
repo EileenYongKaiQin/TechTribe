@@ -27,8 +27,7 @@
         $startDate = isset($_POST['startDate']) ? mysqli_real_escape_string($con, $_POST['startDate']) : '';
         $endDate = isset($_POST['endDate']) ? mysqli_real_escape_string($con, $_POST['endDate']) : '';
 
-        // Example employer ID for testing
-        $userID = 'EP001';
+        $userID = $_SESSION['userID'];
 
         if (empty($jobTitle) || empty($location) || empty($salary) || empty($jobDescription) || empty($workingHour) || empty($startDate) || empty($endDate)) {
             $errorMessage = "All required fields must be filled!";
@@ -68,7 +67,7 @@
 
             $nextJobPostID = 'JP' . str_pad($missingID, 3, '0', STR_PAD_LEFT);
 
-            echo "下一个 jobPostID: " . $nextJobPostID;
+            echo "next jobPostID: " . $nextJobPostID;
 
 
             $sql_insert = "INSERT INTO jobPost (jobPostID, jobTitle, location, salary, startDate, endDate, workingHour, jobDescription, jobRequirement, userID)
