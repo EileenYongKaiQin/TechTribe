@@ -148,7 +148,7 @@
         }
 
         .chat-section {
-            width: 100%;
+            width: 80%;
             max-height: 400px;
             overflow-y: auto;
             border: 1px solid #DBDDE0;
@@ -156,16 +156,37 @@
             padding: 10px;
             background-color: #FFFFFF;
         }
+        
+            /* Align all messages to the left */
+        .job-seeker-message {
+            background-color: #d1e7dd;
+            align-self: flex-end;
+            text-align: right;
+            width: 100%;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+            align-items: center;
+            
+            
+        }
+
+        .employer-message {
+            background-color: #f8d7da;
+            align-self: flex-start;
+            text-align: left;
+            width: 100%;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+            align-items: center;
+        }
 
         .chat-input {
-            width: calc(100% - 100px);
+            width: 975px;
             padding: 10px;
             border-radius: 4px;
             border: 1px solid #DBDDE0;
         }
 
         button {
-            padding: 10px 15px;
+            padding: 20px 20px;
             border: none;
             border-radius: 4px;
             background-color: #AAE1DE;
@@ -176,39 +197,48 @@
         button:hover {
             background-color: #009688; /* Darker shade on hover */
         }
+
+        .logout-button {
+            color: #000000;
+            margin-left: 40px;
+        }
+
+        .logout-text {
+            color: white;
+        };
     </style>
 </head>
 <body>
 
 <!-- Sidebar -->
-<div class="sidebar">
-    <div class="logo-section">
-        <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-        <h1 class="logo-text">FlexMatch</h1>
-    </div>
-    <nav class="menu">
-        <div class="menu-item" onclick="location.href='job_posting_form.php'">
-            <img src="../images/add_circle.png" alt="Create Job Icon" class="menu-icon">
-            <span>Create Job</span>
+    <div class="sidebar">
+        <div class="logo-section">
+            <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
+            <h1 class="logo-text">FlexMatch</h1>
         </div>
-        <div class="menu-item" onclick="location.href='job_posting_list.php'">
-            <img src="../images/text_snippet.png" alt="Posted Job Icon" class="menu-icon">
-            <span>Posted Job</span>
-        </div>
+        <nav class="menu">
         <div class="menu-item">
-            <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
-            <span>Application</span>
+                <img src="../images/add_circle.png" alt="Create Job Icon" class="menu-icon">
+                <span onclick="location.href='job_posting_form.php'">Create Job</span>
+            </div>
+            <div class="menu-item">
+                <img src="../images/text_snippet.png" alt="Posted Job Icon" class="menu-icon">
+                <span onclick="location.href='job_posting_list.php'">Posted Job</span>
+            </div>
+            <div class="menu-item">
+                <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
+                <span>Application</span>
+            </div>
+            <div class="menu-item">
+                <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
+                <span>Job Seeker Wall</span>
+            </div>
+        </nav>
+        <div class="logout" onclick="location.href='../login.html'">
+            <img src="../images/Vector.png" alt="Logout Icon" class="menu-icon">
+            <span class="logout-text"> Logout</span>
         </div>
-        <div class="menu-item">
-            <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
-            <span>Job Seeker Wall</span>
-        </div>
-    </nav>
-    <div class="logout" onclick="location.href='../login.html'">
-        <img src="../images/Vector.png" alt="Logout Icon" class="menu-icon">
-        <span class="logout-text">Logout</span>
     </div>
-</div>
 
 <!-- Main content -->
 <div class="main-content">
@@ -218,7 +248,7 @@
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
             <img src="../images/employer.png" alt="User Image" class="profile-image">
             <div class="user-info">
-                <span class="user-name"><?php echo htmlspecialchars(string: $fullName); ?></span>
+                <span class="user-name">eileen</span>
                 <span class="user-role">Employer</span>
             </div>
         </div>
@@ -247,7 +277,7 @@
     </div>
 </div>
 
-<script src="../js/chat.js"></script>
+<script src="../js/employer_chat.js"></script>
 
 </body>
 </html>
