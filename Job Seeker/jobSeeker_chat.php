@@ -148,7 +148,7 @@
         }
 
         .chat-section {
-            width: 100%;
+            width: 80%;
             max-height: 400px;
             overflow-y: auto;
             border: 1px solid #DBDDE0;
@@ -157,15 +157,36 @@
             background-color: #FFFFFF;
         }
 
+            /* Align all messages to the left */
+            .job-seeker-message {
+            background-color: #d1e7dd;
+            align-self: flex-end;
+            text-align: left;
+            width: 100%;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+            align-items: center;
+            
+            
+        }
+
+        .employer-message {
+            background-color: #f8d7da;
+            align-self: flex-start;
+            text-align: right;
+            width: 100%;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+            align-items: center;
+        }
+
         .chat-input {
-            width: calc(100% - 100px);
+            width: 975px;
             padding: 10px;
             border-radius: 4px;
             border: 1px solid #DBDDE0;
         }
 
         button {
-            padding: 10px 15px;
+            padding: 20px 20px;
             border: none;
             border-radius: 4px;
             background-color: #AAE1DE;
@@ -176,6 +197,15 @@
         button:hover {
             background-color: #009688; /* Darker shade on hover */
         }
+
+        .logout-button {
+            color: #000000;
+            margin-left: 40px;
+        }
+
+        .logout-text {
+            color: white;
+        };
     </style>
 </head>
 <body>
@@ -187,21 +217,21 @@
         <h1 class="logo-text">FlexMatch</h1>
     </div>
     <nav class="menu">
-        <div class="menu-item" onclick="location.href='jobSeeker_profile.php'">
-            <img src="../images/user.png" alt="Profile Icon" class="menu-icon">
-            <span>Profile</span>
-        </div>
-        <div class="menu-item" onclick="location.href='jobSeeker_job_list.php'">
-            <img src="../images/list.png" alt="Job List Icon" class="menu-icon">
-            <span>Job List</span>
+        <div class="menu-item">
+            <img src="../images/add_circle.png" alt="Profile Icon" class="menu-icon">
+            <span>Apply Job</span>
         </div>
         <div class="menu-item">
-            <img src="../images/applications.png" alt="Applications Icon" class="menu-icon">
-            <span>Applications</span>
+            <img src="../images/text_snippet.png" alt="Job List Icon" class="menu-icon">
+            <span>Create Post</span>
         </div>
         <div class="menu-item">
-            <img src="../images/chat.png" alt="Chat Icon" class="menu-icon">
-            <span>Chat</span>
+            <img src="../images/contacts.png" alt="Applications Icon" class="menu-icon">
+            <span>Job Seeker Wall</span>
+        </div>
+        <div class="menu-item" onclick="location.href='my_application.php'">
+            <img src="../images/note_alt.png" alt="Chat Icon" class="menu-icon">
+            <span>My Application</span>
         </div>
     </nav>
     <div class="logout" onclick="location.href='../login.html'">
@@ -216,9 +246,9 @@
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
-            <img src="../images/job_seeker.png" alt="User Image" class="profile-image">
+            <img src="../images/jobSeeker.png" alt="User Image" class="profile-image">
             <div class="user-info">
-                <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
+                <span class="user-name">qiqi03</span>
                 <span class="user-role">Job Seeker</span>
             </div>
         </div>
@@ -226,7 +256,7 @@
     </header>
     
     <section class="content">
-        <h2 class="chat-window-title">Chat Window - Job Seeker</h2>
+        <h2 class="chat-window-title">Job Seeker Chat</h2>
         <div class="chat-section" id="chatSection"></div>
 
         <form id="chatForm" onsubmit="sendMessage(event, 'jobSeeker')">

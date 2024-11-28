@@ -66,28 +66,27 @@ function addMessageToChat(messageContents, senderRole, messageID = null) {
 
     // Set the alignment based on the sender's role
     messageElement.classList.add(senderRole === 'employer' ? 'align-left' : 'align-right');
+    
 
-    // Add edit and delete buttons only for the current user's message
-    const currentUserRole = 'employer'; // Replace this with dynamic role (e.g., 'job_seeker' or 'employer')
-    if (senderRole === currentUserRole) {
-        const editButton = document.createElement("button");
-        editButton.innerText = "Edit";
-        editButton.classList.add("edit-button");
-        editButton.onclick = () => editMessage(messageID, messageElement, currentUserRole);
-        messageElement.appendChild(editButton);
+    // Add edit and delete buttons if the message is sent by the current user
+    const editButton = document.createElement("button");
+    editButton.innerText = "Edit";
+    editButton.classList.add("edit-button");
+    editButton.onclick = () => editMessage(messageID, messageElement, senderRole); // Use senderRole instead
+    messageElement.appendChild(editButton);
 
-        const deleteButton = document.createElement("button");
-        deleteButton.innerText = "Delete";
-        deleteButton.classList.add("delete-button");
-        deleteButton.onclick = () => deleteMessage(messageID, messageElement, currentUserRole);
-        messageElement.appendChild(deleteButton);
-    }
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete";
+    deleteButton.classList.add("delete-button");
+    deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole); // Use senderRole instead
+    messageElement.appendChild(deleteButton);
 
     chatSection.appendChild(messageElement);
     chatSection.scrollTop = chatSection.scrollHeight;
 }
 
-function editMessage(messageID, messageElement, currentUserRole) {
+function editMessage(messageID, messageElement, senderRole) {
+    
     const newMessage = prompt("Edit your message:", messageElement.innerText.replace("Edit", "").replace("Delete", "").trim());
     
     if (newMessage && newMessage !== messageElement.innerText) {
@@ -95,23 +94,24 @@ function editMessage(messageID, messageElement, currentUserRole) {
         fetch("../database/chat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `senderRole=${currentUserRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
+            body: `senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
         }).then(response => response.json())
           .then(data => {
               if (data.status === "success") {
                   // Update the message in the UI
                   messageElement.innerText = newMessage;
+
+                  // Recreate edit and delete buttons
                   const editButton = document.createElement("button");
                   editButton.innerText = "Edit";
                   editButton.classList.add("edit-button");
-                  editButton.onclick = () => editMessage(messageID, messageElement, currentUserRole);
+                  editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
                   messageElement.appendChild(editButton);
                   
-                  // Re-add delete button after editing
                   const deleteButton = document.createElement("button");
                   deleteButton.innerText = "Delete";
                   deleteButton.classList.add("delete-button");
-                  deleteButton.onclick = () => deleteMessage(messageID, messageElement, currentUserRole);
+                  deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole);
                   messageElement.appendChild(deleteButton);
               } else {
                   alert("Failed to edit message.");
@@ -119,6 +119,7 @@ function editMessage(messageID, messageElement, currentUserRole) {
           });
     }
 }
+
 
 function deleteMessage(messageID, messageElement, currentUserRole) {
     const confirmation = confirm("Are you sure you want to delete this message?");
