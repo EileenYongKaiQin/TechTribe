@@ -1,3 +1,4 @@
+// job_seeker_chat.js
 // Sidebar toggle function
 function toggleSidebar() {
     const body = document.body;
@@ -20,7 +21,7 @@ function sendMessage(event, senderRole) {
     const messageContents = chatInput.value.trim();
     if (!messageContents) return;
 
-    // Add message to chat UI
+    // Add message
     addMessageToChat(messageContents, senderRole);
     chatInput.value = "";
 
@@ -47,7 +48,7 @@ function sendMessage(event, senderRole) {
                       headers: { "Content-Type": "application/x-www-form-urlencoded" },
                       body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}`
                   }).then(response => response.json())
-                    .then(data => {
+                    .then(data => { 
                         if (data.status !== "success") {
                             console.error(data.error);
                         }
@@ -63,18 +64,16 @@ function addMessageToChat(messageContents, senderRole, messageID = null) {
     messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
     messageElement.innerText = messageContents;
 
-    // Set alignment based on sender role
+    // Set the alignment based on the sender's role
     messageElement.classList.add(senderRole === 'employer' ? 'align-left' : 'align-right');
 
-    // Attach message ID to the element
-    if (messageID) {
-        messageElement.setAttribute("data-message-id", messageID);
-    }
+    // Dynamically set the role of the current user (job_seeker or employer)
+    const currentUserRole = 'job_seeker'; // This should be dynamically set based on logged-in user
 
-    const currentUserRole = 'job_seeker'; // Should dynamically reflect logged-in user
-
+    // Add edit and delete buttons only if the message is from the current user
     if ((currentUserRole === 'employer' && senderRole === 'employer') ||
         (currentUserRole === 'job_seeker' && senderRole === 'job_seeker')) {
+        
         const editButton = document.createElement("button");
         editButton.innerText = "Edit";
         editButton.classList.add("edit-button");
@@ -93,14 +92,10 @@ function addMessageToChat(messageContents, senderRole, messageID = null) {
 }
 
 function editMessage(messageID, messageElement, senderRole) {
-    if (!messageID) {
-        console.error("Message ID is missing!");
-        return;
-    }
-
     const newMessage = prompt("Edit your message:", messageElement.innerText.replace("Edit", "").replace("Delete", "").trim());
-
+    
     if (newMessage && newMessage !== messageElement.innerText) {
+        // Send update request to the server
         fetch("../database/chat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -108,50 +103,30 @@ function editMessage(messageID, messageElement, senderRole) {
         }).then(response => response.json())
           .then(data => {
               if (data.status === "success") {
+                  // Update the message in the UI
                   messageElement.innerText = newMessage + " (edited)";
-                  recreateButtons(messageElement, messageID, senderRole);
+                  recreateButtons(messageElement, messageID, senderRole);  // Recreate buttons
               } else {
-                  alert("Failed to edit the message.");
+                  alert("Failed to edit message.");
               }
-          });
+          }).catch(error => console.error('Error editing message:', error));
     }
 }
 
-function deleteMessage(messageID, messageElement, currentUserRole) {
-    if (!messageID) {
-        console.error("Message ID is missing!");
-        return;
-    }
-
-    const confirmation = confirm("Are you sure you want to delete this message?");
-    if (confirmation) {
-        fetch("../database/chat.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
-        }).then(response => response.json())
-          .then(data => {
-              if (data.status === "success") {
-                  messageElement.innerText = "deleted";
-                  const existingButtons = messageElement.querySelectorAll("button");
-                  existingButtons.forEach(button => button.remove());
-              } else {
-                  alert("Failed to delete the message.");
-              }
-          });
-    }
-}
-
+// Function to recreate edit and delete buttons
 function recreateButtons(messageElement, messageID, senderRole) {
+    // Clear existing buttons
     const existingButtons = messageElement.querySelectorAll("button");
     existingButtons.forEach(button => button.remove());
 
+    // Add edit button
     const editButton = document.createElement("button");
     editButton.innerText = "Edit";
     editButton.classList.add("edit-button");
     editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
     messageElement.appendChild(editButton);
 
+    // Add delete button
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("delete-button");
@@ -159,8 +134,30 @@ function recreateButtons(messageElement, messageID, senderRole) {
     messageElement.appendChild(deleteButton);
 }
 
+function deleteMessage(messageID, messageElement, currentUserRole) {
+    const confirmation = confirm("Are you sure you want to delete this message?");
+    
+    if (confirmation) {
+        // Send delete request to the server
+        fetch("../database/chat.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
+        }).then(response => response.json())
+          .then(data => {
+              if (data.status === "success") {
+                  messageElement.innerText = "deleted"; // Mark message as deleted
+                  const existingButtons = messageElement.querySelectorAll("button");
+                  existingButtons.forEach(button => button.remove()); // Remove the buttons
+              } else {
+                  alert("Failed to delete message.");
+              }
+          }).catch(error => console.error('Error deleting message:', error));
+    }
+}
+
 function loadChatHistory() {
-    const currentUserRole = 'job_seeker';
+    const currentUserRole = 'job_seeker'; // Replace this with dynamic role (e.g., 'job_seeker' or 'employer')
 
     fetch("../database/chat.php")
         .then(response => response.json())
@@ -175,6 +172,7 @@ function loadChatHistory() {
         });
 }
 
+// Show notification
 function showNotification() {
     const modal = document.getElementById("notificationModal");
     const overlay = document.getElementById("overlay");
@@ -183,6 +181,7 @@ function showNotification() {
     overlay.style.display = "block";
 }
 
+// Close notification
 function closeNotification() {
     const modal = document.getElementById("notificationModal");
     const overlay = document.getElementById("overlay");
