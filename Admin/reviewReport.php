@@ -9,6 +9,7 @@ $sql = "
         reportPost.reportID,
         reportPost.reason,
         reportPost.description,
+        reportPost.evidence,
         reportPost.createTime AS creationDate,
         reportPost.reportStatus,
         reportPost.jobPostID,
@@ -55,7 +56,7 @@ $result = $con->query($sql);
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all"></th>
-                    <th>Post ID</th>
+                    <th>No.</th>
                     <th>Reporter Name</th>
                     <th>Reason</th>
                     <th>Creation Date</th>
@@ -65,10 +66,12 @@ $result = $con->query($sql);
             </thead>
             <tbody>
                 <?php if ($result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php 
+                        $counter = 1;
+                        while ($row = $result->fetch_assoc()): ?>
                         <tr>
                             <td><input type="checkbox" name="select-report" value="<?= htmlspecialchars($row['reportID']) ?>"></td>
-                            <td><?= htmlspecialchars($row['jobPostID']) ?></td>
+                            <td><?= $counter ?></td>
                             <td><?= htmlspecialchars($row['reporterName']) ?></td>
                             <td><?= htmlspecialchars($row['reason']) ?></td>
                             <td><?= htmlspecialchars($row['creationDate']) ?></td>
@@ -79,6 +82,7 @@ $result = $con->query($sql);
                                 <button class="btn btn-view" onclick="showDetailsModal('<?= $row['reportID'] ?>')">View</button>
                             </td>
                         </tr>
+                        <?php $counter++; ?>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
@@ -97,7 +101,7 @@ $result = $con->query($sql);
     <!-- Modal -->
     <div id="updateModal" class="modal hidden">
         <div class="modal-content">
-            <button class="close" id="closeModal" onclick="closeModal('updateModal')">&times;</button>
+            <span class="close" id="closeModal" onclick="closeModal('updateModal')">&times;</span>
             <h2>Are you sure you want to update the review status to "Under Review"?</h2>
             <p id="selectedCount">There are X issue statuses that will be updated.</p>
             <div class="modal-buttons">
@@ -110,15 +114,15 @@ $result = $con->query($sql);
     <!-- Reporter Details Modal -->
     <div id="detailsModal" class="modal hidden">
         <div class="modal-content">
-            <span class="close" id="closeDetailsModal">&times;</span>
+            <span class="close" id="closeDetailsModal" onclick="closeModal('detailsModal')">&times;</span>
             <h2>Reporter Information</h2>
-            <table>
+            <table id="reporter-table">
                 <tr><th>Reporter Name</th><td id="modalReporterName"></td></tr>
                 <tr><th>Submission Date</th><td id="modalSubmissionDate"></td></tr>
                 <tr><th>Job Post</th><td><button class="btn btn-view">View</button></td></tr>
                 <tr><th>Reason</th><td id="modalReason"></td></tr>
                 <tr><th>Description</th><td id="modalDescription"></td></tr>
-                <tr><th>Evidence</th><td><a href="#" id="modalEvidence" target="_blank">View</a></td></tr>
+                <tr><th>Evidence</th><td><a href="#" id="modalEvidence" class="btn btn-view" target="_blank" style="text-decoration: none;">View</a></td></tr>
                 <tr><th>Reported User</th><td id="modalReportedUser"></td></tr>
             </table>
         </div>
@@ -145,44 +149,77 @@ $result = $con->query($sql);
 
         document.getElementById('closeModal').addEventListener('click', () => closeModal('updateModal'));
         document.getElementById('cancelButton').addEventListener('click', () => closeModal('updateModal'));
-
+        document.getElementById('closeDetailsModal').addEventListener('click', () => closeModal('detailsModal'));
+        
+        
         function updateStatus() {
-            const selectedIds = Array.from(document.querySelectorAll('input[name="select-report"]:checked')).map(cb => cb.value);
-            fetch('updateStatus.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids: selectedIds, status: 'Under Review' }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    selectedIds.forEach(id => {
-                        const statusElement = document.querySelector(`.status[data-id="${id}"]`);
-                        statusElement.innerText = 'Under Review';
-                        statusElement.classList.remove('pending');
-                        statusElement.classList.add('under-review');
-                    });
-                    closeModal('updateModal');
-                } else {
-                    alert('Failed to update status.');
+    const selectedIds = Array.from(document.querySelectorAll('input[name="select-report"]:checked')).map(cb => cb.value);
+    const status = 'Under Review';
+
+    // Debugging: Check if the selectedIds and status are correctly set
+    console.log("Selected IDs:", selectedIds);
+    console.log("Status:", status);
+
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('ids', selectedIds.join(',')); // Send the IDs as comma-separated string
+    formData.append('status', status); // Send status
+
+    // Send POST request to update status
+    fetch('updateStatus.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text()) // Expecting plain text response
+    .then(data => {
+        console.log(data); // Debugging: Check the response from the server
+        
+        if (data.trim() === 'success') {
+            // Update the UI to show the new status immediately
+            selectedIds.forEach(id => {
+                const statusElement = document.querySelector(`.status[data-id="${id}"]`);
+                if (statusElement) {
+                    statusElement.innerText = 'Under Review';
+                    statusElement.classList.remove('pending');
+                    statusElement.classList.add('under-review');
                 }
-            })
-            .catch(console.error);
+            });
+
+            // Close the modal automatically
+            closeModal('updateModal');
+        } else {
+            alert('Failed to update status.');
         }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        alert('An error occurred while updating the status.');
+    });
+}
 
         document.getElementById('updateButton').addEventListener('click', updateStatus);
 
         function showDetailsModal(reportId) {
+            // Send request to get report details
             fetch(`getReportDetails.php?id=${reportId}`)
                 .then(response => response.json())
                 .then(data => {
+                    // Populate the modal with the fetched data
                     document.getElementById('modalReporterName').innerText = data.reporterName;
                     document.getElementById('modalSubmissionDate').innerText = data.submissionDate;
                     document.getElementById('modalReason').innerText = data.reason;
                     document.getElementById('modalDescription').innerText = data.description;
                     document.getElementById('modalEvidence').href = data.evidenceLink;
                     document.getElementById('modalReportedUser').innerText = data.reportedUser;
-                    document.getElementById('detailsModal').classList.remove('hidden');
+
+                    // Show the modal
+                    const modal = document.getElementById('detailsModal');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('visible');
+                })
+                .catch(err => {
+                    console.error('Error fetching report details:', err);
+                    alert('An error occurred while fetching report details.');
                 });
         }
 

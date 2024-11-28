@@ -247,8 +247,7 @@ input[type="checkbox"] {
     background-color: rgba(0, 0, 0, 0.6); /* Dimmed background */
     z-index: 1000;
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .modal-content {
@@ -259,8 +258,31 @@ input[type="checkbox"] {
     text-align: center;
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: scaleUp 0.3s ease; /* Animation */
+    animation: scaleUp 0.3s ease-in-out; /* Animation */
 }
+
+/* Modal Details Table */
+#reporter-table {
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+#reporter-table th {
+    background-color: #AAE1DE; /* Gray background for header */
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+#reporter-table td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: top; /* Align text at the top of the cells */
+    border-bottom: 1px solid #ddd; /* Add a bottom border for rows */
+}
+
+
+
 
 .modal h2 {
     font-size: 18px;
@@ -305,11 +327,13 @@ input[type="checkbox"] {
 
 .modal.hidden {
     display: none;
+    opacity: 0;
 }
 
 .modal.visible {
     display: flex;
-    justify-content: center;
+    opacity: 1;
+    /* justify-content: center;
     align-items: center;
     position: fixed;
     top: 50%;
@@ -317,7 +341,7 @@ input[type="checkbox"] {
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 1000;
-    width: 400px;
+    width: 400px; */
 }
 
 .close {
@@ -337,3 +361,4 @@ input[type="checkbox"] {
         transform: scale(1);
     }
 }
+

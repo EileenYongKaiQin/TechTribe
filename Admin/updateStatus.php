@@ -1,26 +1,46 @@
 <?php
 include('../database/config.php');
 
-// Decode JSON input
-$data = json_decode(file_get_contents('php://input'), true);
-$ids = $data['ids'];
-$status = $data['status'];
+// Ensure POST request is sent
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get IDs and status from the FormData sent via POST
+    $ids = isset($_POST['ids']) ? explode(',', $_POST['ids']) : [];
+    $status = isset($_POST['status']) ? $_POST['status'] : '';
 
-if (!empty($ids) && !empty($status)) {
-    // Prepare placeholders for query
-    $placeholders = implode(',', array_fill(0, count($ids), '?'));
-    $stmt = $con->prepare("UPDATE reportPost SET reportStatus = ? WHERE reportID IN ($placeholders)");
+    // Validate data
+    if (!empty($ids) && !empty($status)) {
+        // Prepare placeholders for query
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $query = "UPDATE reportPost SET reportStatus = ? WHERE reportID IN ($placeholders)";
 
-    // Dynamically bind parameters
-    $types = str_repeat('s', count($ids) + 1); // 's' for string placeholders
-    $stmt->bind_param($types, $status, ...$ids);
+        // Prepare the statement
+        $stmt = $con->prepare($query);
 
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        if ($stmt) {
+            // Dynamically bind parameters
+            $types = str_repeat('s', count($ids) + 1); // Adding 1 for the status parameter
+            $bindParams = array_merge([$status], $ids);
+
+            // Bind parameters dynamically
+            $stmt->bind_param($types, ...$bindParams);
+
+            // Execute the query
+            if ($stmt->execute()) {
+                // Return success response
+                echo "success";
+            } else {
+                echo "Error: " . $stmt->error; // If execution fails, send error message
+            }
+
+            $stmt->close();
+        } else {
+            echo "Error: Failed to prepare the statement.";
+        }
     } else {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
+        echo "Error: Missing or invalid data (IDs or status).";
     }
 } else {
-    echo json_encode(['success' => false, 'error' => 'Invalid input']);
+    echo "Error: Invalid request method. Use POST.";
 }
 ?>
+
