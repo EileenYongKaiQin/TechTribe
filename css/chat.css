@@ -270,3 +270,9 @@
     .modal {
         animation: fadeIn 0.3s ease-in;
     }
+
+    .deleted-message {
+        color: gray; /* Change text color to gray */
+        font-style: italic; /* Italicize the text */
+        text-decoration: line-through; /* Optional: add a strikethrough effect */
+    }

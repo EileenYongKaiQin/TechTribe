@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senderRole = $_POST['senderRole'];  // job_seeker or employer
     $messageContents = $_POST['messageContents'];  // The message content
     $messageID = isset($_POST['messageID']) ? $_POST['messageID'] : null;
-    $delete = isset($_POST['delete']) ? $_POST['delete'] : null;
+    $delete = isset($_POST['delete']) ? $_POST['delete'] : false;
 
     if ($delete) {
         // Delete message
@@ -31,22 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     } elseif ($messageID) {
         // Update message (edit message)
-        $stmt = $conn->prepare("UPDATE messages SET messageContents = ? WHERE id = ?");
-        $stmt->bind_param("si", $messageContents, $messageID);
+        $stmt = $conn->prepare("UPDATE messages SET messageContents = ? WHERE id = ? AND senderRole = ?");
+        $stmt->bind_param("sis", $messageContents, $messageID, $senderRole);
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update message']);
+        }
+        $stmt->close();
     } else {
         // Insert new message
         $stmt = $conn->prepare("INSERT INTO messages (senderRole, messageContents) VALUES (?, ?)");
         $stmt->bind_param("ss", $senderRole, $messageContents);
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to save message']);
+        }
+        $stmt->close();
     }
-
-    // Execute the query
-    if ($stmt->execute()) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to save message']);
-    }
-
-    $stmt->close();
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Handle the GET request (for loading chat history)
     $sql = "SELECT id, senderRole, messageContents, timestamp FROM messages ORDER BY timestamp ASC";
@@ -62,11 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'timestamp' => $row['timestamp']
             ];
         }
+        echo json_encode($messages);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }
-
-    echo json_encode($messages);
 }
 
 $conn->close();

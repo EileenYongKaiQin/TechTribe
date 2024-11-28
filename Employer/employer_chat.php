@@ -277,7 +277,7 @@
     </div>
 </div>
 
-<script src="../js/chat.js"></script>
+<script src="../js/employer_chat.js"></script>
 
 </body>
 </html>
