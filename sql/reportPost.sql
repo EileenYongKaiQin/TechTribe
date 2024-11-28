@@ -7,7 +7,7 @@ CREATE TABLE reportPost (
     evidence LONGBLOB,
     createTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    reportStatus ENUM('Pending', 'Reviewed', 'Resolved') DEFAULT 'Pending',
+    reportStatus ENUM('Pending', 'Under Review', 'Resolved') DEFAULT 'Pending',
     jobPostID VARCHAR(10) NOT NULL,
     userID VARCHAR(10) NOT NULL,
     FOREIGN KEY (jobPostID) REFERENCES jobPost(jobPostID) ON DELETE CASCADE
