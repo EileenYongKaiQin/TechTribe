@@ -54,17 +54,6 @@ if ($result && $result->num_rows > 0) {
             background: #F0FDFF;
         }
 
-        .sidebar {
-            position: fixed;
-            width: 180px;
-            height: 100%;
-            background: #AAE1DE;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-
         .logo-section {
             text-align: center;
             margin-bottom: 30px;
@@ -80,11 +69,7 @@ if ($result && $result->num_rows > 0) {
             color: #FFFFFF;
         }
 
-        .menu {
-            width: 100%;
-        }
-
-        .menu-item, .logout {
+        .logout {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -97,20 +82,7 @@ if ($result && $result->num_rows > 0) {
             border-radius: 8px; 
         }
 
-        .menu-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Hover effect */
-        .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-
         /* Hover effect for both menu items and logout */
-        .menu-item:hover,
         .logout:hover {
             background-color: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
@@ -136,11 +108,6 @@ if ($result && $result->num_rows > 0) {
             font-weight: 400;
         }
 
-        .main-content {
-            margin-left: 180px;
-            width: calc(100% - 180px);
-        }
-
         .header {
             background: #FFFFFF;
             padding: 10px 20px;
@@ -151,7 +118,7 @@ if ($result && $result->num_rows > 0) {
             z-index: 1000;
             left: 180px;
             top: 0;
-            width: calc(100% - 180px)
+            width: 100%;
         }
 
         .header-right {
@@ -223,67 +190,15 @@ if ($result && $result->num_rows > 0) {
             align-items: center; 
             justify-content: flex-start; 
         }
-
-        /* Hidden submenu styles */
-        .submenu {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            padding-left: 20px;
-        }
-
-        .submenu-item {
-            padding: 10px;
-            cursor: pointer;
-            color: #FFFFFF;
-            font-size: 14px;
-            font-family: 'Cabin', sans-serif;
-            font-weight: 400;
-            border-radius: 8px; 
-        }
-
-        .submenu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
     </style>
 </head>
-<body>
-    <div class="sidebar">
-        <div class="logo-section">
-            <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <h1 class="logo-text">FlexMatch</h1>
-        </div>
-        <nav class="menu">
-            <div class="menu-item">
-                <img src="../images/add_circle.png" alt="Apply Job Icon" class="menu-icon">
-                <span onclick="location.href='jobSeeker_posting_list.php'">Apply Job</span>
-            </div>
-            <div class="menu-item">
-                <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
-                <span onclick="location.href='my_application.php'">My Application</span>
-            </div>
-            <div class="menu-item" onclick="toggleSubmenu()">
-                <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
-                <span>Job Seeker Wall</span>
-            </div>
-            <div class="submenu">
-                <div class="submenu-item" onclick="location.href='job_seeker_wall.php'">View Posts</div>
-                <div class="submenu-item" onclick="location.href='my_posts.php'">My Posts</div>
-            </div>
-        </nav>
-        <div class="logout" onclick="location.href='../login.html'">
-            <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
-            <span class="logout-text">Logout</span>
-        </div>
-    </div>        
+<body>   
     <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
             <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
-            <a href="view_jobseeker_profile.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
-            <a href="view_jobseeker_profile.php">
+            <a href="jobseeker_dashboard.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
+            <a href="jobseeker_dashboard.php">
             <div class="user-info">
                 <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Job Seeker</span>
@@ -294,14 +209,5 @@ if ($result && $result->num_rows > 0) {
     </header>
     <section class="content">
     </section>
-
-    </div>    
-    <script>
-        // Function to toggle the submenu visibility
-        function toggleSubmenu() {
-            const submenu = document.querySelector('.submenu');
-            submenu.style.display = submenu.style.display === 'flex' ? 'none' : 'flex';
-        }
-    </script>
 </body>
 </html>
