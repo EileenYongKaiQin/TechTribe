@@ -122,7 +122,7 @@
             <label for="jobPreferences"><b>Job Preferences (max 50 words):</b></label>
             <textarea id="jobPreferences" name="jobPreferences" rows="3" maxlength="250"></textarea><br>
 
-            <button type="submit">Submit Post</button>
+            <button type="submit">Publish</button>
         </form>
         
     </div>
@@ -173,7 +173,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Submit',
+                confirmButtonText: 'Yes',
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {

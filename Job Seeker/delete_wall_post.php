@@ -14,12 +14,17 @@ if (isset($_GET['postID'])) {
 
         // Execute the query and check if the post was deleted
         if ($stmt->execute()) {
-            // Redirect back to the page with a success message
-            header('Location: my_posts.php?message=Post deleted successfully');
+            echo '<script>
+                alert("Post deleted successfully!");
+                window.location.href = "my_posts.php";
+            </script>';
             exit;
         } else {
             // If there was an error, show a message
-            echo 'Error deleting post. Please try again.';
+            echo '<script>
+                alert("Failed to delete the post. Please try again.");
+                window.history.back();
+            </script>';
         }
     } else {
         echo 'Invalid post ID format.';

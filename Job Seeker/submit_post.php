@@ -40,11 +40,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Execute the statement and check for errors
     if ($stmt->execute()) {
-        // Redirect to the Job Seeker Wall page after successful insertion
-        header("Location: job_seeker_wall.php");
-        exit();
+        echo '<script>
+            alert("Post published successfully!");
+            window.location.href = "job_seeker_wall.php";
+        </script>';
+      // Redirect to the Job Seeker Wall page after successful insertion
+
     } else {
-        echo "Error: " . $stmt->error;
+        echo '<script>
+            alert("Failed to publish the post. Please try again.");
+            window.history.back();
+          </script>';
     }
 
     // Close the statement and connection
@@ -52,3 +58,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $con->close();
 }
 ?>
+

@@ -83,9 +83,10 @@ function editPost(postID) {
 function confirmDelete(postID) {
     Swal.fire({
         title: 'Are you sure you want to delete this post?',
+        text: "you won't be able to revert this",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes',
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {

@@ -10,7 +10,7 @@ $post_id = $_GET['postID'];
 // Fetch the post data from the database
 $query = "SELECT * FROM wallPost WHERE postID = ?";
 $stmt = $con->prepare($query);
-$stmt->bind_param("i", $post_id);
+$stmt->bind_param("s", $post_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
