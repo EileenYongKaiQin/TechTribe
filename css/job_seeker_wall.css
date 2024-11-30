@@ -106,6 +106,7 @@ h3{
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%; /* 2 posts per row */
+    height: 350px;
     box-sizing: border-box;
     margin-bottom: 20px;
 }

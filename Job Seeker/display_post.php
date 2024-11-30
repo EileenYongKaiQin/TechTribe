@@ -55,6 +55,8 @@ if ($result->num_rows > 0) {
 
         // Location
         echo '<p><strong>Location:</strong> ' . htmlspecialchars($row['district']) . ', ' . htmlspecialchars($row['state']) . '</p>';
+
+        echo '<p><strong>Job Preferences:</strong> ' . htmlspecialchars($row['jobPreferences']) .'</p>';
         
         // Contact details from jobSeeker
         echo '<p><strong>Email:</strong> ' . 'example@gmail.com' . '</p>';
