@@ -162,7 +162,7 @@ if ($result && $result->num_rows > 0) {
         <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
+            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../employer/employer_chat.php'">
             <a href="employer_dashboard.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
             <a href="employer_dashboard.php">
                     <div class="user-info">
