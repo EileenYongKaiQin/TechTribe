@@ -245,7 +245,7 @@
     <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
+            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../employer/employer_chat.php'">
             <img src="../images/employer.png" alt="User Image" class="profile-image">
             <div class="user-info">
                 <span class="user-name">eileen</span>

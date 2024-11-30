@@ -247,6 +247,9 @@ if ($result && $result->num_rows > 0) {
             transform: scale(1.05);
             cursor: pointer;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -285,12 +288,14 @@ if ($result && $result->num_rows > 0) {
     <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
-            <img src="../images/JobSeeker.png" alt="User Image" class="profile-image">
+            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../Job Seeker/jobSeeker_chat.php'">
+            <a href="view_jobseeker_profile.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
+            <a href="view_jobseeker_profile.php">
             <div class="user-info">
                 <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Job Seeker</span>
             </div>
+            </a>
         </div>
         <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>

@@ -1,15 +1,37 @@
 <?php
-session_start();
 
-if(!empty($_POST)) 
-{   
-    $name = $_POST['Name'];
-    $email = $_POST['Email'];
-    $contactNo = $_POST['ContactNo'];
-    $companyName = $_POST['CompanyName'];
-    $companyAddress = $_POST['CompanyAddress'];
+include('../database/config.php');
+include('employerNew.php');
 
-    include('config.php');
+if (!isset($_SESSION['userID'])) {
+    header('Location: employer_dashboard.php');
+    exit();
+}
+
+$userID = $_SESSION['userID'];
+
+$sql = mysqli_query($con, "SELECT * FROM employer WHERE userID='$userID'");
+
+if (!$sql) {
+    die("Query failed: " . mysqli_error($con));
+}
+
+$data = mysqli_fetch_array($sql);
+
+if (!$data) {
+    echo"<script>alert('No profile found. Please create a profile first.');
+    window.location.href='create_employer_profile.php';</script>";
+    echo"<script>";
+
+}
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') 
+{    
+    $name = $_POST['fullName'];
+    $email = $_POST['email'];
+    $contactNo = $_POST['contactNo'];
+    $companyName = $_POST['companyName'];
+    $companyAddress = $_POST['companyAddress'];
 
     $name = mysqli_real_escape_string($con,$name);
     $email = mysqli_real_escape_string($con,$email);
@@ -17,18 +39,19 @@ if(!empty($_POST))
     $companyName = mysqli_real_escape_string($con,$companyName);
     $companyAddress = mysqli_real_escape_string($con,$companyAddress);
 
-    if(mysqli_query($con,"INSERT INTO employer
-        (Name, Email, ContactNo, CompanyName, CompanyAddress)
-        VALUES ('$name','$email','$contactNo','$companyName', '$companyAddress')")) 
+    if(mysqli_query($con,"UPDATE employer SET
+        email='$email', contactNo='$contactNo', companyName='$companyName', companyAddress='$companyAddress' WHERE userID='$userID'")) 
         {
             echo '<script>
             window.onload = function() { 
             document.querySelector("#success-popup").classList.add("active"); 
+            window.location.href="view_employer_profile.php";
         }</script>';
         } else {
             echo '<script>
             window.onload = function() { 
             document.querySelector("#fail-popup").classList.add("active"); 
+            window.location.href="update_employer_profile.php";
             }</script>';
         }
 }
@@ -39,59 +62,54 @@ if(!empty($_POST))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/all.min.css">
-    <link rel="stylesheet" href="css/fontawesome.min.css">
-    <title>Create Profile</title>
+    <title>Update Profile</title>
     <style>
         body {
             font-family: sans-serif;
             font-family: "Poppins", sans-serif;
         }
         .container {
-            position: relative;
-            margin: auto;
-            width: 85%;
-            min-height: 90vh;
-            background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0.3));
-            padding: 1.5rem;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 25px rgba(0, 0, 0, 0.08);
+            margin-left: 200px;
         }
-        .container h1 {
+        .profile-h1 {
             text-align: center;   
             font-size: 40px;
+            margin-bottom: 30px;
             margin-top: 80px;
         }
-        .container h3 {
+        .profile-h3 {
             text-align: center;  
-            margin-bottom: 30px;
+            margin-bottom: 22px;
             font-size: 22px;
         }
-        .container form {
+        form {
             display: flex;
             flex-direction: column;
             text-align: center;  
             align-items: center;
             margin-top: 15px;
             border: 1px solid #ccc;
-            padding: 0px 20px 20px;
+            padding: 25px 25px 25px;
             border-radius: 10px;
-            width: 70%;
+            width: 80%;
             box-sizing: border-box;
             margin: auto;
+            background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.9),rgba(255, 255, 255, 0.7));
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 25px rgba(0, 0, 0, 0.08);
         }
-        .container form .form-row {
+        form .form-row {
             align-items: center;
             width: 100%;
             margin-bottom: 20px;
         }
-        .container form .form-row label {
+        form .form-row label {
             padding: 0px 5px;
             text-align: left;
             display: flex;
             font-size: 18px;
         }
-        .container .form-row input[type="text"], 
-        .container .form-row select {
+        .form-row input[type="text"],
+        .form-row input[type="file"] {
             width: 100%;
             padding: 15px;
             margin-top: 15px;
@@ -100,8 +118,20 @@ if(!empty($_POST))
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
-        .container .back-btn,
-        .container .create-btn {
+        .form-row input[type="file"] {
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #63666A;
+        }
+        .update-btn {
             font-size: 15px;
             width: 100%;
             color: white;
@@ -112,19 +142,15 @@ if(!empty($_POST))
             cursor: pointer;
             font-weight: bold;
         }
-        .container .back-btn {
-            margin-top: 80px;
-        }
-        .container .create-btn {
+        .update-btn {
             margin-top: 20px;
         }
-        .container .back-btn:hover,
-        .container .create-btn:hover {
+        .update-btn:hover {
             color: black;
             background-color: #b2eff1;
             box-shadow: 0 0 15px 5px rgba(255,255,255,0.75);
         }
-        .container form .row{
+        form .row{
             align-items: center;
             width: 100%;
             margin-bottom: 20px;
@@ -132,33 +158,19 @@ if(!empty($_POST))
             margin: 0px;
             align-items: flex-start;
         }
-        .container form .skill-container{
-            width: 100%;
-            margin-bottom: 20px;
-            margin: 0px;
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-        .container form .col-50-le{
+        form .col-50-le{
             float: left;
             align-items: center;
             width: 100%;
             padding: 0px 10px 0px 0px;
         }
-        .container form .col-50-mid{
-            float: center;
-            align-items: center;
-            width: 100%;
-            padding: 0px 10px;
-        }
-        .container form .col-50-ri{
+        form .col-50-ri{
             float: right;
             align-items: center;
             width: 100%;
             padding: 0px 0px 0px 10px;
         }
-        .container form .col-25-ri{
+        form .col-25-ri{
             float: right;
             align-items: center;
             width: 50%;
@@ -170,7 +182,7 @@ if(!empty($_POST))
             left: 0px;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 1000;
         }
         .popup .overlay {
             position: absolute;
@@ -196,15 +208,15 @@ if(!empty($_POST))
             box-shadow: 0px 2px 2px 5px rgba(0,0,0,0.05);
             transition: all 300ms ease-in-out;
         }
-        .popup .popup-content h2{
-            margin: 10px 0px;
+        .popup .popup-content h3{
+            margin: 15px 0px;
             font-size: 25px;
             color: #111111;
             text-align: center;
         }
         .popup .popup-content p{
-            margin: 15px 0px;
-            font-size: 16px;
+            margin: 20px 0px;
+            font-size: 15px;
             color: #222222;
             text-align: center;
         }
@@ -225,6 +237,8 @@ if(!empty($_POST))
         .popup .popup-content .controls .okay-btn{
            background: #3284ed;
            color:#ffffff;
+           float: right;
+           width: 100px;
         }
         .popup.active {
             top: 0px;
@@ -253,25 +267,25 @@ if(!empty($_POST))
 <body>
 
 <div class="container">
-    <h1>Create Profile</h1>
-    <form class="section" action='create_employer_profile.php' method='POST'>
+    <h1 class="profile-h1">Update Profile</h1>
+    <form class="section" action='update_employer_profile.php?userID=<?PHP echo $userID; ?>' method='POST'>
 
-        <h3>Personal Information</h3>
+        <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" placeholder="Enter Full Name"required>
+            <label for="fullName">Name</label>
+            <input type="text" name="fullName" placeholder="Enter Full Name" value="<?PHP echo $data['fullName'];?>" readonly>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="Email">Email</label>
-                    <input type="text" name="Email" placeholder="Enter Email" required>
+                    <label for="email">Email</label>
+                    <input type="text" name="email" placeholder="Enter Email" value="<?PHP echo $data['email'];?>" required>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="ContactNo">Contact No.</label>
-                    <input type="text" name="ContactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' required>
+                    <label for="contactNo">Contact No.</label>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?PHP echo $data['contactNo'];?>" minlength='10' required maxlength='12' required>
                 </div>
             </div>
         </div>
@@ -279,19 +293,19 @@ if(!empty($_POST))
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="companyName">Company Name</label>
-                    <input type="text" name="CompanyName" placeholder="Enter Company Name">
+                    <input type="text" name="companyName" value="<?PHP echo $data['companyName'];?>" placeholder="Enter Company Name">
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="companyAddress">Company Address</label>
-                    <input type="text" name="CompanyAddress" placeholder="Enter Company Address">
+                    <input type="text" name="companyAddress" value="<?PHP echo $data['companyAddress'];?>" placeholder="Enter Company Address">
                 </div>
             </div>
         </div>
         <br>
         <br>
-        <input class="create-btn" id="create-btn" type="submit" value="Create">
+        <input class="update-btn" id="update-btn" type="submit" value="Update">
 
         <!-- Success Popup -->
         <div class="popup" id="success-popup">
@@ -299,8 +313,8 @@ if(!empty($_POST))
             <div class="popup-content">
                 <button class="close-btn">✖</button>
                 <br>
-                <h3>Profile Created</h3>
-                <p>Congrates! You have successfully created your profile.</p>
+                <h3>Profile Updated</h3>
+                <p>Congrates! You have successfully updated your profile.</p>
                 <div class="controls">
                     <button class="okay-btn">OK</button>
                 </div>
@@ -313,7 +327,7 @@ if(!empty($_POST))
             <div class="popup-content">
                 <button class="close-btn">✖</button>
                 <br>
-                <h3>Failed to Create Profile</h3>
+                <h3>Failed to Update Profile</h3>
                 <p>There was an issue creating your profile. Please try again later.</p>
                 <div class="controls">
                     <button class="okay-btn">OK</button>
@@ -328,7 +342,7 @@ if(!empty($_POST))
 
 <script src="jquery-3.7.1.min.js"></script>
 <script>
-function createProfile(id){
+function updateProfile(id){
     let popupNode = document.querySelector(id);
     let overlay = popupNode.querySelector(".overlay");
     let okayBtn = popupNode.querySelector(".okay-btn");
@@ -342,11 +356,11 @@ function createProfile(id){
     okayBtn.addEventListener("click", closePopup);
     return openPopup;
 }
-    let successPopup = createProfile("#success-popup");
-    let failPopup = createProfile("#fail-popup");
-    document.querySelector("#create-btn").addEventListener("click", popup);
+    let successPopup = updateProfile("#success-popup");
+    let failPopup = updateProfile("#fail-popup");
+    document.querySelector("#update-btn").addEventListener("click", popup);
 
-    document.querySelector("#create-btn").addEventListener("click", function (e) {
+    document.querySelector("#update-btn").addEventListener("click", function (e) {
     e.preventDefault();
     const form = document.querySelector("form");
     const inputs = form.querySelectorAll("[required]");

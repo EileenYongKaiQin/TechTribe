@@ -245,7 +245,7 @@
     <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon">
+            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../Job Seeker/jobSeeker_chat.php'">
             <img src="../images/jobSeeker.png" alt="User Image" class="profile-image">
             <div class="user-info">
                 <span class="user-name">qiqi03</span>

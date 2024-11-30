@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlexMatch - Login</title>
+    <title>FlexMatch - Login/Register</title>
     <link rel="shortcut icon" href="images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="css/login.css">
 </head>
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Login Form -->
-        <form action="login.php" method="POST">
+        <form id="login-form" action="login.php" method="POST">
             <div class="input-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" class="input-field" placeholder="Enter your Username" required>
@@ -47,37 +47,64 @@
             <!-- Login Button -->
             <button type="submit" class="login-btn">Login</button>
         </form>
+
+        <!-- Register Form -->
+        <form id="register-form" action="register.php" method="POST" style="display: none;">
+            <div class="input-group">
+                <label for="reg-username">Username</label>
+                <input type="text" id="reg-username" name="username" class="input-field" placeholder="Enter your Username" required>
+            </div>
+            <div class="input-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" name="password" class="input-field" placeholder="Enter your Password" required>
+            </div>
+            <div class="input-group">
+                <label for="role">Select Role</label>
+                <select id="role" name="role" class="input-field" required>
+                    <option value="jobseeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="login-btn">Register</button>
+        </form>
     </div>
+
     <script>
         function toggleOption(option) {
-        const slider = document.getElementById('slider');
-        const loginToggle = document.getElementById('login-toggle');
-        const registerToggle = document.getElementById('register-toggle');
+            const slider = document.getElementById('slider');
+            const loginToggle = document.getElementById('login-toggle');
+            const registerToggle = document.getElementById('register-toggle');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
 
-        if (option === 'login') {
-            slider.style.transform = 'translateX(0%)'; // Slide to the left
-            loginToggle.classList.add('active');
-            registerToggle.classList.remove('active');
-        } else if (option === 'register') {
-            slider.style.transform = 'translateX(100%)'; // Slide to the right
-            registerToggle.classList.add('active');
-            loginToggle.classList.remove('active');
+            if (option === 'login') {
+                slider.style.transform = 'translateX(0%)'; // Slide to the left
+                loginToggle.classList.add('active');
+                registerToggle.classList.remove('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else if (option === 'register') {
+                slider.style.transform = 'translateX(100%)'; // Slide to the right
+                registerToggle.classList.add('active');
+                loginToggle.classList.remove('active');
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            }
         }
-    }
 
-    const password = document.getElementById('password');
+        const password = document.getElementById('password');
         const toggle = document.getElementById('toggle');
-        function showHide(){
-            if(password.type === 'password'){
-                password.setAttribute('type','text');
-                toggle.classList.add('hide')
-            }
-            else{
-                password.setAttribute('type','password');
-                toggle.classList.remove('hide')
+        function showHide() {
+            if (password.type === 'password') {
+                password.setAttribute('type', 'text');
+                toggle.classList.add('hide');
+            } else {
+                password.setAttribute('type', 'password');
+                toggle.classList.remove('hide');
             }
         }
-
     </script>
 </body>
 </html>

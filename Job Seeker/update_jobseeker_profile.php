@@ -3,14 +3,29 @@
 include('../database/config.php');
 include('jobSeeker1.php');
 
-if (isset($_SESSION['userID'])) {
-    $userID = $_SESSION['userID'];
-} else {
-    header("Location: ../login.html");
+if (!isset($_SESSION['userID'])) {
+    header('Location: jobseeker_dashboard.php');
     exit();
 }
 
-if(!empty($_POST)) 
+$userID = $_SESSION['userID'];
+
+$sql = mysqli_query($con, "SELECT * FROM jobseeker WHERE userID='$userID'");
+
+if (!$sql) {
+    die("Query failed: " . mysqli_error($con));
+}
+
+$data = mysqli_fetch_array($sql);
+
+if (!$data) {
+    echo"<script>alert('No profile found. Please create a profile first.');
+    window.location.href='create_jobseeker_profile.php';</script>";
+    echo"<script>";
+
+}
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') 
 { 
     $fullName = $_POST['fullName'];
     $email = $_POST['email'];
@@ -23,57 +38,20 @@ if(!empty($_POST))
     $position = $_POST['position'];
     $company = $_POST['company'];
     $workExperience = $_POST['workExperience'];
-    $languages = '';
-    if (isset($_POST['language']) && is_array($_POST['language'])) {
-        if (isset($_POST['OthersInput']) && $_POST['OthersInput'] == 'Others' && !empty($_POST['language'][count($_POST['language'])-1])) {
-            $languages = implode(", ", $_POST['language']);
-        } else {
-            $languages = implode(", ", array_filter($_POST['language']));
-        }
-    }
-    $hardSkill = $_POST['hardSkill'];
-    $hardSkills = implode(", ",$hardSkill);
-    $softSkill = $_POST['softSkill'];
-    $softSkills = implode(", ",$softSkill);
+    $languages = $_POST['language'];
+    $hardSkills = isset($_POST['hardSkill']) ? 
+    implode(", ", array_filter($_POST['hardSkill'])) : '';
+    $softSkills = isset($_POST['softSkill']) ? 
+    implode(", ", array_filter($_POST['softSkill'])) : '';
 
-    /*$profilePic = '';
-    if (isset($_FILES['profilePic']) && $_FILES['profilePic']['error'] === UPLOAD_ERR_OK) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = mime_content_type($_FILES['profilePic']['tmp_name']);
-
-        if (in_array($fileType, $allowedTypes)) {
-            $uploadDir = '../uploads/profile_pics/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $profilePic = $uploadDir . uniqid() . "_" . basename($_FILES['profilePic']['name']);
-            move_uploaded_file($_FILES['profilePic']['tmp_name'], $profilePic);
-        } else {
-            echo '<script>alert("Invalid file type. Please upload an image.");</script>';
-            exit();
-        }
-    }*/
-
-    $fullName = mysqli_real_escape_string($con,$fullName);
-    $email = mysqli_real_escape_string($con,$email);
-    $contactNo = mysqli_real_escape_string($con,$contactNo);
-    $age = mysqli_real_escape_string($con,$age);
-    $gender = mysqli_real_escape_string($con,$gender);
-    $race = mysqli_real_escape_string($con,$race);
-    $location = mysqli_real_escape_string($con,$location);
-    $state = mysqli_real_escape_string($con,$state);
-    $position = mysqli_real_escape_string($con,$position);
-    $company = mysqli_real_escape_string($con,$company);
-    $workExperience = mysqli_real_escape_string($con,$workExperience);
-    
-    if(mysqli_query($con,"INSERT INTO jobseeker
-        (userID, fullName, email, contactNo, age, gender, race, location, state, position, company, workExperience, language, hardSkill, softSkill)
-        VALUES ('$userID', '$fullName','$email','$contactNo','$age', '$gender','$race','$location','$state','$position','$company','$workExperience','$languages','$hardSkills','$softSkills')")) 
+    if(mysqli_query($con,"UPDATE jobseeker SET
+        email='$email', contactNo='$contactNo', age='$age', gender='$gender', race='$race', location='$location', state='$state', 
+        position='$position', company='$company', workExperience='$workExperience', language='$languages', hardSkill='$hardSkills', softSkill='$softSkills' WHERE userID='$userID'")) 
         {
             echo '<script>
                     window.onload = function() { 
                     document.querySelector("#success-popup").classList.add("active"); 
-                    window.location.href="jobseeker_dashboard.php";
+                    window.location.href="view_jobseeker_profile.php";
                 }</script>';
         } else {
             echo '<script>
@@ -90,7 +68,7 @@ if(!empty($_POST))
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Create Profile</title>
+    <title>Update Profile</title>
 
     <style>
         body {
@@ -138,8 +116,7 @@ if(!empty($_POST))
             display: flex;
             font-size: 18px;
         }
-        .form-row input[type="text"],
-        .form-row input[type="file"], 
+        .form-row input[type="text"], 
         .form-row select {
             width: 100%;
             padding: 15px;
@@ -150,7 +127,6 @@ if(!empty($_POST))
             box-sizing: border-box;
         }
         .input-group input[type="text"],
-        .form-row input[type="file"], 
         .input-group button {
             padding: 15px;
             margin-top: 15px;
@@ -161,7 +137,7 @@ if(!empty($_POST))
             align-items: center;
         }
         .back-btn,
-        .create-btn {
+        .update-btn {
             font-size: 15px;
             width: 100%;
             color: white;
@@ -175,11 +151,11 @@ if(!empty($_POST))
         .back-btn {
             margin-top: 80px;
         }
-        .create-btn {
+        .update-btn {
             margin-top: 20px;
         }
         .back-btn:hover,
-        .create-btn:hover {
+        .update-btn:hover {
             color: black;
             background-color: #b2eff1;
             box-shadow: 0 0 15px 5px rgba(255,255,255,0.75);
@@ -267,6 +243,10 @@ if(!empty($_POST))
             display: inline-flex;
             align-items: center;
             gap: 5px;
+        }
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #63666A;
         }
         .lang-container .others-wrapper input[type="text"] {
             margin-top: 10px;
@@ -363,25 +343,25 @@ if(!empty($_POST))
 <body>
 
 <div class="container">
-    <h1 class="profile-h1">Create Profile</h1>
-    <form class="section" action='create_jobseeker_profile.php?userID=<?PHP echo $userID; ?>' method='POST'>
+    <h1 class="profile-h1">Update Profile</h1>
+    <form class="section" action='update_jobseeker_profile.php' method='POST'>
 
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
             <label for="name">Name</label>
-            <input type="text" name="fullName" placeholder="Enter Full Name"required>
+            <input type="text" name="fullName" placeholder="Enter Full Name" value="<?PHP echo $data['fullName'];?>" readonly>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="email">Email</label>
-                    <input type="text" name="email" placeholder="Enter Email" required>
+                    <input type="text" name="email" placeholder="Enter Email" value="<?PHP echo $data['email'];?>" required>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' required>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?PHP echo $data['contactNo'];?>" minlength='10' required maxlength='12' required>
                 </div>
             </div>
         </div>
@@ -389,28 +369,28 @@ if(!empty($_POST))
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="age">Age</label>
-                    <input type="text" name="age" placeholder="Enter Age" required>
+                    <input type="text" name="age" placeholder="Enter Age" value="<?PHP echo $data['age'];?>" required>
                 </div>
             </div>
             <div class="col-50-mid">
                 <div class="form-row">
                     <label for="gender">Gender</label>
-                    <select name="gender" id="gender">
+                    <select name="gender" id="gender" value="<?PHP echo $data['gender'];?>">
                         <option disabled selected hidden>- Select Gender -</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="Male" <?php echo $data['gender'] === 'Male' ? 'selected' : ''; ?>>Male</option>
+                        <option value="Female" <?php echo $data['gender'] === 'Female' ? 'selected' : ''; ?>>Female</option>
                     </select> 
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="race">Race</label>
-                    <select name="race" id="race">
+                    <select name="race" id="race" value="<?PHP echo $data['race'];?>">
                         <option disabled selected hidden>- Select Race -</option>
-                        <option value="Malay">Malay</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="Indian">Indian</option>
-                        <option value="Others">Others</option>
+                        <option value="Malay" <?php echo $data['race'] === 'Malay' ? 'selected' : ''; ?>>Malay</option>
+                        <option value="Chinese" <?php echo $data['race'] === 'Chinese' ? 'selected' : ''; ?>>Chinese</option>
+                        <option value="Indian" <?php echo $data['race'] === 'Indian' ? 'selected' : ''; ?>>Indian</option>
+                        <option value="Others" <?php echo $data['race'] === 'Others' ? 'selected' : ''; ?>>Others</option>
                     </select> 
                 </div>
             </div>
@@ -419,38 +399,34 @@ if(!empty($_POST))
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="location">Location</label>
-                    <input type="text" name="location" placeholder="Enter Location" required>
+                    <input type="text" name="location" placeholder="Enter Location" value="<?PHP echo $data['location'];?>" required>
                 </div>
             </div> 
             <div class="col-25-ri">
                 <div class="form-row">
                     <label for="state">State</label>
-                    <select name="state" id="state">
+                    <select name="state" id="state" value="<?PHP echo $data['state'];?>">
                         <option disabled selected hidden>- Choose State -</option>
-                        <option value="Johor">Johor</option>
-                        <option value="Kedah">Kedah</option>
-                        <option value="Kelantan">Kelantan</option>
-                        <option value="Malacca">Malacca</option>
-                        <option value="Negeri Sembilan">Negeri Sembilan</option>
-                        <option value="Pahang">Pahang</option>
-                        <option value="Penang">Penang</option>
-                        <option value="Perak">Perak</option>
-                        <option value="Perlis">Perlis</option>
-                        <option value="Sabah">Sabah</option>
-                        <option value="Sarawak">Sarawak</option>
-                        <option value="Selangor">Selangor</option>
-                        <option value="Terengganu">Terengganu</option>
-                        <option value="Kuala Lumpur">Kuala Lumpur</option>
-                        <option value="Labuan">Labuan</option>
-                        <option value="Putrajaya">Putrajaya</option>
+                        <option value="Johor" <?php echo $data['state'] === 'Johor' ? 'selected' : ''; ?>>Johor</option>
+                        <option value="Kedah" <?php echo $data['state'] === 'Kedah' ? 'selected' : ''; ?>>Kedah</option>
+                        <option value="Kelantan" <?php echo $data['state'] === 'Kelantan' ? 'selected' : ''; ?>>Kelantan</option>
+                        <option value="Malacca" <?php echo $data['state'] === 'Malacca' ? 'selected' : ''; ?>>Malacca</option>
+                        <option value="Negeri Sembilan" <?php echo $data['state'] === 'Negeri Sembilan' ? 'selected' : ''; ?>>Negeri Sembilan</option>
+                        <option value="Pahang" <?php echo $data['state'] === 'Pahang' ? 'selected' : ''; ?>>Pahang</option>
+                        <option value="Penang" <?php echo $data['state'] === 'Penang' ? 'selected' : ''; ?>>Penang</option>
+                        <option value="Perak" <?php echo $data['state'] === 'Perak' ? 'selected' : ''; ?>>Perak</option>
+                        <option value="Perlis" <?php echo $data['state'] === 'Perlis' ? 'selected' : ''; ?>>Perlis</option>
+                        <option value="Sabah" <?php echo $data['state'] === 'Sabah' ? 'selected' : ''; ?>>Sabah</option>
+                        <option value="Sarawak" <?php echo $data['state'] === 'Sarawak' ? 'selected' : ''; ?>>Sarawak</option>
+                        <option value="Selangor" <?php echo $data['state'] === 'Selangor' ? 'selected' : ''; ?>>Selangor</option>
+                        <option value="Terengganu" <?php echo $data['state'] === 'Terengganu' ? 'selected' : ''; ?>>Terengganu</option>
+                        <option value="Kuala Lumpur" <?php echo $data['state'] === 'Kuala Lumpur' ? 'selected' : ''; ?>>Kuala Lumpur</option>
+                        <option value="Labuan" <?php echo $data['state'] === 'Labuan' ? 'selected' : ''; ?>>Labuan</option>
+                        <option value="Putrajaya" <?php echo $data['state'] === 'Putrajaya' ? 'selected' : ''; ?>>Putrajaya</option>
                     </select>
                 </div>
             </div>
         </div>
-        <!--<div class="form-row">
-            <label for="profilePic">Upload Profile Picture</label>
-            <input type="file" name="profilePic" accept="image/*">
-        </div>-->
         <br>
         <br>
         
@@ -459,19 +435,19 @@ if(!empty($_POST))
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="position">Job Role / Position</label>
-                    <input type="text" name="position" placeholder="Enter Job Role">
+                    <input type="text" name="position" placeholder="Enter Job Role" value="<?PHP echo $data['position'];?>">
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="company">Job Place / Company</label>
-                    <input type="text" name="company" placeholder="Enter Job Place">
+                    <input type="text" name="company" placeholder="Enter Job Place" value="<?PHP echo $data['company'];?>">
                 </div>
             </div>
         </div>
         <div class="form-row">
             <label for="workExperience">Working Experience</label>
-            <input type="text" name="workExperience" placeholder="Enter Working Experience">
+            <input type="text" name="workExperience" placeholder="Enter Working Experience" value="<?PHP echo $data['workExperience'];?>">
         </div>
         <br>
         <br>
@@ -480,24 +456,7 @@ if(!empty($_POST))
         <div class="row">
             <div class="form-row">
                 <label for="language">Language</label>
-                <div class="lang-container">
-                    <div>
-                        <input type="checkbox" name="language[]" value="English" id="English"><label for="English">English</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="language[]" value="Malay" id="Malay"><label for="Malay">Malay</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="language[]" value="Chinese" id="Chinese"><label for="Chinese">Chinese</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" name="language[]" value="Tamil" id="Tamil"><label for="Tamil">Tamil</label>
-                    </div>
-                    <div class="others-wrapper">
-                        <input type="checkbox" name="OthersInput" value="Others" id="Others" onclick="toggleInput()"><label for="Others">Others</label>
-                        <input type="text" name="language[]" id="otherInput" placeholder="Enter others language" disabled>
-                    </div>
-                </div>
+                <input type="text" name="language" placeholder="Enter languages" value="<?PHP echo $data['language'];?>">
             </div>
         </div>
         <br>
@@ -510,10 +469,21 @@ if(!empty($_POST))
                     <div class="input-row">
                         <label for="hardskill">Hard Skills</label>
                         <div id="hardSkillsContainer">
-                            <div class="input-group">
-                                <input type="text" name="hardSkill[]" placeholder="Enter Hard Skill">
-                                <button type="button" class="add-btn" id="addHardSkill">+</button>
-                            </div>
+                            <?php $hardSkills = explode(", ", $data['hardSkill']); ?>
+                                <div class="input-group">
+                                    <input type="text" name="hardSkill[]" value="<?php echo isset($hardSkills[0]) ? $hardSkills[0] : ''; ?>" placeholder="Enter Hard Skill">
+                                    <button type="button" class="add-btn" id="addHardSkill">+</button>
+                                </div>
+                                <?php if (!empty($hardSkills[1])): ?>
+                                    <?php foreach ($hardSkills as $index => $skill): ?>
+                                        <?php if ($index > 0): ?>
+                                            <div class="input-group">
+                                                <input type="text" name="hardSkill[]" value="<?php echo htmlspecialchars($skill); ?>" placeholder="Enter Hard Skill">
+                                                <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                         </div>
                     </div>
                 </div>    
@@ -523,10 +493,21 @@ if(!empty($_POST))
                     <div class="input-row">
                         <label for="softskill">Soft Skills</label>
                         <div id="softSkillsContainer">
+                            <?php $softSkills = explode(", ", $data['softSkill']); ?>
                             <div class="input-group">
-                                <input type="text" name="softSkill[]" placeholder="Enter Soft Skill">
+                                <input type="text" name="softSkill[]" value="<?php echo isset($softSkills[0]) ? $softSkills[0] : ''; ?>" placeholder="Enter Soft Skill">
                                 <button type="button" class="add-btn" id="addSoftSkill">+</button>
                             </div>
+                            <?php if (!empty($softSkills[1])): ?>
+                                <?php foreach ($softSkills as $index => $skill): ?>
+                                    <?php if ($index > 0): ?>
+                                        <div class="input-group">
+                                            <input type="text" name="softSkill[]" value="<?php echo htmlspecialchars($skill); ?>" placeholder="Enter Soft Skill">   
+                                            <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>    
+                                        </div>        
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>    
@@ -534,7 +515,7 @@ if(!empty($_POST))
         </div>
         <br>
         <br>
-        <input class="create-btn" id="create-btn" type="submit" value="Create">
+        <input class="update-btn" id="update-btn" type="submit" value="Submit">
 
         <!-- Success Popup -->
         <div class="popup" id="success-popup">
@@ -542,8 +523,8 @@ if(!empty($_POST))
             <div class="popup-content">
                 <button class="close-btn">✖</button>
                 <br>
-                <h3>Profile Created</h3>
-                <p>Congrates! You have successfully created your profile.</p>
+                <h3>Profile Updated</h3>
+                <p>Congrates! You have successfully updated your profile.</p>
                 <div class="controls">
                     <button class="okay-btn">OK</button>
                 </div>
@@ -556,7 +537,7 @@ if(!empty($_POST))
             <div class="popup-content">
                 <button class="close-btn">✖</button>
                 <br>
-                <h3>Failed to Create Profile</h3>
+                <h3>Failed to Update Profile</h3>
                 <p>There was an issue creating your profile. Please try again later.</p>
                 <div class="controls">
                     <button class="okay-btn">OK</button>
@@ -603,7 +584,12 @@ $(document).on("click", ".remove-btn", function (e) {
     $(this).closest(".input-group").remove();
 });
 
-function createProfile(id){
+$(document).on("click", ".remove-btn", function (e) {
+    e.preventDefault();
+    $(this).closest(".input-group").remove();
+});
+
+function updateProfile(id){
     let popupNode = document.querySelector(id);
     let overlay = popupNode.querySelector(".overlay");
     let okayBtn = popupNode.querySelector(".okay-btn");
@@ -617,11 +603,11 @@ function createProfile(id){
     okayBtn.addEventListener("click", closePopup);
     return openPopup;
 }
-    let successPopup = createProfile("#success-popup");
-    let failPopup = createProfile("#fail-popup");
-    document.querySelector("#create-btn").addEventListener("click", popup);
+    let successPopup = updateProfile("#success-popup");
+    let failPopup = updateProfile("#fail-popup");
+    document.querySelector("#update-btn").addEventListener("click", popup);
 
-    document.querySelector("#create-btn").addEventListener("click", function (e) {
+    document.querySelector("#update-btn").addEventListener("click", function (e) {
     e.preventDefault();
     const form = document.querySelector("form");
     const inputs = form.querySelectorAll("[required]");

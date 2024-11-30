@@ -11,23 +11,23 @@ if (!isset($_SESSION['userID'])) {
     exit();
 }
 
-// Fetch the logged-in employer's full name from the employer table
+// Fetch the logged-in user's full name from the jobSeeker table
 $userID = $_SESSION['userID'];
 $query = $con->prepare("
-    SELECT employer.fullName 
-    FROM employer 
-    INNER JOIN login ON employer.userID = login.userID 
-    WHERE employer.userID = ?
+    SELECT jobSeeker.fullName 
+    FROM jobSeeker 
+    INNER JOIN login ON jobSeeker.userID = login.userID 
+    WHERE jobSeeker.userID = ?
 ");
 $query->bind_param("s", $userID);
 $query->execute();
 $result = $query->get_result();
 
 if ($result && $result->num_rows > 0) {
-    $employer = $result->fetch_assoc();
-    $fullName = $employer['fullName']; // Get the full name
+    $user = $result->fetch_assoc();
+    $fullName = $user['fullName']; // Get the full name
 } else {
-    $fullName = "Employer"; // Default fallback if user not found
+    $fullName = "Guest"; // Default fallback if user not found
 }
 ?>
 
@@ -54,41 +54,22 @@ if ($result && $result->num_rows > 0) {
             background: #F0FDFF;
         }
 
-        .sidebar {
-            position: fixed;
-            width: 180px;
-            height: 100%;
-            background: #AAE1DE;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-
         .logo-section {
             text-align: center;
             margin-bottom: 30px;
-            margin-top: -10px;
-            position: relative;
         }
 
         .logo-image {
             width: 70px;
-            height: auto;
         }
 
         .logo-text {
             font-weight: bold;
             font-size: 20px;
             color: #FFFFFF;
-            margin-top: 0px;
         }
 
-        .menu {
-            width: 100%;
-        }
-
-        .menu-item, .logout {
+        .logout {
             display: flex;
             align-items: center;
             padding: 15px;
@@ -101,20 +82,7 @@ if ($result && $result->num_rows > 0) {
             border-radius: 8px; 
         }
 
-        .menu-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Hover effect */
-        .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-
         /* Hover effect for both menu items and logout */
-        .menu-item:hover,
         .logout:hover {
             background-color: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
@@ -123,8 +91,14 @@ if ($result && $result->num_rows > 0) {
 
         .logout {
             margin-top: auto;
-            margin-bottom: 80px;
-            text-align: center;
+            margin-bottom: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .logout-text {
@@ -134,18 +108,17 @@ if ($result && $result->num_rows > 0) {
             font-weight: 400;
         }
 
-        .main-content {
-            margin-left: 180px;
-            width: calc(100% - 180px);
-        }
-
         .header {
             background: #FFFFFF;
             padding: 10px 20px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            border-bottom: 1px solid #DBDDE0;
+            position: sticky;
+            z-index: 1000;
+            left: 180px;
+            top: 0;
+            width: 100%;
         }
 
         .header-right {
@@ -222,57 +195,22 @@ if ($result && $result->num_rows > 0) {
         }
     </style>
 </head>
-<body>
-    <div class="sidebar">
-    <div class="logo-section">
-            <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <h1 class="logo-text">FlexMatch</h1>
-        </div>
-        <nav class="menu">
-            <div class="menu-item">
-                <img src="../images/dashboardIcon.png" alt="Dashboard Icon" class="menu-icon">
-                <span onclick="location.href='employer_dashboard.php'">Dashboard</span>
-            </div>
-            <div class="menu-item">
-                <img src="../images/add_circle.png" alt="Create Job Icon" class="menu-icon">
-                <span onclick="location.href='job_posting_form.php'">Create Job</span>
-            </div>
-            <div class="menu-item">
-                <img src="../images/text_snippet.png" alt="Posted Job Icon" class="menu-icon">
-                <span onclick="location.href='job_posting_list.php'">Posted Job</span>
-            </div>
-            <div class="menu-item">
-                <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
-                <span>Application</span>
-            </div>
-            <div class="menu-item">
-                <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
-                <span>Job Seeker Wall</span>
-            </div>
-        </nav>
-        <div class="logout" onclick="location.href='../login.html'">
-    <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">
-    <span class="logout-text">Logout</span>
-</div>
-
-    </div>
-    <div class="main-content">
-        <header class="header">
+<body>   
+    <header class="header">
         <div class="header-right">
             <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../employer/employer_chat.php'">
-            <a href="view_employer_profile.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
-                <a href="view_employer_profile.php">    
-                    <div class="user-info">
-                        <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
-                        <span class="user-role">Employer</span>
-                    </div>
-                </a>
-                <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
+            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../Job Seeker/jobSeeker_chat.php'">
+            <a href="jobseeker_dashboard.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
+            <a href="jobseeker_dashboard.php">
+            <div class="user-info">
+                <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
+                <span class="user-role">Job Seeker</span>
             </div>
-        </header>
-        <section class="content">
-        </section>
-    </div>
+            </a>
+        </div>
+        <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
+    </header>
+    <section class="content">
+    </section>
 </body>
 </html>
