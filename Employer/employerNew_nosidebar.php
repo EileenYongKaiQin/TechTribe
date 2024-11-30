@@ -155,6 +155,9 @@ if ($result && $result->num_rows > 0) {
             align-items: center; 
             justify-content: flex-start; 
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
