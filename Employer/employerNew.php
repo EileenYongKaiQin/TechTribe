@@ -226,7 +226,11 @@ if ($result && $result->num_rows > 0) {
             <h1 class="logo-text">FlexMatch</h1>
         </div>
         <nav class="menu">
-        <div class="menu-item">
+            <div class="menu-item">
+                <img src="../images/dashboardIcon.png" alt="Dashboard Icon" class="menu-icon">
+                <span onclick="location.href='employer_dashboard.php'">Dashboard</span>
+            </div>
+            <div class="menu-item">
                 <img src="../images/add_circle.png" alt="Create Job Icon" class="menu-icon">
                 <span onclick="location.href='job_posting_form.php'">Create Job</span>
             </div>
