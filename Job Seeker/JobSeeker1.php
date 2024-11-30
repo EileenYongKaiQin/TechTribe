@@ -247,6 +247,9 @@ if ($result && $result->num_rows > 0) {
             transform: scale(1.05);
             cursor: pointer;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
