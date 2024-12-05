@@ -13,16 +13,16 @@ include 'employerNew.php'; // This includes the session_start and user verificat
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <title>Employer Chat</title>
-    <link rel="stylesheet" href="../css/chat.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="../css/employer_chat.css"> <!-- Link to your CSS file -->
 </head>
 <body>
     <!-- The header and sidebar are included in employerNew.php -->
 
     <div class="main-content">
         <section class="content">
-            <h2 class="chat-window-title">Employer Chat</h2>
+            <h2 class="chat-window-title">Chat Section</h2>
             <div class="chat-section" id="chatSection"></div>
-
+        
             <form id="chatForm" onsubmit="sendMessage(event, 'employer')">
                 <input type="text" id="chatInput" class="chat-input" placeholder="Type a message...">
                 <button type="submit">Send</button>
