@@ -58,7 +58,7 @@ body {
 
 /* Job Seeker Message */
 .job-seeker-message {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(224, 246, 237);
     align-self: flex-start;
     text-align: right;
     width: 100%;
@@ -68,7 +68,7 @@ body {
 
 /* Employer Message */
 .employer-message {
-    background-color: rgb(224, 246, 237);
+    background-color: rgb(255, 255, 255);
     align-self: flex-end;
     text-align: left;
     width: 100%;
