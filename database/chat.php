@@ -1,9 +1,9 @@
 <?php
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "flexMatch_db";  // Replace with your database name
+$username = "FlexMatch";
+$password = "parttimejob2024";
+$dbname = "flexmatch_db";  
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($delete) {
         // Delete message
-        $stmt = $conn->prepare("DELETE FROM messages WHERE id = ? AND senderRole = ?");
+        $stmt = $conn->prepare("DELETE FROM message WHERE id = ? AND senderRole = ?");
         $stmt->bind_param("is", $messageID, $senderRole);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     } elseif ($messageID) {
         // Update message (edit message)
-        $stmt = $conn->prepare("UPDATE messages SET messageContents = ? WHERE id = ? AND senderRole = ?");
+        $stmt = $conn->prepare("UPDATE message SET messageContents = ? WHERE id = ? AND senderRole = ?");
         $stmt->bind_param("sis", $messageContents, $messageID, $senderRole);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     } else {
         // Insert new message
-        $stmt = $conn->prepare("INSERT INTO messages (senderRole, messageContents) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO message (senderRole, messageContents) VALUES (?, ?)");
         $stmt->bind_param("ss", $senderRole, $messageContents);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
@@ -52,20 +52,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Handle the GET request (for loading chat history)
-    $sql = "SELECT id, senderRole, messageContents, timestamp FROM messages ORDER BY timestamp ASC";
+    $sql = "SELECT id, senderRole, messageContents, timestamp FROM message ORDER BY timestamp ASC";
     $result = $conn->query($sql);
 
-    $messages = array();
+    $message = array();
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
-            $messages[] = [
+            $message[] = [
                 'id' => $row['id'],
                 'senderRole' => $row['senderRole'],
                 'messageContents' => $row['messageContents'],
                 'timestamp' => $row['timestamp']
             ];
         }
-        echo json_encode($messages);
+        echo json_encode($message);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }

@@ -1,0 +1,197 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #F0FDFF;
+}
+
+.main-content {
+    margin-left: 180px;
+    width: calc(100% - 180px);
+}
+
+.content {
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Chat Window Title */
+.chat-window-title {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+/* Chat Section */
+.chat-section {
+    width: 80%;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #DBDDE0;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #e8e8e8;
+}
+
+/* Chat Message Styles */
+.chat-message {
+    flex-direction: column; /* Stack author and message */
+    margin-bottom: 20px; /* Increased space between messages */
+    padding: 15px 10px;
+    border-radius: 8px;
+    border-color: black;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* For absolute positioning of buttons */
+}
+
+/* Job Seeker Message */
+.job-seeker-message {
+    background-color: rgb(224, 246, 237);
+    align-self: flex-start;
+    text-align: right;
+    width: 100%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+
+}
+
+/* Employer Message */
+.employer-message {
+    background-color: rgb(255, 255, 255);
+    align-self: flex-end;
+    text-align: left;
+    width: 100%;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+
+}
+
+/* Chat Input and Send Button */
+#chatForm {
+    display: flex;
+    margin-top: 20px; /* Space between chat section and form */
+}
+
+.chat-input {
+    width: 975px;
+    padding: 18px;
+    border-radius: 4px;
+    border: 1px solid #DBDDE0;
+}
+
+.chat-input:focus {
+    outline: none; /* Remove outline on focus */
+    border-color: #AAE1DE; /* Change border color on focus */
+}
+
+button {
+    padding: 10px 20px; /* Adjusted padding for button */
+    border: none;
+    border-radius: 4px;
+    background-color: #AAE1DE;
+    color: #FFFFFF;
+    cursor: pointer;
+    margin-left: 10px; /* Space between input and button */
+}
+
+button:hover {
+    background-color: #009688; /* Darker shade on hover */
+}
+
+/* Overlay Styles */
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 1000; /* On top of everything */
+}
+
+/* Notification Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Above the overlay */
+    width: 300px; /* Fixed width for the modal */
+}
+
+.modal-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #333333;
+}
+
+.modal-content button {
+    background-color: #AAE1DE;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #88C7C0; /* Darker shade on hover */
+}
+
+.button-container {
+    display: flex; /* Align buttons horizontally */
+    gap: 5px; /* Space between buttons */
+}
+
+.edit-button {
+    padding: 5px 10px; /* Adjusted padding for better appearance */
+    border: none;
+    border-radius: 4px;
+    background-color: #AAE1DE; /* Matching background color */
+    color: #FFFFFF; /* White text color */
+    cursor: pointer;
+    font-size: 12px; /* Smaller font size for buttons */
+    margin-left: 5px; /* Space between buttons */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.edit-button:hover {
+    background-color: #009688; /* Darker shade on hover */
+}
+
+.delete-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #FF5733; /* Red color for delete button */
+    color: #FFFFFF; /* White text color */
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 5px; /* Space between buttons */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.delete-button:hover {
+    background-color: #C70039; /* Darker red on hover */
+}
