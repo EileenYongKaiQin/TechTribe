@@ -13,4 +13,4 @@ CREATE TABLE employer (
 
 INSERT INTO employer (userID, fullName, email, contactNo, companyName, companyAddress, profilePic, accountStatus, warningHistory)
 VALUES ('EP001', 'Eileen Yong Kai Qin', 'eileen@gmail.com', '0123456789', 'FlexMatch', '123 Jalan Bukit, KL', NULL,'Active', 0),
-VALUES ('EP002', 'Jessie', 'jc@gmail.com', '012345678901', 'Company ABC', 'No 1, Jalan Skudai', NULL,'Active', 0);
+('EP002', 'Jessie', 'jc@gmail.com', '012345678901', 'Company ABC', 'No 1, Jalan Skudai', NULL,'Active', 0);
