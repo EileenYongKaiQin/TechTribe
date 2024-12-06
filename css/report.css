@@ -276,7 +276,7 @@ button.show-modal {
     color: #000000;
     border: none;
     cursor: not-allowed;
-    transition: background 0.3s ease, transform 0.3s ease;
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
     display: block;
     margin-left: auto;
     margin-right: 600px;
