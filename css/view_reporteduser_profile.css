@@ -1,0 +1,325 @@
+/* Profile Container */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    font-size: 10px;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas:
+    "userProfile userDetails";
+    width: 80%;
+    display: grid;
+    align-items: center; /* Center-align content */
+}
+
+/* Profile Section */
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile figure img {
+    width: 180px; /* Added width to ensure consistency */
+    height: 180px; /* Ensured height consistency */
+    border-radius: 50%;
+    object-fit: cover; /* Ensures the image fits well */
+    margin-bottom: 20px; /* Added margin to create space below */
+}
+
+.userDetails {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    justify-self: flex-start;
+}
+
+.profilefc {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+}
+
+.profilefc .btn {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #007ACC;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Added smooth transition */
+}
+
+.profilefc .btn:hover {
+    background-color: #005999;
+}
+
+/* Extended Lines */
+.userDetails .basic-info::before,
+.userDetails .company-info::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Extended to the container width */
+    height: 2px;
+    background-color: #ddd; /* Light grey line */
+}
+
+/* Profile Info */
+.userDetails .basic-info, .userDetails .company-info {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+/* Bigger Name */
+.userDetails .userName h1 {
+    font-size: 2.2rem; /* Increase font size for the name */
+    color: #333;
+    margin-bottom: 10px; /* Added margin for spacing */
+}
+
+h1.heading {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px; /* Added margin for spacing */
+}
+
+p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* View Profile Button Section */
+.viewProfileSection {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.viewProfileSection .btn-view {
+    padding: 10px 20px;
+    background-color: #007ACC;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Added smooth transition */
+}
+
+.viewProfileSection .btn-view:hover {
+    background-color: #005999;
+}
+/* Buttons Section */
+.btns {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btns ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.btns ul li {
+    display: inline-block;
+}
+
+.btn {
+    padding: 12px 20px;
+    background-color: #007ACC;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.4rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #005999;
+    transform: scale(1.05);
+}
+
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%; /* Make container responsive */
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    .profile figure img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profilefc .btn {
+        font-size: 14px; /* Reduce font size for smaller screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .profile figure img {
+        width: 100px; /* Adjust size for very small screens */
+        height: 100px;
+    }
+
+    .profilefc .btn {
+        padding: 8px 16px; /* Smaller padding for smaller screens */
+    }
+
+    h1.heading {
+        font-size: 16px; /* Reduce heading size */
+    }
+
+    p {
+        font-size: 12px; /* Adjust paragraph text for smaller screens */
+    }
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Dimmed background */
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal-content {
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: scaleUp 0.3s ease-in-out; /* Animation */
+}
+
+
+.modal h2 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.modal p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-buttons .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-buttons .btn.cancel {
+    background-color: #CCCCCC;
+    color: #333;
+}
+
+.modal-buttons .btn.update {
+    background-color: #007ACC;
+    color: #FFFFFF;
+}
+
+.modal-buttons .btn:hover {
+    opacity: 0.9;
+}
+
+.modal.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.modal.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Back Button */
+#back-btn {
+    position: absolute;
+    top: 80px;
+    right: 200px;
+    width: 99px;
+    height: 43px;
+    background: #AAE1DE;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 43px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+#back-btn:hover {
+    background: #8DCBC8;
+}
+
+/* Animation for modal appearance */
+@keyframes scaleUp {
+    from {
+        transform: scale(0.8);
+    }
+    to {
+        transform: scale(1);
+    }
+}

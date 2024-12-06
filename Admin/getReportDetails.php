@@ -59,7 +59,8 @@ if (isset($_GET['id'])) {
             'reason' => $report['reason'],
             'description' => $report['description'],
             'evidenceLink' => "../reports/" . htmlspecialchars($report['evidence']), // Correct file path
-            'reportedUser' => $reportedUserName
+            'reportedUser' => $reportedUserName,
+            'reportedUserID' => $report['reportedUserID']
         ]);
     } else {
         echo json_encode(['error' => 'Report not found.']);

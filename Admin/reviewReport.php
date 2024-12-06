@@ -124,6 +124,7 @@ $result = $con->query($sql);
                 <tr><th>Description</th><td id="modalDescription"></td></tr>
                 <tr><th>Evidence</th><td><a href="#" id="modalEvidence" class="btn btn-view" target="_blank" style="text-decoration: none;">View</a></td></tr>
                 <tr><th>Reported User</th><td id="modalReportedUser"></td></tr>
+                <tr><th>View Profile</th><td><button id="modalViewProfile" class="btn btn-view" onclick="viewProfile()">View</button></td></tr>
             </table>
         </div>
     </div>
@@ -211,7 +212,7 @@ $result = $con->query($sql);
                     document.getElementById('modalDescription').innerText = data.description;
                     document.getElementById('modalEvidence').href = data.evidenceLink;
                     document.getElementById('modalReportedUser').innerText = data.reportedUser;
-
+                    document.getElementById('modalViewProfile').dataset.userId = data.reportedUserID;
                     // Show the modal
                     const modal = document.getElementById('detailsModal');
                     modal.classList.remove('hidden');
@@ -224,6 +225,16 @@ $result = $con->query($sql);
         }
 
         document.getElementById('closeDetailsModal').addEventListener('click', () => closeModal('detailsModal'));
+
+        function viewProfile() {
+        // Get the userID stored in the button's data-userId attribute
+        const userID = document.getElementById('modalViewProfile').dataset.userId;
+
+        // Example: Open the reporter's profile page using userID
+        const profileURL = `viewProfile.php?userID=${encodeURIComponent(userID)}`;
+        window.location.href = profileURL;
+    }
+        
     </script>
 </body>
 </html>
