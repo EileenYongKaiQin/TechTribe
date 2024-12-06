@@ -23,10 +23,14 @@ if ($result->num_rows > 0) {
         echo '<div class="post-container">';
         // Convert times to 12-hour format
         $availability = json_decode($row['availableTime'], true);
-        echo '<div class="user-info">';
+        echo '<div class="user-info-post"">';
             // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
-            echo '<img src="../images/employer.png" alt="Profile Picture" class="profile-pic">';
-            echo '<h3>' . htmlspecialchars($row['fullName']) . '</h3>';
+            echo '<div class="picture">';
+                echo '<a href="view_jobseeker_profile.php"><img src="../images/JobSeeker.png" alt="Profile Picture" class="profile-pic"></a>';
+            echo '</div>';
+            echo '<div class="name">';
+                echo '<a href="view_jobseeker_profile.php"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
+            echo '</div>';
         echo '</div>';
 
         // Display individual post
@@ -58,12 +62,12 @@ if ($result->num_rows > 0) {
         echo '</div>';
 
         
-        echo '<div class="contact-info">';
+        echo '<div class="contact-info" style="display:flex; justify-content:space-between;">';
         echo '<p><strong>Phone:</strong> ' . htmlspecialchars($row['contactNo']) . '</p>';
         echo '<p><strong>Email:</strong> ' . htmlspecialchars($row['email']) . '</p>';
         echo '</div>';
         
-        echo '<p class="published-time" style="text-align: right; font-size: 0.9em; color: #555;">Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['createdAt']))) . '</p>';
+        echo '<p class="published-time" style="text-align: center; font-size: 0.9em; color: #555;">Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['createdAt']))) . '</p>';
         
         echo '</div>';
         
