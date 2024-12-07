@@ -16,4 +16,5 @@ CREATE TABLE jobPost (
 );
 
 INSERT INTO jobPost (jobPostID, jobTitle, location, salary, startDate, endDate, workingHour, jobDescription, jobRequirement, createTime, updateTime, userID)
-VALUES ('JP001', 'Test Job Title', 'Kuala Lumpur', 12.00, '2024-01-01', '2024-12-31', 'Day Shift', 'Test Job Description', 'Test Job Requirement', NOW(), NOW(), 'EP001');
+VALUES ('JP001', 'Test Job Title 1', 'Kuala Lumpur', 12.00, '2024-12-01', '2025-05-31', 'Day Shift', 'Test Job Description', 'Test Job Requirement', NOW(), NOW(), 'EP001'),
+('JP002', 'Test Job Title 2', 'Johor', 10.00, '2025-01-24', '2025-06-30', 'Night Shift', 'Test Job Description', 'Test Job Requirement', NOW(), NOW(), 'EP001');
