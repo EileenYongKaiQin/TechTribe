@@ -1,14 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('employerNew.php');
-
-if (isset($_SESSION['userID'])) {
-    $userID = $_SESSION['userID'];
-} else {
-    header("Location: ../login.html");
-    exit();
-}
+include('employerNew_nosidebar.php');
 
 if(!empty($_POST)) 
 {   
@@ -29,15 +22,12 @@ if(!empty($_POST))
         VALUES ('$userID','$name','$email','$contactNo','$companyName', '$companyAddress')")) 
         {
             echo '<script>
-            window.onload = function() { 
-            document.querySelector("#success-popup").classList.add("active"); 
-            window.location.href="employer_dashboard.php";
-        }</script>';
+            window.location.href="create_employer_profile.php?status=success";
+                </script>';
         } else {
             echo '<script>
-            window.onload = function() { 
-            document.querySelector("#fail-popup").classList.add("active"); 
-            }</script>';
+                    window.location.href="create_employer_profile.php?status=fail"";
+                </script>';
         }
 }
 ?>
@@ -54,7 +44,12 @@ if(!empty($_POST))
             font-family: "Poppins", sans-serif;
         }
         .container {
-            margin-left: 200px;
+            position: relative;
+            margin: auto;
+            width: 90%;
+            min-height: 100vh;
+            background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0.3));
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 25px rgba(0, 0, 0, 0.08);
         }
         .profile-h1 {
             text-align: center;   
@@ -76,7 +71,7 @@ if(!empty($_POST))
             border: 1px solid #ccc;
             padding: 25px 25px 25px;
             border-radius: 10px;
-            width: 80%;
+            width: 85%;
             box-sizing: border-box;
             margin: auto;
             background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.9),rgba(255, 255, 255, 0.7));
@@ -323,44 +318,38 @@ if(!empty($_POST))
 
 <script src="jquery-3.7.1.min.js"></script>
 <script>
-function createProfile(id){
-    let popupNode = document.querySelector(id);
-    let overlay = popupNode.querySelector(".overlay");
-    let okayBtn = popupNode.querySelector(".okay-btn");
-    function openPopup(){
-        popupNode.classList.add("active");
-    }
-    function closePopup(){
-        popupNode.classList.remove("active");
-    }
-    overlay.addEventListener("click", closePopup);
-    okayBtn.addEventListener("click", closePopup);
-    return openPopup;
-}
-    let successPopup = createProfile("#success-popup");
-    let failPopup = createProfile("#fail-popup");
-    document.querySelector("#create-btn").addEventListener("click", popup);
+<?php
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+?>
 
-    document.querySelector("#create-btn").addEventListener("click", function (e) {
-    e.preventDefault();
-    const form = document.querySelector("form");
-    const inputs = form.querySelectorAll("[required]");
-    let allValid = true;
-
-    inputs.forEach(input => {
-        if (!input.value) {
-            allValid = false;
-            input.classList.add("error");
-        } else {
-            input.classList.remove("error");
-        }
-    });
-
-    if (allValid) {
-        form.submit();
-    } else {
-        alert("Please fill out all required fields.");
+document.addEventListener('DOMContentLoaded', function() {
+    const status = "<?php echo $status; ?>";
+    
+    if (status === 'success') {
+        const successPopup = document.getElementById('success-popup');
+        successPopup.classList.add('active');
+    } else if (status === 'fail') {
+        const failPopup = document.getElementById('fail-popup');
+        failPopup.classList.add('active');
     }
+
+    function setupPopupRedirect(popupId) {
+        const popup = document.getElementById(popupId);
+        const closeElements = popup.querySelectorAll('.close-btn, .okay-btn, .overlay');
+        
+        closeElements.forEach(element => {
+            element.addEventListener('click', function() {
+                if (popupId === 'success-popup') {
+                    window.location.href = 'employer_dashboard.php';
+                } else {
+                    window.location.href = 'create_employer_profile.php';
+                }
+            });
+        });
+    }
+
+    setupPopupRedirect('success-popup');
+    setupPopupRedirect('fail-popup');
 });
 </script>
 
