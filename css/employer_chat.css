@@ -36,13 +36,15 @@ body {
 
 /* Chat Section */
 .chat-section {
-    width: 80%;
+    width: 60%;
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #DBDDE0;
     border-radius: 8px;
     padding: 10px;
     background-color: #e8e8e8;
+    display: flex; /* Ensure chat section uses flexbox */
+    flex-direction: column; /* Stack messages vertically */
 }
 
 /* Chat Message Styles */
@@ -54,26 +56,21 @@ body {
     border-color: black;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     position: relative; /* For absolute positioning of buttons */
+    width: fit-content; /* Allow messages to shrink to fit content */
 }
 
 /* Job Seeker Message */
 .job-seeker-message {
     background-color: rgb(255, 255, 255);
-    align-self: flex-start;
+    align-self: flex-start; /* Align to the left */
     text-align: left;
-    width: 100%;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
-
 }
 
 /* Employer Message */
 .employer-message {
     background-color: rgb(224, 246, 237);
-    align-self: flex-end;
+    align-self: flex-end; /* Align to the right */
     text-align: right;
-    width: 100%;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
-
 }
 
 /* Chat Input and Send Button */
@@ -83,7 +80,7 @@ body {
 }
 
 .chat-input {
-    width: 975px;
+    width: 710px;
     padding: 18px;
     border-radius: 4px;
     border: 1px solid #DBDDE0;
@@ -194,4 +191,41 @@ button:hover {
 
 .delete-button:hover {
     background-color: #C70039; /* Darker red on hover */
+}
+
+
+.job-seeker-info {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px; /* Add margin for spacing */
+}
+
+.arrow {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.dropdown-menu {
+    display: none; /* Hide by default */
+    position: absolute;
+    background-color: #e0f7fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    margin-top: 5px;
+}
+
+.dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #b2ebf2; /* Highlight on hover */
 }
