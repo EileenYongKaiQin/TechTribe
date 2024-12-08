@@ -70,25 +70,43 @@ function addMessageToChat(messageContents, senderRole, messageID = null) {
     // Get the current user role dynamically (replace with your method of retrieving the role)
     const currentUserRole = 'employer'; // This should be dynamically set based on logged-in user
 
-    // Add edit and delete buttons only if the message is from the current user
-    if ((currentUserRole === 'employer' && senderRole === 'employer') ||
-        (currentUserRole === 'job_seeker' && senderRole === 'job_seeker')) {
-        
-        const editButton = document.createElement("button");
-        editButton.innerText = "Edit";
-        editButton.classList.add("edit-button");
-        editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
-        messageElement.appendChild(editButton);
-
-        const deleteButton = document.createElement("button");
-        deleteButton.innerText = "Delete";
-        deleteButton.classList.add("delete-button");
-        deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole);
-        messageElement.appendChild(deleteButton);
+    // Add ellipsis button only if the message is from the employer
+    if (currentUserRole === 'employer' && senderRole === 'employer') {
+        const ellipsisButton = document.createElement("button");
+        ellipsisButton.innerText = "⋮"; // Three dots
+        ellipsisButton.classList.add("ellipsis-button");
+        ellipsisButton.onclick = () => toggleEditDeleteMenu(messageElement, messageID, senderRole);
+        messageElement.appendChild(ellipsisButton);
     }
 
     chatSection.appendChild(messageElement);
     chatSection.scrollTop = chatSection.scrollHeight;
+}
+
+function toggleEditDeleteMenu(messageElement, messageID, senderRole) {
+    // Check if the menu already exists
+    let menu = messageElement.querySelector(".edit-delete-menu");
+
+    if (!menu) {
+        // Create the edit/delete menu
+        menu = document.createElement("div");
+        menu.classList.add("edit-delete-menu");
+        
+        const editButton = document.createElement("button");
+        editButton.innerText = "Edit";
+        editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
+        menu.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "Delete";
+        deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole);
+        menu.appendChild(deleteButton);
+
+        messageElement.appendChild(menu);
+    } else {
+        // Toggle menu visibility
+        menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    }
 }
 
 
@@ -198,3 +216,4 @@ function closeNotification() {
     modal.style.display = "none";
     overlay.style.display = "none";
 }
+

@@ -28,6 +28,13 @@ body {
     justify-content: flex-start;
 }
 
+/* Chat Container */
+.chat-container {
+    display: flex;
+    flex-direction: column; /* Stack job seeker info and chat section vertically */
+    width: 60%; /* Ensure consistent width */
+}
+
 /* Chat Window Title */
 .chat-window-title {
     font-size: 24px;
@@ -36,11 +43,11 @@ body {
 
 /* Chat Section */
 .chat-section {
-    width: 60%;
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #DBDDE0;
-    border-radius: 8px;
+    border-bottom-left-radius: 8px; /* No rounding for bottom left corner */
+    border-bottom-right-radius: 8px; 
     padding: 10px;
     background-color: #e8e8e8;
     display: flex; /* Ensure chat section uses flexbox */
@@ -165,8 +172,8 @@ button:hover {
     padding: 5px 10px; /* Adjusted padding for better appearance */
     border: none;
     border-radius: 4px;
-    background-color: #AAE1DE; /* Matching background color */
-    color: #FFFFFF; /* White text color */
+    background-color: rgb(224, 246, 237); /* Matching background color */
+    color: rgb(224, 246, 237); /* White text color */
     cursor: pointer;
     font-size: 12px; /* Smaller font size for buttons */
     margin-left: 5px; /* Space between buttons */
@@ -174,15 +181,15 @@ button:hover {
 }
 
 .edit-button:hover {
-    background-color: #009688; /* Darker shade on hover */
+    background-color: rgb(224, 246, 237); /* Darker shade on hover */
 }
 
 .delete-button {
     padding: 5px 10px;
     border: none;
     border-radius: 4px;
-    background-color: #FF5733; /* Red color for delete button */
-    color: #FFFFFF; /* White text color */
+    background-color: rgb(224, 246, 237); /* Red color for delete button */
+    color: rgb(224, 246, 237); /* White text color */
     cursor: pointer;
     font-size: 12px;
     margin-left: 5px; /* Space between buttons */
@@ -190,15 +197,26 @@ button:hover {
 }
 
 .delete-button:hover {
-    background-color: #C70039; /* Darker red on hover */
+    background-color: rgb(224, 246, 237); /* Darker red on hover */
 }
 
+/* Job Info */
+.job-info {
+    margin-bottom: 10px; /* Add margin for spacing */
+    font-weight: bold; /* Make job name bold */
+}
 
+/* Job Seeker Info */
 .job-seeker-info {
     display: flex;
     align-items: center;
     position: relative;
-    margin-bottom: 15px; /* Add margin for spacing */
+    width: 100%; /* Full width to match chat section */
+    border: 1px solid #DBDDE0; /* Border */
+    border-top-left-radius: 8px; /* Round the top left corner */
+    border-top-right-radius: 8px; /* Round the top right corner */
+    padding: 10px; /* Padding */
+    background-color: #f0eded; /* Background color */
 }
 
 .arrow {
@@ -212,7 +230,8 @@ button:hover {
     background-color: #e0f7fa;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 100;
-    margin-top: 5px;
+    margin-top: 5px; /* Space below the arrow */
+    left: 0; /* Align dropdown menu to the left */
 }
 
 .dropdown-menu ul {
@@ -228,4 +247,26 @@ button:hover {
 
 .dropdown-menu li:hover {
     background-color: #b2ebf2; /* Highlight on hover */
+}
+
+
+.ellipsis-button {
+    background: none;
+    border: none;
+    font-size: 10px; /* Adjust size as needed */
+    color: black;
+    cursor: pointer;
+}
+
+.edit-delete-menu {
+    display: none; /* Hide by default */
+    position: absolute; /* Positioning relative to message */
+    background: white; /* Menu background */
+    border: 1px solid #ccc; /* Menu border */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.edit-delete-menu button {
+    display: block; /* Stack buttons vertically */
+    margin: 5px; /* Spacing between buttons */
 }

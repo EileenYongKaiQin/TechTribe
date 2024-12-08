@@ -69,6 +69,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }
+}else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $sql = "SELECT id, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message ORDER BY timestamp ASC";
+
+    $result = $conn->query($sql);
+
+    $messages = array();
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $messages[] = [
+                'id' => $row['id'],
+                'senderRole' => $row['senderRole'],
+                'messageContents' => $row['messageContents'],
+                'timestamp' => $row['timestamp']
+            ];
+        }
+        echo json_encode($messages);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'No messages found']);
+    }
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Add new message
+    $senderRole = $_POST['senderRole'];
+    $messageContents = $_POST['messageContents'];
+
+    $sql = "INSERT INTO message (senderRole, messageContents) VALUES ('$senderRole', '$messageContents')";
+    if ($conn->query($sql) === TRUE) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'error' => $conn->error]);
+    }
+    // Handle edit and delete requests as needed here...
 }
 
 $conn->close();
