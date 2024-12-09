@@ -94,7 +94,7 @@ include('jobSeeker1.php');
                 <?php
             }
         } else {
-            echo "<p>You have not applied for any jobs yet.</p>";
+            echo "<p class='alert alert-info'>You have not applied for any jobs yet.</p>";
         }
         $stmt->close();
         $con->close();

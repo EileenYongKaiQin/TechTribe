@@ -90,23 +90,29 @@
                                 <p><strong>Job Seeker Response:</strong> " . ($row['applicantResponse'] ?: 'No message provided yet.') . "</p>
                             </div>";
                             }   
-                        }
 
+                        }
+                        
+                    if (in_array($row['applyStatus'], ['Pending', 'Under Review'])){
                 echo "
 
-                         <div class='d-flex gap-2'>
+                        <div class='d-flex gap-2'>
                             <button class='btn btn-success' onclick='confirmAction(\"accept\", \"{$row['applicationID']}\")'>Accept</button>
                             <button class='btn btn-danger' onclick='confirmAction(\"reject\", \"{$row['applicationID']}\")'>Reject</button>
                             <button type='button' class='btn btn-secondary' data-bs-toggle='collapse' data-bs-target='#details-{$row['applicationID']}'>Request More</button>
                         </div>
                             
-                            <div id='details-{$row['applicationID']}' class='collapse mt-3'>
+                        <div id='details-{$row['applicationID']}' class='collapse mt-3'>
                             <textarea id='message-{$row['applicationID']}' name='additionalDetails' class='form-control' placeholder='Enter your message for the applicant'></textarea>
                             <button type='button' class='btn btn-primary mt-2' onclick='sendRequestMore(\"{$row['applicationID']}\")'>Send Request</button>
-                        </div>
-                    </div>
+                        </div>";
+                    }
+                    
+                echo "    </div>
                 </div>";
+                    
             }
+        
         } else {
             echo "<p class='alert alert-info'>No job applications found for your job posts.</p>";
         }
@@ -149,34 +155,34 @@
         }
 
         function sendRequestMore(applicationID) {
-    const message = document.getElementById(`message-${applicationID}`).value.trim();
+            const message = document.getElementById(`message-${applicationID}`).value.trim();
 
-    if (!message) {
-        Swal.fire('Error', 'Please enter a message before sending the request.', 'error');
-        return;
-    }
+            if (!message) {
+                Swal.fire('Error', 'Please enter a message before sending the request.', 'error');
+                return;
+            }
 
-    // Create FormData object for the AJAX request
-    const formData = new FormData();
-    formData.append('applicationID', applicationID);
-    formData.append('additionalDetails', message); // Make sure the field name matches the PHP script
-    formData.append('action', 'requestMore');
+            // Create FormData object for the AJAX request
+            const formData = new FormData();
+            formData.append('applicationID', applicationID);
+            formData.append('additionalDetails', message); // Make sure the field name matches the PHP script
+            formData.append('action', 'requestMore');
 
-    // Send the request via Fetch API
-    fetch('processApplication.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text()) // Expect text or JSON response
-    .then(data => {
-        // Display success or error message
-        Swal.fire('Success', 'Request sent successfully!', 'success');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire('Error', 'An unexpected error occurred. Please try again.', 'error');
-    });
-}
+            // Send the request via Fetch API
+            fetch('processApplication.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text()) // Expect text or JSON response
+            .then(data => {
+                // Display success or error message
+                Swal.fire('Success', 'Request sent successfully!', 'success');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'An unexpected error occurred. Please try again.', 'error');
+            });
+        }
 
     </script>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
