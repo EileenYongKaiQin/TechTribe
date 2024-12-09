@@ -5,21 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
 </head>
 <style>
+    .my-application{
+        text-align: center;
+    }
+
     .jobDescription{
-        margin: 30px 500px;
-        padding: 60px;
+        margin: 0 auto;
+        padding: 25px 50px;
+        width: 80%;
+        max-width: 700px;
         background-color: white;
         border-radius: 20px;
     }
 
     .jobDescription p {
-        padding: 20px 50px;
         font-size: 20px;
-        float: left;
-        letter-spacing: 0.75px;
+        text-align: left;
     }
 
     .jobDescription p strong{
@@ -27,14 +32,15 @@
     }
 
     #cancelButton{
-        float: right;
-        padding:15px 20px;
-        margin: 30px 500px;
+        text-align: center;
+        padding: 15px 20px;
+        margin: 0 auto;
         border-radius: 0.5rem;
         color: white;
         background: #216ce7;
         border: 2px solid rgb(243, 243, 243);
     }
+
 </style>
 <body>
     <?php 
@@ -59,7 +65,7 @@
     ?>
 
     <div class="content">
-        <h1>My Application</h1>
+        <h1 class="my-application">My Application</h1>
 
         <!-- Display job details -->
         <div class="jobDescription">
@@ -86,8 +92,8 @@
                 title: "Are you sure you want to cancel your application?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Yes, cancel it",
-                cancelButtonText: "No, keep it"
+                confirmButtonText: "Yes",
+                cancelButtonText: "No"
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch('cancelJobAction.php', {

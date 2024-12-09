@@ -9,6 +9,17 @@
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
 </head>
 <style>
+    .container{
+        margin: 0 auto;
+        padding: 0;
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .container h1{
+        text-align: center;
+    }
+
     .status-label {
         font-weight: bold;
         padding: 5px 10px;
@@ -66,7 +77,7 @@
                 <div class='card mb-3'>
                     <div class='card-body'>
                         <h3 class='card-title'>{$row['jobTitle']}</h3>
-                        <p><strong>Applicant Name:</strong><a href='view_jobseeker_profile' class='text-decoration-none'> {$row['applicantName']}</a></p>
+                        <p><strong>Applicant Name:</strong><a href='viewProfile.php?applicantID={$row['applicantID']}' class='text-decoration-none'> {$row['applicantName']}</a></p>
                         <p><strong>Location:</strong> {$row['location']}</p>
                         <p><strong>Application ID:</strong> {$row['applicationID']}</p>
                         <p><strong>Applied On:</strong> {$row['applyDate']}</p>

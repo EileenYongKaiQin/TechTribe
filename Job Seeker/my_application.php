@@ -8,6 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <style>
+    .container{
+        margin: 0 auto;
+        padding: 0;
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .my-application{
+        text-align: center;
+    }
+
     .status-label {
         font-weight: bold;
         padding: 5px 10px;
@@ -36,7 +47,7 @@ include('jobSeeker1.php');
 ?>
     
     <div class="container">
-        <h1 style="padding: 20px">My Applications</h1>
+        <h1 class="my-application">My Applications</h1>
 
         <?php
         // Ensure user is logged in

@@ -6,20 +6,26 @@
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     
     <style>
+        .content h1{
+            text-align: center;
+        }
+
         .jobDescription{
-            margin: 30px 500px;
-            padding: 50px;
+            margin: 0 auto;
+            padding: 30px 50px;
+            width: 80%;
+            max-width: 700px;
             background-color: white;
             border-radius: 20px;
         }
 
         .jobDescription p {
-            padding: 20px;
             font-size: 20px;
-            float: left;
+            text-align: left;
         }
 
         .jobDescription p strong{
@@ -27,14 +33,14 @@
         }
 
         #applyButton{
-            padding:15px 20px;
-            float: right;
-            margin: 30px 500px;
+            text-align: center;
+            padding: 10px 20px;
+            margin: 0 auto;
             border-radius: 0.5rem;
             color: white;
             background: #216ce7;
             border: 2px solid rgb(243, 243, 243);
-            letter-spacing: 3px;
+            letter-spacing: 2px;
         }
         
     </style>
@@ -68,7 +74,7 @@
     ?>
      <!-- Main content -->
      <div class="content">
-        <h1>APPLY JOB!</h1>
+        <h1>APPLY JOB</h1>
     
     <div class="jobDescription">
         <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p><br>
