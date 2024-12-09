@@ -71,9 +71,10 @@
             <p><strong>Salary: </strong> <?php echo $application['salary']; ?></p><br>
             <p><strong>Working Hour: </strong> <?php echo $application['workingHour']; ?></p><br>
         </div>
-
+    <?php if (!in_array($application['applyStatus'], ['Accepted', 'Rejected'])) { ?>
         <!-- Cancel Button -->
         <button id="cancelButton">Cancel Application</button>
+    <?php } ?>
     </div>
 
     <script>
