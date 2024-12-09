@@ -21,195 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .main-content {
-            display: flex;
-            justify-content: center;    
-            margin-top: 50px;            
-            padding: 20px;
-        }
-
-        .rectangle {
-            background: #FFFFFF;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-            border-radius: 20px;        
-            display: flex;
-            flex-wrap: wrap;           
-            justify-content: space-between; 
-            width: 75%;                 
-            max-width: 1000px;      
-            padding: 30px 50px;        
-        }
-
-        .job-card {
-            width: 45%;                 
-            background: #F0FDFF;
-            border: 1px solid #EFE2F8;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px; 
-            margin-bottom: 30px;         
-            box-sizing: border-box;  
-            display: flex;
-            flex-direction: column;     
-            justify-content: space-between;
-        }
-
-        .job-header h3 {
-            font-size: 18px;
-            color: #18191C;
-            font-weight: bold;
-            margin-bottom: 10px;      
-        }
-
-        .job-details {
-            font-size: 14px;
-            color: #303030;
-            display: flex;
-            flex-direction: column;  
-            gap: 25px;                    
-            margin-bottom: 10px;      
-        }
-
-        .date, .location, .salary {
-            margin: 0;
-        }
-
-        .date, .location {
-            padding-left: 50px;      
-        }
-
-        .date {
-            margin-bottom: -18px;    
-            font-weight: bold;   */
-        }
-
-        .location {
-            display: flex;
-            align-items: center; 
-            margin-bottom: 85px;  
-            color: #767F8C;
-        }
-
-        .salary {
-            color: #767F8C;      
-        }
-
-        .view-details-btn {
-            padding: 10px 12px;
-            background: #FFFFFF;
-            border: 1.05121px solid #AAE1DE;
-            border-radius: 4.20482px;
-            color: #303030;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;            
-            display: flex;               
-            justify-content: center;     
-            align-items: center;      
-        }
-
-        .apply-btn:hover, .view-details-btn:hover {
-            background-color: #AAE1DE;
-        }
-
-        .view-details-btn:hover {
-            background-color: #8EFAAB;
-            color: #FFFFFF;              
-        }
-
-        /* Time Label (Day/Night) */
-        .time-label {
-            font-weight: bold;
-            padding: 2px 8px;       
-            border-radius: 4px;      
-            margin-right: 8px; 
-        }
-
-        .time-label.day {
-            background: #E7F6EA;  
-            color: #4CAF50;       
-        }
-
-        .time-label.night {
-            background: #F1E0FF;  
-            color: #9C27B0;            
-        }
-
-        .map-pin {
-            width: 18.78px;
-            height: 18.9px;
-            margin-right: 8px; 
-            color: #767F8C;   
-        }
-
-        /* Search Bar */
-        .search-bar-container {
-            position: absolute;
-            width: 969px;
-            height: 66px;
-            left: calc(50% - 969px / 2 + 6.5px);
-            top: 85px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .search-bar {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            background-color: #F7F7F7;
-            border-radius: 10px;
-            box-sizing: border-box;
-            padding: 0 10px;
-            position: relative;
-        }
-
-        .search-input {
-            flex: 1;
-            height: 65%;
-            border: none;
-            background-color: transparent;
-            font-size: 18px;
-            font-family: 'Poppins', sans-serif;
-            color: #808080;
-            margin-right: 15px;
-            padding: 0 20px;
-            outline: none;
-        }
-
-        .search-btn {
-            width: 95px;
-            height: 65%;
-            background-color: #AAE1DE;
-            color: #FFFFFF;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-right: 35px;
-        }
-
-        .search-btn:hover {
-            background-color: #80C2B2;
-        }
-
-        .search-icon {
-            width: 20px;
-            height: 20px;
-            margin-left: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/view_job.css">
 </head>
 <body>
     <!-- Search Bar -->
@@ -227,11 +39,25 @@
             <?php
             // Check if there are any jobs to display
             if (count($jobs) > 0) {
-                // Loop through each job and display the job details dynamically
                 foreach ($jobs as $job) {
             ?>
 
-            <div class="job-card">
+        <div class="job-card" data-id="<?php echo $job['jobPostID']; ?>">
+            <div class="top-right-icons">
+                <img src="../images/BookmarkSimple.png" alt="Bookmark" class="bookmark-icon">
+                <img src="../images/more_vert.png" alt="More Options" class="more-options-icon" onclick="toggleDropdown(this)">
+                <div class="dropdown-menu">
+                    <div class="dropdown-item" onclick="navigateToReport('<?php echo $job['jobPostID']; ?>')">
+                        <img src="../images/sms_failed.png" alt="Report Icon">
+                        <span>Report Post</span>
+                    </div>
+                    <div class="dropdown-item" onclick="hidePost(this)">
+                        <img src="../images/cancel_presentation.png" alt="Hide Icon">
+                        <span>Hide Post</span>
+                    </div>
+                </div>
+            </div>
+
                 <div class="job-header">
                     <h3><?php echo htmlspecialchars($job['jobTitle']); ?></h3>
                 </div>
@@ -253,7 +79,6 @@
                         <img src="../images/MapPin.png" alt="Location Icon" class="map-pin"> <?php echo htmlspecialchars($job['location']); ?>
                     </p>
 
-                    <!-- Wrap buttons in a container for horizontal alignment -->
                     <div class="job-details-buttons">
                         <button class="view-details-btn" onclick="location.href='manageJob.php?jobPostID=<?php echo $job['jobPostID']; ?>'">View Details</button>
 
@@ -264,11 +89,66 @@
             <?php
                 }
             } else {
-                // If no jobs are found, display a message
                 echo "<p>No jobs found.</p>";
             }
             ?>
         </div>
     </div>
+
+    <script>
+    function toggleDropdown(element) {
+        const dropdownMenu = element.nextElementSibling;
+        dropdownMenu.classList.toggle('show');
+    }
+
+    function navigateToReport(jobPostID) {
+        window.location.href = `report_form.php?jobPostID=${jobPostID}`;
+    }
+
+    function hidePost(element) {
+        const jobCard = element.closest('.job-card');
+        const jobContainer = jobCard.parentElement;
+
+        const placeholder = document.createElement('div');
+        placeholder.classList.add('job-placeholder');
+        placeholder.dataset.hiddenJobCardId = jobCard.dataset.id;
+
+        placeholder.style.height = `${jobCard.offsetHeight}px`;
+        placeholder.style.width = `${jobCard.offsetWidth}px`;
+        placeholder.style.margin = window.getComputedStyle(jobCard).margin;
+
+        const modal = document.createElement('div');
+        modal.classList.add('hide-post-modal');
+        modal.innerHTML = `
+            <span class="hide-post-text">Hiding posts helps us find the suitable jobs for you</span>
+            <button class="undo-btn" onclick="showPost('${jobCard.dataset.id}')">Undo</button>
+        `;
+        placeholder.appendChild(modal);
+
+        jobCard.style.display = 'none';
+        jobContainer.insertBefore(placeholder, jobCard);
+    }
+
+    function showPost(hiddenJobCardId) {
+        const placeholder = document.querySelector(`.job-placeholder[data-hidden-job-card-id='${hiddenJobCardId}']`);
+
+        if (placeholder) {
+            const jobCard = document.querySelector(`.job-card[data-id='${hiddenJobCardId}']`);
+            if (jobCard) {
+                jobCard.style.display = 'block';
+            }
+            placeholder.remove();
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach((dropdown) => {
+            if (!dropdown.contains(event.target) && !event.target.matches('.more-options-icon')) {
+                dropdown.classList.remove('show');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
