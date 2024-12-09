@@ -243,7 +243,7 @@ if ($result && $result->num_rows > 0) {
             </div>
             <div class="menu-item">
                 <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
-                <span>Application</span>
+                <span onclick="location.href='response_application.php'">Application</span>
             </div>
             <div class="menu-item">
                 <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
