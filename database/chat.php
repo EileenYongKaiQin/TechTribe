@@ -81,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $sql = "SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message ORDER BY timestamp ASC";
     $result = $con->query($sql);
 
-    $messages = array();
+    $message = array();
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $messages[] = [
+            $message[] = [
                 'id' => $row['id'],
                 'userID' => $row['userID'], // Include userID in the result
                 'senderRole' => $row['senderRole'],
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'timestamp' => $row['timestamp']
             ];
         }
-        echo json_encode($messages);
+        echo json_encode($message);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No messages found']);
     }

@@ -2,6 +2,31 @@
 <?php
 include '../database/config.php';
 include 'employerNew.php'; // Include session_start and user verification
+
+
+
+// Get the job seeker ID from the URL
+if (isset($_GET['jobSeekerID'])) {
+    $jobSeekerID = $_GET['jobSeekerID'];
+
+    // Fetch job seeker details from the database
+    $sql = "SELECT fullName FROM jobseeker WHERE userID = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $jobSeekerID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $jobSeeker = $result->fetch_assoc();
+        $jobSeekerName = htmlspecialchars($jobSeeker['fullName']);
+    } else {
+        // Handle case where the job seeker is not found
+        $jobSeekerName = "Unknown Job Seeker";
+    }
+} else {
+    // Handle case where no job seeker ID is provided
+    $jobSeekerName = "No Job Seeker Selected";
+}
 ?>
 
 <!DOCTYPE html>
@@ -347,7 +372,8 @@ button:hover {
         <section class="content">
             <div class="chat-container">
                 <div class="job-seeker-info">
-                    <span id="jobSeekerName">Karry Wang</span>
+                    <span id="jobSeekerName"><?php echo $jobSeekerName; ?></span>
+                    <span id="jobSeekerName"><?php echo $jobSeekerID; ?></span>
                     <span class="arrow" onclick="toggleDropdown()">▼</span>
                     <!-- <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..."> -->
                     <div id="dropdownMenu" class="dropdown-menu">
@@ -359,6 +385,8 @@ button:hover {
                         </ul>
                     </div>
                 </div>
+                <?php echo htmlspecialchars($fullName); ?>
+                <?php echo htmlspecialchars($userID); ?>
                 <div class="chat-section" id="chatSection"></div>
             </div>
 
