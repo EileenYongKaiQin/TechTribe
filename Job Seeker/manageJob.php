@@ -10,22 +10,37 @@
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     
     <style>
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 250px; /* Adjusted for sidebar offset */
+            padding: 20px;
+         }
+
         .content h1{
             text-align: center;
+            margin-top:-20px;
+            margin-bottom:10px;
+
+            font-weight: 700;
         }
 
         .jobDescription{
             margin: 0 auto;
-            padding: 30px 50px;
+            padding: 40px 60px 20px 60px;
             width: 80%;
             max-width: 700px;
+            height: auto;
             background-color: white;
             border-radius: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
         }
 
         .jobDescription p {
             font-size: 20px;
             text-align: left;
+            margin-bottom: 5px; 
         }
 
         .jobDescription p strong{
@@ -33,16 +48,54 @@
         }
 
         #applyButton{
-            text-align: center;
-            padding: 10px 20px;
+            display: block;
             margin: 0 auto;
-            border-radius: 0.5rem;
-            color: white;
-            background: #216ce7;
-            border: 2px solid rgb(243, 243, 243);
-            letter-spacing: 2px;
+            padding: 20px 40px;
+            width: 180px;
+            height: 58px;
+            background: #BEC6BF;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            line-height: 1;
         }
-        
+
+        #applyButton:hover {
+        background: #8EFAAB;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+        border-radius: 50px;
+        color: #000000; /* Black text color */
+        text-align: center;
+    }
+
+    /* Back Button */
+    #back-btn {
+        position: absolute;
+        top: 110px;
+        right: 300px;
+        width: 99px;
+        height: 43px;
+        background: #AAE1DE;
+        border-radius: 50px;
+        text-align: center;
+        line-height: 43px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #000000;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+
+    #back-btn:hover {
+        background: #8DCBC8;
+    }
+            
     </style>
 </head>
 <body>
@@ -74,7 +127,8 @@
     ?>
      <!-- Main content -->
      <div class="content">
-        <h1>APPLY JOB</h1>
+        <h1>Detail Job Posting</h1>
+        <a href="jobSeeker_posting_list.php" id="back-btn">Back</a>
     
     <div class="jobDescription">
         <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p><br>
