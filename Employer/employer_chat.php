@@ -19,12 +19,13 @@ include 'employerNew.php'; // Include session_start and user verification
                 <div class="job-seeker-info">
                     <span id="jobSeekerName">Karry Wang</span>
                     <span class="arrow" onclick="toggleDropdown()">▼</span>
+                    <!-- <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..."> -->
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
-                            <li onclick="viewProfile()">View Profile</li>
+                            <!-- <li onclick="viewProfile()">View Profile</li> -->
                             <li onclick="searchChat()">Search Chat</li>
-                            <li onclick="deleteChat()">Delete Chat</li>
-                            <li onclick="report()">Report</li>
+                            <!-- <li onclick="deleteChat()">Delete Chat</li>
+                            <li onclick="report()">Report</li> -->
                         </ul>
                     </div>
                 </div>

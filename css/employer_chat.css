@@ -23,7 +23,7 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1px;
     align-items: center;
     justify-content: flex-start;
 }
@@ -172,7 +172,7 @@ button:hover {
     padding: 5px 10px; /* Adjusted padding for better appearance */
     border: none;
     border-radius: 4px;
-    background-color: rgb(224, 246, 237); /* Matching background color */
+    background-color: AAE1DE; /* Matching background color */
     color: rgb(224, 246, 237); /* White text color */
     cursor: pointer;
     font-size: 12px; /* Smaller font size for buttons */
@@ -188,7 +188,7 @@ button:hover {
     padding: 5px 10px;
     border: none;
     border-radius: 4px;
-    background-color: rgb(224, 246, 237); /* Red color for delete button */
+    background-color: rgb(192, 51, 51); /* Red color for delete button */
     color: rgb(224, 246, 237); /* White text color */
     cursor: pointer;
     font-size: 12px;
@@ -209,6 +209,7 @@ button:hover {
 /* Job Seeker Info */
 .job-seeker-info {
     display: flex;
+    /* display: inline-block; */
     align-items: center;
     position: relative;
     width: 100%; /* Full width to match chat section */
@@ -217,6 +218,17 @@ button:hover {
     border-top-right-radius: 8px; /* Round the top right corner */
     padding: 10px; /* Padding */
     background-color: #f0eded; /* Background color */
+    justify-content: flex-start; /* Align items to the left */
+    
+}
+
+.search-bar {
+    margin-left: auto; /* Space between the dropdown arrow and the search bar */
+    padding: 5px; /* Padding for the search bar */
+    border: 1px solid #ccc; /* Border for the search bar */
+    border-radius: 4px; /* Rounded corners */
+    width: 200px; /* Width of the search bar */
+    font-size: 14px; /* Font size */
 }
 
 .arrow {
@@ -251,22 +263,60 @@ button:hover {
 
 
 .ellipsis-button {
-    background: none;
-    border: none;
-    font-size: 10px; /* Adjust size as needed */
-    color: black;
-    cursor: pointer;
+    position: absolute; /* Position the button absolutely within the container */
+    left: -54px; /* Adjust this value to move the button left as needed */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust to align center */
+    border: 1px solid #ccc;
+    z-index: 1000;
+    display: none; /* Hide by default */
+}
+
+.message-container:hover .ellipsis-button {
+    display: inline; /* Show the button on hover */
 }
 
 .edit-delete-menu {
     display: none; /* Hide by default */
-    position: absolute; /* Positioning relative to message */
-    background: white; /* Menu background */
-    border: 1px solid #ccc; /* Menu border */
-    z-index: 10; /* Ensure it appears above other elements */
+    position: absolute; /* Position it absolutely in relation to the message */
+    left: 0; /* Adjust position as necessary */
+    top: 100%; /* Position below the message */
+    background: white; /* Background color */
+    border: 1px solid #ccc; /* Border style */
+    z-index: 1000; /* Ensure it appears above other elements */
+    border-radius: 10px;
 }
+
 
 .edit-delete-menu button {
     display: block; /* Stack buttons vertically */
     margin: 5px; /* Spacing between buttons */
+}
+
+
+.message-timestamp {
+    display: block; /* Display as block to occupy full width */
+    font-size: 10px; /* Smaller font size for the timestamp */
+    color: gray; /* Gray color for the timestamp */
+    text-align: right; /* Align text to the right */
+    margin-top: 3px; /* Margin above the timestamp */
+  
+
+}
+
+
+.date-separator {
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #888; /* Change color as desired */
+    position: relative;
+}
+
+.date-separator:before {
+    content: '';
+    display: block;
+    width: 100%;
+    border-top: 1px solid #ccc; /* Line above the date */
+    margin: 5px 0; /* Space above and below the line */
 }
