@@ -22,7 +22,7 @@ $sql = "
     FROM 
         reportPost
     JOIN 
-        login ON reportPost.userID = login.userID
+        login ON reportPost.reporterID = login.userID
     LEFT JOIN 
         jobSeeker ON login.userID = jobSeeker.userID
     LEFT JOIN 
@@ -38,6 +38,21 @@ $result = $con->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review Report</title>
     <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        /* Resolved Status */
+        .status.resolved {
+            background-color: #dffddb;
+            color: #20d64d;
+        }
+
+        .status.resolved::before {
+            content: "●";
+            font-size: 12px;
+            color: #2fe37a;
+            position: relative;
+            top: 1px; 
+        }
+    </style>
 </head>
 <body>
     <h1>Report</h1>
@@ -48,7 +63,7 @@ $result = $con->query($sql);
         </div>
         <div class="action-buttons">
             <button class="btn btn-under-review" onclick="showUnderReviewModal()">Under Review</button>
-            <button class="btn btn-resolve-issue">Resolve Issue</button>
+            <button class="btn btn-resolve-issue" onclick="showResolvedModal()">Resolve Issue</button>
         </div>
     </div>
     <div class="container">    
@@ -78,6 +93,7 @@ $result = $con->query($sql);
                             <td class="status <?= strtolower(str_replace(' ', '-', $row['reportStatus'])) ?>" data-id="<?= htmlspecialchars($row['reportID']) ?>">
                                 <?= htmlspecialchars($row['reportStatus']) ?>
                             </td>
+
                             <td>
                                 <button class="btn btn-view" onclick="showDetailsModal('<?= $row['reportID'] ?>')">View</button>
                             </td>
@@ -98,15 +114,28 @@ $result = $con->query($sql);
         <button class="page-btn">»</button>
     </div>
 
-    <!-- Modal -->
-    <div id="updateModal" class="modal hidden">
+    <!-- Modal for Under Review-->
+    <div id="underReviewModal" class="modal hidden">
         <div class="modal-content">
-            <span class="close" id="closeModal" onclick="closeModal('updateModal')">&times;</span>
+            <span class="close" id="closeUnderReviewModal" onclick="closeModal('underReviewModal')">&times;</span>
             <h2>Are you sure you want to update the review status to "Under Review"?</h2>
-            <p id="selectedCount">There are X issue statuses that will be updated.</p>
+            <p id="underReviewCount">There are X issue statuses that will be updated.</p>
             <div class="modal-buttons">
-                <button id="cancelButton" class="btn cancel" onclick="closeModal('updateModal')">Cancel</button>
-                <button id="updateButton" class="btn update" onclick="updateStatus()">Update</button>
+                <button id="cancelUnderReviewButton" class="btn cancel" onclick="closeModal('underReviewModal')">Cancel</button>
+                <button id="updateUnderReviewButton" class="btn update" onclick="updateStatus('under-review')">Update</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Modal for Resolved -->
+     <div id="resolvedModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" id="closeResolvedModal" onclick="closeModal('resolvedModal')">&times;</span>
+            <h2>Are you sure you want to update the review status to "Resolved"?</h2>
+            <p id="resolvedCount">There are X issue statuses that will be updated.</p>
+            <div class="modal-buttons">
+                <button id="cancelResolvedButton" class="btn cancel" onclick="closeModal('resolvedModal')">Cancel</button>
+                <button id="updateResolvedButton" class="btn update" onclick="updateStatus('resolved')">Update</button>
             </div>
         </div>
     </div>
@@ -133,10 +162,23 @@ $result = $con->query($sql);
         function showUnderReviewModal() {
             const selectedCount = document.querySelectorAll('input[name="select-report"]:checked').length;
             if (selectedCount > 0) {
-                const modal = document.getElementById('updateModal');
+                const modal = document.getElementById('underReviewModal');
                 modal.classList.remove('hidden');
                 modal.classList.add('visible');
-                document.getElementById('selectedCount').innerText = `There are ${selectedCount} issue status that will be updated.`;
+                document.getElementById('underReviewCount').innerText = `There are ${selectedCount} issue status that will be updated.`;
+            } else {
+                alert("Please select at least one report to update.");
+            }
+        }
+
+        // Show the Resolved modal
+        function showResolvedModal() {
+            const selectedCount = document.querySelectorAll('input[name="select-report"]:checked').length;
+            if (selectedCount > 0) {
+                const modal = document.getElementById('resolvedModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('visible');
+                document.getElementById('resolvedCount').innerText = `There are ${selectedCount} issue statuses that will be updated.`;
             } else {
                 alert("Please select at least one report to update.");
             }
@@ -148,18 +190,31 @@ $result = $con->query($sql);
             modal.classList.add('hidden');
         }
 
-        document.getElementById('closeModal').addEventListener('click', () => closeModal('updateModal'));
-        document.getElementById('cancelButton').addEventListener('click', () => closeModal('updateModal'));
+        document.getElementById('closeResolvedModal').addEventListener('click', () => closeModal('resolvedModal'));
+        document.getElementById('closeUnderReviewModal').addEventListener('click', () => closeModal('underReviewModal'));
+        document.getElementById('cancelResolvedButton').addEventListener('click', () => closeModal('resolvedModal'));
+        document.getElementById('cancelUnderReviewButton').addEventListener('click', () => closeModal('underReviewModal'));
         document.getElementById('closeDetailsModal').addEventListener('click', () => closeModal('detailsModal'));
         
         
-        function updateStatus() {
+        // Update status to Under Review or Resolved
+function updateStatus(status) {
     const selectedIds = Array.from(document.querySelectorAll('input[name="select-report"]:checked')).map(cb => cb.value);
-    const status = 'Under Review';
 
     // Debugging: Check if the selectedIds and status are correctly set
     console.log("Selected IDs:", selectedIds);
     console.log("Status:", status);
+
+    const hasResolvedStatus = selectedIds.some(id => {
+        const statusElement = document.querySelector(`.status[data-id="${id}"]`);
+        return statusElement && statusElement.classList.contains('resolved');
+    });
+
+    if (hasResolvedStatus) {
+        alert("You cannot change the status of a resolved report.");
+        window.location.href = "reviewReport.php"; // Redirect back to reviewReport.php
+        return;
+    }
 
     // Prepare form data
     const formData = new FormData();
@@ -180,14 +235,14 @@ $result = $con->query($sql);
             selectedIds.forEach(id => {
                 const statusElement = document.querySelector(`.status[data-id="${id}"]`);
                 if (statusElement) {
-                    statusElement.innerText = 'Under Review';
-                    statusElement.classList.remove('pending');
-                    statusElement.classList.add('under-review');
+                    statusElement.innerText = status.charAt(0).toUpperCase() + status.slice(1); // Capitalize first letter
+                    statusElement.classList.remove('under-review', 'resolved');
+                    statusElement.classList.add(status);
                 }
             });
 
             // Close the modal automatically
-            closeModal('updateModal');
+            closeModal(status === 'under-review' ? 'underReviewModal' : 'resolvedModal');
         } else {
             alert('Failed to update status.');
         }
@@ -198,7 +253,8 @@ $result = $con->query($sql);
     });
 }
 
-        document.getElementById('updateButton').addEventListener('click', updateStatus);
+document.getElementById('updateUnderReviewButton').addEventListener('click', () => updateStatus('under review'));
+document.getElementById('updateResolvedButton').addEventListener('click', () => updateStatus('resolved'));
 
         function showDetailsModal(reportId) {
             // Send request to get report details
@@ -213,6 +269,7 @@ $result = $con->query($sql);
                     document.getElementById('modalEvidence').href = data.evidenceLink;
                     document.getElementById('modalReportedUser').innerText = data.reportedUser;
                     document.getElementById('modalViewProfile').dataset.userId = data.reportedUserID;
+                    // document.getElementById('modalReporterUserID').dataset.userId = data.reporterID;
                     // Show the modal
                     const modal = document.getElementById('detailsModal');
                     modal.classList.remove('hidden');

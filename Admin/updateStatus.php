@@ -9,32 +9,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate data
     if (!empty($ids) && !empty($status)) {
-        // Prepare placeholders for query
+        $statusMapping = [
+            'under-review' => 'Under Review',
+            'resolved' => 'Resolved',
+            'pending' => 'Pending'
+        ];
+
+        if (!array_key_exists($status, $statusMapping)) {
+            echo "Error: Invalid status value.";
+            exit;
+        }
+        $status = $statusMapping[$status];
+
+        // Check if any of the selected reports already have the status "Resolved"
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $query = "UPDATE reportPost SET reportStatus = ? WHERE reportID IN ($placeholders)";
+        $checkQuery = "SELECT COUNT(*) AS resolvedCount FROM reportPost WHERE reportID IN ($placeholders) AND reportStatus = 'Resolved'";
+        $stmtCheck = $con->prepare($checkQuery);
 
-        // Prepare the statement
-        $stmt = $con->prepare($query);
+        if ($stmtCheck) {
+            // Bind parameters dynamically for the check query
+            $typesCheck = str_repeat('s', count($ids));
+            $stmtCheck->bind_param($typesCheck, ...$ids);
 
-        if ($stmt) {
-            // Dynamically bind parameters
-            $types = str_repeat('s', count($ids) + 1); // Adding 1 for the status parameter
-            $bindParams = array_merge([$status], $ids);
+            $stmtCheck->execute();
+            $resultCheck = $stmtCheck->get_result();
+            $rowCheck = $resultCheck->fetch_assoc();
 
-            // Bind parameters dynamically
-            $stmt->bind_param($types, ...$bindParams);
+            if ($rowCheck['resolvedCount'] > 0) {
+                echo "Error: One or more reports are already resolved and cannot be updated.";
+                exit;
+            }
+        } else {
+            echo "Error: Failed to prepare the resolved check query.";
+            exit;
+        }
+
+        // Proceed with the update query
+        $updateQuery = "UPDATE reportPost SET reportStatus = ? WHERE reportID IN ($placeholders)";
+        $stmtUpdate = $con->prepare($updateQuery);
+
+        if ($stmtUpdate) {
+            // Dynamically bind parameters for the update query
+            $typesUpdate = str_repeat('s', count($ids) + 1); // Adding 1 for the status parameter
+            $bindParamsUpdate = array_merge([$status], $ids);
+
+            $stmtUpdate->bind_param($typesUpdate, ...$bindParamsUpdate);
 
             // Execute the query
-            if ($stmt->execute()) {
+            if ($stmtUpdate->execute()) {
                 // Return success response
                 echo "success";
             } else {
-                echo "Error: " . $stmt->error; // If execution fails, send error message
+                echo "Error: " . $stmtUpdate->error; // If execution fails, send error message
             }
 
-            $stmt->close();
+            $stmtUpdate->close();
         } else {
-            echo "Error: Failed to prepare the statement.";
+            echo "Error: Failed to prepare the update statement.";
         }
     } else {
         echo "Error: Missing or invalid data (IDs or status).";
@@ -43,4 +74,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "Error: Invalid request method. Use POST.";
 }
 ?>
-

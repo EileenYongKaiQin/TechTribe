@@ -20,10 +20,16 @@ if (isset($_GET['userID'])) {
             employer.companyName, 
             employer.companyAddress, 
             employer.contactNo,
-            employer.profilePic AS employerPic
+            employer.profilePic AS employerPic,
+            rp.reportID
         FROM login
         LEFT JOIN jobSeeker ON login.userID = jobSeeker.userID
         LEFT JOIN employer ON login.userID = employer.userID
+        LEFT JOIN reportPost rp ON 
+        CASE 
+            WHEN login.role = 'employer' THEN rp.reportedUserID = login.userID
+            WHEN login.role = 'jobSeeker' THEN rp.reportedUserID = login.userID
+        END
         WHERE login.userID = ?
     ";
 
@@ -35,31 +41,18 @@ if (isset($_GET['userID'])) {
     if ($result && $result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Prepare data based on the user's role (Job Seeker or Employer)
-        if ($user['role'] == 'jobSeeker') {
-            $profileData = [
-                'name' => $user['jobSeekerName'],
-                'contact' => $user['contactNo'],
-                'profilePic' => $user['jobSeekerPic'] ? "../uploads/profile_pics/" . $user['jobSeekerPic'] : '../images/jobSeeker.png',
-                'role' => 'Job Seeker',
-                'email' => $user['email'],
-                'location' => $user['location'] ?? 'N/A',
-                'company' => 'N/A',
-                'companyAddress' => 'N/A',
-                'profileLink' => "view_jobseeker_profile.php?userID=" . $user['userID'],
-            ];
-        } elseif ($user['role'] == 'employer') {
-            $profileData = [
-                'name' => $user['employerName'],
-                'contact' => $user['contactNo'],
-                'profilePic' => $user['employerPic'] ? "../uploads/profile_pics/" . $user['employerPic'] : '../images/employer.png',
-                'role' => 'Employer',
-                'email' => $user['email'],
-                'company' => $user['companyName'],
-                'companyAddress' => $user['companyAddress'],
-                'profileLink' => "view_employer_profile.php?userID=" . $user['userID'],
-            ];
-        }
+        $profileData = [
+            'name' => $user['role'] == 'jobSeeker' ? $user['jobSeekerName'] : $user['employerName'],
+            'contact' => $user['contactNo'],
+            'profilePic' => $user['role'] == 'jobSeeker' ? 
+                ($user['jobSeekerPic'] ? "../uploads/profile_pics/" . $user['jobSeekerPic'] : '../images/jobSeeker.png') : 
+                ($user['employerPic'] ? "../uploads/profile_pics/" . $user['employerPic'] : '../images/employer.png'),
+            'role' => ucfirst($user['role']),
+            'email' => $user['email'],
+            'company' => $user['role'] == 'employer' ? $user['companyName'] : 'N/A',
+            'companyAddress' => $user['role'] == 'employer' ? $user['companyAddress'] : 'N/A',
+            'reportID' => $user['reportID'], // Now this will correctly fetch the report ID
+        ];
 
         ?>
 
@@ -92,6 +85,8 @@ if (isset($_GET['userID'])) {
                         <p><?php echo $profileData['role']; ?></p>
                     </div>
 
+                    <hr class="separation-line">
+
                     <div class="basic-info">
                         <h1 class="heading">Basic Information</h1>
                         <p>Email: <?php echo $profileData['email']; ?></p>
@@ -101,6 +96,8 @@ if (isset($_GET['userID'])) {
                         <?php endif; ?>
                     </div>
 
+                    <hr class="separation-line">
+
                     <div class="company-info">
                         <?php if ($profileData['role'] == 'Employer'): ?>
                             <h1 class="heading">Company Details</h1>
@@ -109,23 +106,28 @@ if (isset($_GET['userID'])) {
                         <?php endif; ?>
                     </div>
 
-                    <div class="btns">
-                        <ul>
-                            <li><button class="btn warning" onclick="showWarningModal()">Issue Warning</button></li>
-                        </ul>
-                    </div>
+                    
                 </section>
                 <!-- Modal -->
                 <div id="updateModal" class="modal hidden">
                     <div class="modal-content">
                         <span class="close" id="closeModal" onclick="closeModal('updateModal')">&times;</span>
                         <h2>Are you sure you want to issue the warning to this user?</h2>
+                        <div class="comment-section">
+                            <!-- Comment section (optional) -->
+                            <label for="comment">Additional comment:</label><textarea id="warningComment" placeholder="Write comment"></textarea>
+                        </div>
                         <div class="modal-buttons">
                             <button id="cancelButton" class="btn cancel" onclick="closeModal('updateModal')">Cancel</button>
                             <button id="updateButton" class="btn update" onclick="updateStatus()">Submit</button>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="btns">
+                        <ul>
+                            <li><button class="btn warning" onclick="showWarningModal()">Issue Warning</button></li>
+                        </ul>
             </div>
         <script>
             // JavaScript for modal functionality
@@ -141,9 +143,30 @@ if (isset($_GET['userID'])) {
                 }
 
                 function updateStatus() {
-                    // Example: Submit the action for issuing a warning (you can add AJAX here to update status in DB)
-                    alert('Warning issued to user.');
-                    closeModal('updateModal');
+                    const comment = document.getElementById('warningComment').value; // Get the comment text
+                    const userID = '<?php echo $userID; ?>'; // Get the userID from PHP
+                    const reportID = '<?php echo $profileData['reportID']; ?>'; 
+                    console.log("Report id:",reportID);
+                    // Update the warningHistory in the database
+                    fetch('updateWarning.php', {
+                        method: 'POST',
+                        body: JSON.stringify({ userID, comment, reportID }),
+                        headers: { 'Content-Type': 'application/json' },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Warning issued successfully.');
+                            closeModal('updateModal');
+                            window.location.href = 'reviewReport.php';
+                        } else {
+                            alert('Failed to issue warning.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Error occurred while issuing the warning.');
+                    });
                 }
         </script>
         </body>

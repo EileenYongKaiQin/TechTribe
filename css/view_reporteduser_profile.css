@@ -12,9 +12,11 @@ html {
 
 
 .container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 30px auto;
     padding: 30px;
+    margin-left: 450px;
+    margin-top: 60px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -59,6 +61,11 @@ html {
     gap: 20px; /* Space between buttons */
 }
 
+.userDetails .userName p {
+    font-size: 1.4rem;
+    color: #A8AAB0;
+}
+
 .profilefc .btn {
     margin: 10px;
     padding: 10px 20px;
@@ -75,23 +82,18 @@ html {
     background-color: #005999;
 }
 
-/* Extended Lines */
-.userDetails .basic-info::before,
-.userDetails .company-info::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%; /* Extended to the container width */
-    height: 2px;
-    background-color: #ddd; /* Light grey line */
+hr.separation-line {
+    width: 100%; /* Make sure the line spans the entire container */
+    border: none;
+    height: 2px; /* Line thickness */
+    background-color: #ddd; /* Line color */
+    margin: 20px 0; /* Add space around the line */
 }
 
 /* Profile Info */
-.userDetails .basic-info, .userDetails .company-info {
-    margin-top: 20px;
-    padding: 20px;
-    border-top: 1px solid #ddd;
+.userDetails .userName, .userDetails .basic-info,
+.userDetails .company-info {
+    padding: 10px;
 }
 
 /* Bigger Name */
@@ -151,6 +153,9 @@ p {
     display: inline-block;
 }
 
+.btn.warning {
+    margin-left: 50px;
+}
 .btn {
     padding: 12px 20px;
     background-color: #007ACC;
@@ -163,7 +168,7 @@ p {
 }
 
 .btn:hover {
-    background-color: #005999;
+    background-color: #69BFBB;
     transform: scale(1.05);
 }
 
@@ -225,7 +230,8 @@ p {
     background: #FFFFFF;
     padding: 20px;
     border-radius: 10px;
-    width: 400px;
+    width: 500px;
+    height: auto;
     text-align: center;
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -250,6 +256,7 @@ p {
     display: flex;
     justify-content: center;
     gap: 15px;
+    margin-top: 20px;
 }
 
 .modal-buttons .btn {
@@ -266,7 +273,7 @@ p {
 }
 
 .modal-buttons .btn.update {
-    background-color: #007ACC;
+    background-color: #69BFBB;
     color: #FFFFFF;
 }
 
@@ -296,7 +303,7 @@ p {
 #back-btn {
     position: absolute;
     top: 80px;
-    right: 200px;
+    right: 150px;
     width: 99px;
     height: 43px;
     background: #AAE1DE;
@@ -313,6 +320,27 @@ p {
 #back-btn:hover {
     background: #8DCBC8;
 }
+
+.comment-section {
+    width: 100%;
+}
+
+.comment-section textarea {
+    width: 60%;
+    height: 5px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.comment-section label {
+    font-size: 14px;
+    color: #333;
+    display: block;
+}
+
 
 /* Animation for modal appearance */
 @keyframes scaleUp {

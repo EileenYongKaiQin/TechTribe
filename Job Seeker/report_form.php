@@ -3,8 +3,8 @@
     include('jobSeeker1.php');
 
     // Assuming the jobPostID is passed as a GET parameter
-    // $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;
-    $jobPostID = 'JP001';
+    $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;
+    
     // Check if jobPostID exists
     if ($jobPostID) {
         // Fetch the employer's username who created the job post
@@ -72,6 +72,7 @@
         <div id="file-preview" class="file-preview"></div>
     </div>
 </div>
+<input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($jobPostID); ?>">
     <!-- Submit Button -->
         <button type="submit" class="show-modal" id="submitBtn" disabled>Submit</button>
 </form>

@@ -328,7 +328,7 @@ button.show-modal:disabled {
     border-radius: 16px;
     text-align: center;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease-in-out;
+    animation: scaleUp 0.3s ease-in-out;
     max-width: 90%;
     box-sizing: border-box;
 }
@@ -481,15 +481,13 @@ button.show-modal:disabled {
     color: #FFF;
 }
 
-/* Animation for Fade-in Effect */
-@keyframes fadeIn {
+/* Animation for modal appearance */
+@keyframes scaleUp {
     from {
-        opacity: 0;
-        transform: translateY(-20px);
+        transform: scale(0.8);
     }
     to {
-        opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
     }
 }
 

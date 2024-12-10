@@ -2,9 +2,27 @@
 // Include database configuration
 include('../database/config.php');
 
-// Hardcoded placeholders for userID and jobPostID for testing
-$userID = "JS001"; // Temporary user ID
-$jobPostID = "JP001"; // Ensure this exists in the jobPost table
+session_start();
+// Check if the user is logged in
+if (!isset($_SESSION['userID'])) {
+    echo "<script>alert('Session expired. Please log in again.'); window.location.href = '../login.html';</script>";
+    exit();
+}
+
+// Retrieve the userID from the session
+$userID = $_SESSION['userID'];
+
+// Check if jobPostID is passed as a POST parameter
+if (isset($_POST['jobPostID'])) {
+    $_SESSION['jobPostID'] = $_POST['jobPostID']; // Store it in the session
+}
+
+$jobPostID = $_SESSION['jobPostID'] ?? null; // Retrieve from session
+
+if (!$jobPostID) {
+    echo "<script>alert('Job post information is missing. Please try again.'); window.location.href = 'jobseeker_dashboard.php';</script>";
+    exit();
+}
 
 // Process the submitted form
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -53,10 +71,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $newReportID = 'REP001';
     }
 
+    // Get the reported user ID dynamically
+    $reportedUserQuery = $con->prepare("
+        SELECT l.userID AS reportedUserID 
+        FROM jobPost jp
+        INNER JOIN login l ON jp.userID = l.userID
+        WHERE jp.jobPostID = ?
+    ");
+    $reportedUserQuery->bind_param("s", $jobPostID);
+    $reportedUserQuery->execute();
+    $reportedUserResult = $reportedUserQuery->get_result();
+    $reportedUserData = $reportedUserResult->fetch_assoc();
+    $reportedUserID = $reportedUserData['reportedUserID'] ?? null;
+
+    if (!$reportedUserID) {
+        echo "<script>alert('Unable to identify the user associated with this job post. Please try again.'); history.back();</script>";
+        exit();
+    }
+
     // Insert the report into the database
-    $stmt = $con->prepare("INSERT INTO reportPost (reportID, reason, description, evidence, userID, jobPostID) 
-                            VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $newReportID, $report_reason, $description, $evidence, $userID, $jobPostID);
+    $stmt = $con->prepare("
+        INSERT INTO reportPost (reportID, reason, description, evidence, reporterID, jobPostID, reportedUserID) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("sssssss", $newReportID, $report_reason, $description, $evidence, $userID, $jobPostID, $reportedUserID);
 
     if ($stmt->execute()) {
         echo "<script>alert('Report submitted successfully!'); window.location.href = 'report_form.php';</script>";
