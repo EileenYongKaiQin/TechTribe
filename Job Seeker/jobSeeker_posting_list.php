@@ -359,6 +359,20 @@
             background-color: rgba(0, 0, 0, 0.1); 
             border-radius: 50%; 
         }
+
+        .no-jobs-container {
+            display: flex; 
+            justify-content: center;
+            align-items: center; 
+            width: 100%; 
+        }
+
+        .no-jobs-container p {
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #767F8C;
+        }
+
     </style>
 </head>
 <body>
@@ -431,7 +445,7 @@
             <?php
                 }
             } else {
-                echo "<p>No jobs found.</p>";
+                echo "<div class='no-jobs-container'><p>No jobs found.</p></div>";
             }
             ?>
         </div>
