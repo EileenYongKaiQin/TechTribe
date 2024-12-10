@@ -235,34 +235,12 @@ function editMessage(messageID, messageElement, senderRole) {
                   messageElement.innerText = `${newMessage}`; // Add time and edited note
                   location.reload()
                 //   // Recreate edit and delete buttons
-                //   recreateButtons(messageElement, messageID, senderRole);
+                
               } else {
                   alert("Failed to edit message.");
               }
           });
     }
-}
-
-
-// Function to recreate edit and delete buttons
-function recreateButtons(messageElement, messageID, senderRole) {
-    // Clear existing buttons
-    const existingButtons = messageElement.querySelectorAll("button");
-    existingButtons.forEach(button => button.remove());
-
-    // Add edit button
-    const editButton = document.createElement("button");
-    editButton.innerText = "Edit";
-    editButton.classList.add("edit-button");
-    editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
-    messageElement.appendChild(editButton);
-
-    // Add delete button
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
-    deleteButton.classList.add("delete-button");
-    deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole);
-    messageElement.appendChild(deleteButton);
 }
 
 
@@ -323,23 +301,5 @@ function toggleDropdown() {
 
     // Toggle the display of the dropdown
     dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
-}
-
-// Show notification
-function showNotification() {
-    const modal = document.getElementById("notificationModal");
-    const overlay = document.getElementById("overlay");
-
-    modal.style.display = "block";
-    overlay.style.display = "block";
-}
-
-// Close notification
-function closeNotification() {
-    const modal = document.getElementById("notificationModal");
-    const overlay = document.getElementById("overlay");
-
-    modal.style.display = "none";
-    overlay.style.display = "none";
 }
 

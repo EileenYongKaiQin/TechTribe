@@ -43,14 +43,14 @@ $result = $con->query($sql);
         .chat-button {
             padding: 5px 10px;
             color: white;
-            background-color: #007bff;
+            background-color: #AAE1DE;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none; /* Remove underline from links */
         }
         .chat-button:hover {
-            background-color: #0056b3;
+            background-color: #009688;
         }
     </style>
 </head>
