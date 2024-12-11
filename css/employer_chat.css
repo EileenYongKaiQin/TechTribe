@@ -1,4 +1,3 @@
-/* General Styles */
 * {
     margin: 0;
     padding: 0;
@@ -19,7 +18,7 @@ body {
 }
 
 .content {
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -43,25 +42,40 @@ body {
 
 /* Chat Section */
 .chat-section {
+    min-height: 400px;
     max-height: 400px;
     overflow-y: auto;
     border: 1px solid #DBDDE0;
-    border-bottom-left-radius: 8px; /* No rounding for bottom left corner */
-    border-bottom-right-radius: 8px; 
+    border-bottom-left-radius: 15px; /* No rounding for bottom left corner */
+    border-bottom-right-radius: 15px; 
     padding: 10px;
-    background-color: #e8e8e8;
+    background-color: #efefef;
     display: flex; /* Ensure chat section uses flexbox */
     flex-direction: column; /* Stack messages vertically */
+    
+}
+
+.chat-section::before {
+    content: "No messages yet. Start the conversation!";
+    color: #888;
+    font-size: 16px;
+    font-style: italic;
+    display: none; /* Hidden when messages exist */
+}
+
+/* Show placeholder only if the chat section is empty */
+.chat-section:empty::before {
+    display: block;
 }
 
 /* Chat Message Styles */
 .chat-message {
     flex-direction: column; /* Stack author and message */
-    margin-bottom: 20px; /* Increased space between messages */
-    padding: 15px 10px;
-    border-radius: 8px;
+    margin-bottom: 15px; /* Increased space between messages */
+    padding: 10px 10px;
+    border-radius: 15px;
     border-color: black;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     position: relative; /* For absolute positioning of buttons */
     width: fit-content; /* Allow messages to shrink to fit content */
 }
@@ -71,6 +85,7 @@ body {
     background-color: rgb(255, 255, 255);
     align-self: flex-start; /* Align to the left */
     text-align: left;
+    border-radius: 15px;
 }
 
 /* Employer Message */
@@ -78,6 +93,7 @@ body {
     background-color: rgb(224, 246, 237);
     align-self: flex-end; /* Align to the right */
     text-align: right;
+    border-radius: 15px;
 }
 
 /* Chat Input and Send Button */
@@ -87,10 +103,11 @@ body {
 }
 
 .chat-input {
-    width: 710px;
+    width: 720px;
     padding: 18px;
     border-radius: 4px;
     border: 1px solid #DBDDE0;
+    border-radius: 15px;
 }
 
 .chat-input:focus {
@@ -101,7 +118,7 @@ body {
 button {
     padding: 10px 20px; /* Adjusted padding for button */
     border: none;
-    border-radius: 4px;
+    border-radius: 15px;
     background-color: #AAE1DE;
     color: #FFFFFF;
     cursor: pointer;
@@ -124,43 +141,98 @@ button:hover {
     z-index: 1000; /* On top of everything */
 }
 
-/* Notification Modal Styles */
 .modal {
     display: none; /* Hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* Above the overlay */
-    width: 300px; /* Fixed width for the modal */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    
 }
 
 .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
-    text-align: center;
+    border: 3px solid #888;
+    width: 25%; /* Could be more or less, depending on screen size */
+    text-align: center; /* Center the text */
+    border-radius: 13px;
+    font-size: 12px;
 }
 
-.modal-content p {
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #333333;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.modal-content button {
-    background-color: #AAE1DE;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.modal-content button:hover {
-    background-color: #88C7C0; /* Darker shade on hover */
+/* .modal-content button {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+} */
+
+.modal-content-edit {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-edit:hover {
+    background-color: blue; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-delete {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: red;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-delete:hover {
+    background-color: red; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-cancel {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-cancel:hover {
+    background-color: blue; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
 }
 
 .button-container {
@@ -168,41 +240,19 @@ button:hover {
     gap: 5px; /* Space between buttons */
 }
 
-.edit-button {
-    padding: 5px 10px; /* Adjusted padding for better appearance */
-    border: none;
-    border-radius: 4px;
-    background-color: AAE1DE; /* Matching background color */
-    color: rgb(224, 246, 237); /* White text color */
-    cursor: pointer;
-    font-size: 12px; /* Smaller font size for buttons */
-    margin-left: 5px; /* Space between buttons */
-    transition: background-color 0.3s; /* Smooth background transition */
-}
-
-.edit-button:hover {
-    background-color: rgb(224, 246, 237); /* Darker shade on hover */
-}
-
-.delete-button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: rgb(192, 51, 51); /* Red color for delete button */
-    color: rgb(224, 246, 237); /* White text color */
-    cursor: pointer;
-    font-size: 12px;
-    margin-left: 5px; /* Space between buttons */
-    transition: background-color 0.3s; /* Smooth background transition */
-}
-
-.delete-button:hover {
-    background-color: rgb(224, 246, 237); /* Darker red on hover */
+#editMessageInput {
+    width: 100%; /* Sets the width to 100% of the parent container */
+    max-width: 600px; /* Adjust this value to set a maximum width */
+    padding: 10px; /* Add padding for better text input experience */
+    border: 1px solid #ccc; /* Add border for visibility */
+    border-radius: 5px; /* Round the corners */
+    resize: none; /* Disable resizing if desired */
+    font-size: 16px; /* Set font size for better readability */
 }
 
 /* Job Info */
 .job-info {
-    margin-bottom: 10px; /* Add margin for spacing */
+    margin-bottom: 12px; /* Add margin for spacing */
     font-weight: bold; /* Make job name bold */
 }
 
@@ -214,10 +264,10 @@ button:hover {
     position: relative;
     width: 100%; /* Full width to match chat section */
     border: 1px solid #DBDDE0; /* Border */
-    border-top-left-radius: 8px; /* Round the top left corner */
-    border-top-right-radius: 8px; /* Round the top right corner */
+    border-top-left-radius: 15px; /* Round the top left corner */
+    border-top-right-radius: 15px; /* Round the top right corner */
     padding: 10px; /* Padding */
-    background-color: #f0eded; /* Background color */
+    background-color: #f1f1f1; /* Background color */
     justify-content: flex-start; /* Align items to the left */
     
 }
@@ -244,6 +294,7 @@ button:hover {
     z-index: 100;
     margin-top: 5px; /* Space below the arrow */
     left: 0; /* Align dropdown menu to the left */
+    
 }
 
 .dropdown-menu ul {
@@ -264,12 +315,18 @@ button:hover {
 
 .ellipsis-button {
     position: absolute; /* Position the button absolutely within the container */
-    left: -54px; /* Adjust this value to move the button left as needed */
+    left: -55px; /* Adjust this value to move the button left as needed */
     top: 50%; /* Center vertically */
     transform: translateY(-50%); /* Adjust to align center */
-    border: 1px solid #ccc;
     z-index: 1000;
     display: none; /* Hide by default */
+    background-color: #efefef;
+    color: black;
+    font-size: 20px;
+}
+
+.ellipsis-button:hover {
+    background-color: #efefef; /* Darker shade on hover */
 }
 
 .message-container:hover .ellipsis-button {
@@ -277,21 +334,38 @@ button:hover {
 }
 
 .edit-delete-menu {
-    display: none; /* Hide by default */
-    position: absolute; /* Position it absolutely in relation to the message */
-    left: 0; /* Adjust position as necessary */
+    display: flex; /* Align buttons horizontally */
+    flex-direction: column; /* Stack buttons vertically */
+    position: absolute; /* Position relative to the message */
+    left: -40px; /* Adjust position as necessary */
     top: 100%; /* Position below the message */
     background: white; /* Background color */
     border: 1px solid #ccc; /* Border style */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
     z-index: 1000; /* Ensure it appears above other elements */
-    border-radius: 10px;
+    padding: 6px; /* Add padding around the buttons inside the menu */
+    align-items: center;
 }
-
 
 .edit-delete-menu button {
-    display: block; /* Stack buttons vertically */
-    margin: 5px; /* Spacing between buttons */
+    display: block; /* Ensure buttons take full width */
+    background-color: #AAE1DE; /* Primary color for buttons */
+    color: white; /* White text color */
+    border: none; /* Remove border */
+    padding: 8px 12px; /* Padding for comfort */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    border-radius: 8px; /* Slightly rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    margin: 5px 0; /* Margin between buttons */
+    width: 100%;
 }
+
+.edit-delete-menu button:hover {
+    background-color: #009688; /* Darker shade on hover */
+}
+
+
 
 
 .message-timestamp {
@@ -299,7 +373,7 @@ button:hover {
     font-size: 10px; /* Smaller font size for the timestamp */
     color: gray; /* Gray color for the timestamp */
     text-align: right; /* Align text to the right */
-    margin-top: 3px; /* Margin above the timestamp */
+    margin-top: 5px; /* Margin above the timestamp */
   
 
 }
@@ -309,14 +383,24 @@ button:hover {
     text-align: center;
     margin: 10px 0;
     font-weight: bold;
-    color: #888; /* Change color as desired */
+    color: #757575; /* Change color as desired */
     position: relative;
+
 }
 
 .date-separator:before {
     content: '';
     display: block;
     width: 100%;
-    border-top: 1px solid #ccc; /* Line above the date */
+    border-top: 2px solid #ccc; /* Line above the date */
     margin: 5px 0; /* Space above and below the line */
+}
+
+.arrow-icon {
+    margin: 0 7px; 
+    width: 16px; /* Adjust width as needed */
+    height: 16px; /* Adjust height as needed */
+    cursor: pointer; /* Pointer cursor for clickability */
+    display: inline-block;
+    vertical-align: middle; /* Align with text if necessary */
 }

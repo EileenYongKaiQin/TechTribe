@@ -24,16 +24,18 @@ $result = $con->query($sql);
         h1 {
             text-align: center; /* Center the heading */
             margin-bottom: 20px; /* Add some space below the heading */
+            
         }
         table {
             width: 700px;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 30px;
             margin-left: auto;
             margin-right: auto;
+            
         }
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: left;
             border: 1px solid #ddd;
         }
@@ -41,13 +43,14 @@ $result = $con->query($sql);
             background-color: #f2f2f2;
         }
         .chat-button {
-            padding: 5px 10px;
+            padding: 1  0px 20px;
             color: white;
             background-color: #AAE1DE;
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
             text-decoration: none; /* Remove underline from links */
+            
         }
         .chat-button:hover {
             background-color: #009688;
