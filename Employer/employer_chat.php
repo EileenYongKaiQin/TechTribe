@@ -199,8 +199,8 @@ button:hover {
     border: 3px solid #888;
     width: 25%; /* Could be more or less, depending on screen size */
     text-align: center; /* Center the text */
-    border-radius: 15px;
-
+    border-radius: 13px;
+    font-size: 12px;
 }
 
 .close {
@@ -217,10 +217,59 @@ button:hover {
     cursor: pointer;
 }
 
-.modal-content button {
+/* .modal-content button {
     margin-top: 8%;
-    margin-right: 5%;
-    margin-left: 5%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+} */
+
+.modal-content-edit {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-edit:hover {
+    background-color: blue; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-delete {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: red;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-delete:hover {
+    background-color: red; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-cancel {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content-cancel:hover {
+    background-color: blue; /* Darker gray on hover */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
 }
 
 .button-container {
@@ -302,14 +351,14 @@ button:hover {
 
 .ellipsis-button {
     position: absolute; /* Position the button absolutely within the container */
-    left: -54px; /* Adjust this value to move the button left as needed */
+    left: -55px; /* Adjust this value to move the button left as needed */
     top: 50%; /* Center vertically */
     transform: translateY(-50%); /* Adjust to align center */
     z-index: 1000;
     display: none; /* Hide by default */
     background-color: #e8e8e8;
     color: black;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .ellipsis-button:hover {
@@ -417,7 +466,7 @@ button:hover {
         <span class="close" id="modalCloseBtn">&times;</span>
         <h2>Edit Message</h2><br>
         <textarea id="editMessageInput" rows="5" placeholder="Edit your message..."></textarea><br>
-        <button id="saveEditButton">Save</button>
+        <button id="saveEditButton" class="modal-content-edit">Save</button>
     </div>
     </div>
 
@@ -427,8 +476,8 @@ button:hover {
             <span class="close" id="deleteModalCloseBtn">&times;</span>
             <h2>Delete Message</h2><br>
             <p>Are you sure you want to delete this message?</p>
-            <button id="confirmDeleteButton">Yes, Delete</button>
-            <button id="cancelDeleteButton">Cancel</button>
+            <button id="confirmDeleteButton" class="modal-content-delete">Delete</button>
+            <button id="cancelDeleteButton" class="modal-content-cancel">Cancel</button>
         </div>
     </div>
 
