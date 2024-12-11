@@ -43,7 +43,7 @@ $result = $con->query($sql);
             background-color: #f2f2f2;
         }
         .chat-button {
-            padding: 1  0px 20px;
+            padding: 10px 20px;
             color: white;
             background-color: #AAE1DE;
             border: none;
