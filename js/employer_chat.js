@@ -13,9 +13,13 @@ function toggleSidebar() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", loadChatHistory);
 
-function sendMessage(event, senderRole) {
+document.addEventListener("DOMContentLoaded", () => {
+    const userID = "<?= $_SESSION['userID']; ?>"; // Replace with dynamic PHP code
+    loadChatHistory(userID);
+});
+
+function sendMessage(event, senderRole, userID) {
     event.preventDefault();
     const chatInput = document.getElementById("chatInput");
     const messageContents = chatInput.value.trim();
@@ -29,7 +33,7 @@ function sendMessage(event, senderRole) {
     fetch("../database/chat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}`
+        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}`
     })
     .then(response => response.json())
     .then(data => {
@@ -215,66 +219,122 @@ window.onclick = function(event) {
     }
 };
 
-function editMessage(messageID, messageElement, senderRole) {
+function editMessage(messageID, messageElement, senderRole, userID) {
     // Get the current message text without the ellipsis and time
     const originalMessage = messageElement.innerText.replace(" (edited)", "").split(" ").slice(0, -1).join(" "); // Assuming the last part is the time
     
-    const newMessage = prompt("Edit your message:", originalMessage);
+    // Set the original message in the modal input
+    const editMessageInput = document.getElementById("editMessageInput");
+    editMessageInput.value = originalMessage; // Set the input value to the current message
     
-    if (newMessage && newMessage !== messageElement.innerText) {
-        // Update message in the database
-        fetch("../database/chat.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
-        }).then(response => response.json())
-          .then(data => {
-              if (data.status === "success") {
-                  // Update the message in the UI, appending the new time format
-                  const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                  messageElement.innerText = `${newMessage}`; // Add time and edited note
-                  location.reload()
-                //   // Recreate edit and delete buttons
-                
-              } else {
-                  alert("Failed to edit message.");
-              }
-          });
-    }
+    // Show the modal
+    const editMessageModal = document.getElementById("editMessageModal");
+    editMessageModal.style.display = "block";
+
+    // Save the edit
+    const saveEditButton = document.getElementById("saveEditButton");
+    saveEditButton.onclick = () => {
+        const newMessage = editMessageInput.value.trim();
+        if (newMessage && newMessage !== originalMessage) {
+            // Update message in the database
+            fetch("../database/chat.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
+            }).then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Update the message in the UI, appending the new time format
+                    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    messageElement.innerText = `${newMessage}`; // Add time and edited note
+                    location.reload()
+                    //   // Recreate edit and delete buttons
+                    
+                } else {
+                    alert("Failed to edit message.");
+                }
+            });
+        }
+    };
+
+    // Close the modal when the user clicks on <span> (x)
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    modalCloseBtn.onclick = closeEditModal;
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === editMessageModal) {
+            closeEditModal();
+        }
+    };
+}
+
+function closeEditModal() {
+    const editMessageModal = document.getElementById("editMessageModal");
+    editMessageModal.style.display = "none"; // Hide the modal
 }
 
 
-function deleteMessage(messageID, messageElement, currentUserRole) {
-    const confirmation = confirm("Are you sure you want to delete this message?");
-    location.reload(); // This will reload the page
-    if (confirmation) {
+let currentMessageIDToDelete = null; // Variable to hold the message ID to be deleted
+
+function deleteMessage(messageID, messageElement, currentUserRole, userID) {
+
+    
+    currentMessageIDToDelete = messageID; // Store the message ID to delete
+    const deleteMessageModal = document.getElementById("deleteMessageModal");
+    deleteMessageModal.style.display = "block"; // Show the modal
+    
+    // Confirm delete button click event
+    const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+    confirmDeleteButton.onclick = () => {
+        location.reload(); // This will reload the page
         // Send delete request to the server
         fetch("../database/chat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
+            body: `userID=${userID}&senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
         }).then(response => response.json())
           .then(data => {
               if (data.status === "success") {
                   // Change the message content to "deleted"
-                  messageElement.innerText = "deleted"; 
                   
+                  messageElement.innerText = "deleted"; 
+
                   // Optionally, you can also disable the edit and delete buttons
                   const existingButtons = messageElement.querySelectorAll("button");
                   existingButtons.forEach(button => button.remove()); // Remove buttons or disable them
-
+                  location.reload(); // This will reload the page
                  
               } else {
                   alert("Failed to delete message.");
               }
           });
-    }
+    };
+
+    // Cancel button click event
+    const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+    cancelDeleteButton.onclick = closeDeleteModal;
+
+    // Close the modal when the user clicks on <span> (x)
+    const modalCloseBtn = document.getElementById("deleteModalCloseBtn");
+    modalCloseBtn.onclick = closeDeleteModal;
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === deleteMessageModal) {
+            closeDeleteModal();
+        }
+    };
+}
+
+function closeDeleteModal() {
+    const deleteMessageModal = document.getElementById("deleteMessageModal");
+    deleteMessageModal.style.display = "none"; // Hide the modal
+    currentMessageIDToDelete = null; // Reset the message ID to delete
 }
 
 
-
-
-function loadChatHistory() {
+function loadChatHistory(userID) {
     const currentUserRole = 'employer'; // Replace this with dynamic role (e.g., 'job_seeker' or 'employer')
 
     fetch("../database/chat.php")

@@ -178,43 +178,49 @@ button:hover {
     z-index: 1000; /* On top of everything */
 }
 
-/* Notification Modal Styles */
 .modal {
     display: none; /* Hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* Above the overlay */
-    width: 300px; /* Fixed width for the modal */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    
 }
 
 .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
-    text-align: center;
+    border: 3px solid #888;
+    width: 25%; /* Could be more or less, depending on screen size */
+    text-align: center; /* Center the text */
+    border-radius: 15px;
+
 }
 
-.modal-content p {
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #333333;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .modal-content button {
-    background-color: #AAE1DE;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.modal-content button:hover {
-    background-color: #88C7C0; /* Darker shade on hover */
+    margin-top: 8%;
+    margin-right: 5%;
+    margin-left: 5%;
 }
 
 .button-container {
@@ -222,6 +228,15 @@ button:hover {
     gap: 5px; /* Space between buttons */
 }
 
+#editMessageInput {
+    width: 100%; /* Sets the width to 100% of the parent container */
+    max-width: 600px; /* Adjust this value to set a maximum width */
+    padding: 10px; /* Add padding for better text input experience */
+    border: 1px solid #ccc; /* Add border for visibility */
+    border-radius: 5px; /* Round the corners */
+    resize: none; /* Disable resizing if desired */
+    font-size: 16px; /* Set font size for better readability */
+}
 
 /* Job Info */
 .job-info {
@@ -309,7 +324,7 @@ button:hover {
     display: flex; /* Align buttons horizontally */
     flex-direction: column; /* Stack buttons vertically */
     position: absolute; /* Position relative to the message */
-    left: -50%; /* Adjust position as necessary */
+    left: -40px; /* Adjust position as necessary */
     top: 100%; /* Position below the message */
     background: white; /* Background color */
     border: 1px solid #ccc; /* Border style */
@@ -395,6 +410,26 @@ button:hover {
                 <button type="submit">Send</button>
             </form>
         </section>
+    </div>
+
+    <div id="editMessageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="modalCloseBtn">&times;</span>
+        <h2>Edit Message</h2><br>
+        <textarea id="editMessageInput" rows="5" placeholder="Edit your message..."></textarea><br>
+        <button id="saveEditButton">Save</button>
+    </div>
+    </div>
+
+    <!-- Delete Message Modal -->
+    <div id="deleteMessageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="deleteModalCloseBtn">&times;</span>
+            <h2>Delete Message</h2><br>
+            <p>Are you sure you want to delete this message?</p>
+            <button id="confirmDeleteButton">Yes, Delete</button>
+            <button id="cancelDeleteButton">Cancel</button>
+        </div>
     </div>
 
     <div id="overlay" class="overlay"></div>
