@@ -29,7 +29,7 @@ if ($result && $result->num_rows > 0) {
 } else {
     $fullName = "Employer"; // Default fallback if user not found
 }
-$_SESSION['userID'] = $employer['userID']; 
+
 ?>
 
 <!DOCTYPE html>
