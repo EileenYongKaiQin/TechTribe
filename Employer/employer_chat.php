@@ -370,6 +370,8 @@ button:hover {
 <body>
     <div class="main-content">
         <section class="content">
+            <?php echo htmlspecialchars($fullName); ?>
+            <?php echo htmlspecialchars($userID); ?>
             <div class="chat-container">
                 <div class="job-seeker-info">
                     <span id="jobSeekerName"><?php echo $jobSeekerName; ?></span>
@@ -385,8 +387,6 @@ button:hover {
                         </ul>
                     </div>
                 </div>
-                <?php echo htmlspecialchars($fullName); ?>
-                <?php echo htmlspecialchars($userID); ?>
                 <div class="chat-section" id="chatSection"></div>
             </div>
 
