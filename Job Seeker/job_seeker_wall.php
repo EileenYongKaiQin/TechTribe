@@ -16,12 +16,22 @@
 
     <div class="main-content">
         <h1>Job Seeker Wall</h1>
-        <!-- Search and Filter Bar -->
-        <div class="search-filter-bar">
-            <input type="text" placeholder="Enter Job title">
-            <input type="text" placeholder="Enter location">
-            <button>Search</button>
-            <button>Filter</button>
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+                <form method="GET" action="job_seeker_wall.php" class="search-bar">
+                    <img src="../images/Search.png" alt="Search Icon" class="search-icon" />
+                    <input type="text" name="keyword" class="search-input" placeholder="Search post" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>" />
+                    <button type="submit" class="search-btn">Search</button>
+                    <?php if (!empty($_GET['keyword'])): ?>
+                        <button 
+                            type="button" 
+                            class="clear-btn" 
+                            onclick="window.location.href='job_seeker_wall.php';">
+                            ✖
+                        </button>
+                    <?php endif; ?>
+                </form>
+                <button class="filter-btn">Filter <span class="dropdown-icon">▼</span></button>
         </div>
 
         <!-- Display posts -->
