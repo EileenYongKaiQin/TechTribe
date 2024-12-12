@@ -28,7 +28,6 @@ function createNotification($userID, $notificationText, $notificationType) {
     }
 }
 
-
 // Fetch all notifications, but also calculate the unread count
 function fetchNotifications($userID) {
     global $con;
@@ -36,6 +35,14 @@ function fetchNotifications($userID) {
     // Fetch all notifications for the user
     $query = "SELECT * FROM notification WHERE userID = ? ORDER BY createdAt DESC";
     $stmt = $con->prepare($query);
+
+    // Check if the preparation is successful
+    if ($stmt === false) {
+        // Error occurred while preparing the query
+        error_log("Error preparing query: " . $con->error);
+        return false; // Or handle it accordingly
+    }
+
     $stmt->bind_param('s', $userID);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -43,10 +50,23 @@ function fetchNotifications($userID) {
     // Fetch the unread count
     $unreadCountQuery = "SELECT COUNT(*) as unreadCount FROM notification WHERE userID = ? AND isRead = 0";
     $stmtUnread = $con->prepare($unreadCountQuery);
+
+    // Check if the preparation is successful
+    if ($stmtUnread === false) {
+        // Error occurred while preparing the query
+        error_log("Error preparing unread count query: " . $con->error);
+        return false; // Or handle it accordingly
+    }
+
     $stmtUnread->bind_param('s', $userID);
     $stmtUnread->execute();
     $unreadResult = $stmtUnread->get_result();
-    $unreadCount = $unreadResult->fetch_assoc()['unreadCount'];
+    
+    if ($unreadResult) {
+        $unreadCount = $unreadResult->fetch_assoc()['unreadCount'];
+    } else {
+        $unreadCount = 0;  // Default if no result found
+    }
 
     return ['notifications' => $result, 'unreadCount' => $unreadCount];
 }

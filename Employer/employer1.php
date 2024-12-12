@@ -34,8 +34,15 @@ if ($result && $result->num_rows > 0) {
 }
 
 $noti = fetchNotifications($userID);
-$notiArray = $noti['notifications']->fetch_all(MYSQLI_ASSOC);
-$notiCount = $noti['unreadCount'];
+// Check if notifications were fetched correctly
+if ($noti !== false) {
+    $notiArray = $noti['notifications']->fetch_all(MYSQLI_ASSOC);
+    $notiCount = $noti['unreadCount'];
+} else {
+    // Handle the case when fetching notifications fails
+    $notiArray = [];
+    $notiCount = 0;
+}
 ?>
 
 <!DOCTYPE html>
