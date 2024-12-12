@@ -15,8 +15,13 @@ function toggleSidebar() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    const userID = "<?= $_SESSION['userID']; ?>"; // Replace with dynamic PHP code
-    loadChatHistory(userID);
+    // Address of the current window 
+    address = window.location.search 
+  
+    // Returns a URLSearchParams object instance 
+    parameterList = new URLSearchParams(address) 
+    const jobSeekerID = parameterList.get("jobSeekerID"); 
+    loadChatHistory(jobSeekerID);
 });
 
 function sendMessage(event, senderRole, userID) {
@@ -29,11 +34,17 @@ function sendMessage(event, senderRole, userID) {
     addMessageToChat(messageContents, senderRole);
     chatInput.value = "";
 
+    address = window.location.search 
+  
+    // Returns a URLSearchParams object instance 
+    parameterList = new URLSearchParams(address) 
+    const jobSeekerID = parameterList.get("jobSeekerID"); 
+
     // Send message to the server
     fetch("../database/chat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}`
+        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&jobSeekerID=${jobSeekerID}`
     })
     .then(response => response.json())
     .then(data => {
@@ -51,7 +62,7 @@ function sendMessage(event, senderRole, userID) {
                 fetch("../database/chat.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}`
+                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&jobSeekerID=${jobSeekerID}`
                 })
                 .then(response => response.json())
                 .then(data => { 
@@ -234,6 +245,7 @@ function editMessage(messageID, messageElement, senderRole, userID) {
     // Save the edit
     const saveEditButton = document.getElementById("saveEditButton");
     saveEditButton.onclick = () => {
+        location.reload()
         const newMessage = editMessageInput.value.trim();
         if (newMessage && newMessage !== originalMessage) {
             // Update message in the database
@@ -334,10 +346,9 @@ function closeDeleteModal() {
 }
 
 
-function loadChatHistory(userID) {
-    const currentUserRole = 'employer'; // Replace this with dynamic role (e.g., 'job_seeker' or 'employer')
-
-    fetch("../database/chat.php")
+function loadChatHistory(jobSeekerID) {
+    var url = `../database/chat.php?jobSeekerID=${jobSeekerID}`
+    fetch(url)
         .then(response => response.json())
         .then(chats => {
             if (Array.isArray(chats)) {
