@@ -244,7 +244,7 @@ function updateStatus(status) {
             // Close the modal automatically
             closeModal(status === 'under-review' ? 'underReviewModal' : 'resolvedModal');
         } else {
-            alert('Failed to update status.');
+            alert('Failed to update status. Response: ' + data);
         }
     })
     .catch(err => {
@@ -253,7 +253,7 @@ function updateStatus(status) {
     });
 }
 
-document.getElementById('updateUnderReviewButton').addEventListener('click', () => updateStatus('under review'));
+document.getElementById('updateUnderReviewButton').addEventListener('click', () => updateStatus('under-review'));
 document.getElementById('updateResolvedButton').addEventListener('click', () => updateStatus('resolved'));
 
         function showDetailsModal(reportId) {
