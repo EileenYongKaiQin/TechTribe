@@ -1,4 +1,7 @@
 <?php
+// Detect the current file name
+$currentPage = basename($_SERVER['PHP_SELF']);
+$submenuVisible = ($currentPage == 'job_seeker_wall.php' || $currentPage == 'my_posts.php') ? 'flex' : 'none';
 session_start(); // Start the session
 
 // Include the database configuration file
@@ -37,220 +40,9 @@ if ($result && $result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/job_seeker_layout.css">
     <title>FlexMatch</title>
-    <style>
-        /* General styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background: #F0FDFF;
-        }
-
-        .sidebar {
-            position: fixed;
-            width: 180px;
-            height: 100%;
-            background: #AAE1DE;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-image {
-            width: 70px;
-        }
-
-        .logo-text {
-            font-weight: bold;
-            font-size: 20px;
-            color: #FFFFFF;
-        }
-
-        .menu {
-            width: 100%;
-        }
-
-        .menu-item, .logout {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            cursor: pointer;
-            color: #FFFFFF;
-            font-size: 14px;
-            font-family: 'Cabin', sans-serif;
-            font-weight: 400;
-            gap: 18px;
-            border-radius: 8px; 
-        }
-
-        .menu-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Hover effect */
-        .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-
-        /* Hover effect for both menu items and logout */
-        .menu-item:hover,
-        .logout:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            color: #FFFFFF;
-        }
-
-        .logout {
-            margin-top: auto;
-            margin-bottom: 50px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logout-text {
-            color: #FFFFFF;
-            font-size: 14px;
-            font-family: 'Arial', sans-serif;
-            font-weight: 400;
-        }
-
-        .main-content {
-            margin-left: 180px;
-            width: calc(100% - 180px);
-        }
-
-        .header {
-            background: #FFFFFF;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            position: sticky;
-            z-index: 1000;
-            left: 180px;
-            top: 0;
-            width: calc(100% - 180px)
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .notification-icon {
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-right: 20px; 
-        }
-
-        .profile-image {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 0.1px solid #000000;
-            cursor: pointer;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .user-name {
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 20px;
-            color: #000000;
-        }
-
-        .user-role {
-            font-size: 14px;
-            color: #A8AAB0;
-        }
-
-        .logout-button {
-            font-size: 14px;
-            color: #000000;
-            border: none;
-            background: none;
-            cursor: pointer;
-            margin-left: 80px;
-            transition: color 0.3s ease; 
-        }
-
-        /* Hover effect */
-        .logout-button:hover {
-            color: #AAE1DE;
-        }
-
-        .content {
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center; 
-            justify-content: flex-start; 
-        }
-
-        /* Hidden submenu styles */
-        .submenu {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            padding-left: 20px;
-        }
-
-        .submenu-item {
-            padding: 10px;
-            cursor: pointer;
-            color: #FFFFFF;
-            font-size: 14px;
-            font-family: 'Cabin', sans-serif;
-            font-weight: 400;
-            border-radius: 8px; 
-        }
-
-        .submenu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-        a {
-            text-decoration: none;
-        }
-    </style>
+    
 </head>
 <body>
     <div class="sidebar">
@@ -259,19 +51,19 @@ if ($result && $result->num_rows > 0) {
             <h1 class="logo-text">FlexMatch</h1>
         </div>
         <nav class="menu">
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'jobseeker_dashboard.php' ? 'active' : ''; ?>">
                 <img src="../images/dashboardIcon.png" alt="Dashboard Icon" class="menu-icon">
                 <span onclick="location.href='jobseeker_dashboard.php'">Dashboard</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'jobSeeker_posting_list.php' ? 'active' : ''; ?>">
                 <img src="../images/add_circle.png" alt="Apply Job Icon" class="menu-icon">
                 <span onclick="location.href='jobSeeker_posting_list.php'">Apply Job</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'my_application.php' ? 'active' : ''; ?>">
                 <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
                 <span onclick="location.href='my_application.php'">My Application</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'saved_job.php' ? 'active' : ''; ?>">
                 <img src="../images/save.png" alt="Saved Job Icon" class="menu-icon">
                 <span onclick="location.href='saved_job.php'">Saved Job</span>
             </div>
@@ -279,9 +71,9 @@ if ($result && $result->num_rows > 0) {
                 <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
                 <span>Job Seeker Wall</span>
             </div>
-            <div class="submenu">
-                <div class="submenu-item" onclick="location.href='job_seeker_wall.php'">View Posts</div>
-                <div class="submenu-item" onclick="location.href='my_posts.php'">My Posts</div>
+            <div class="submenu" style="display: <?php echo $submenuVisible; ?>;">
+                <div class="submenu-item <?php echo $currentPage == 'job_seeker_wall.php' ? 'active' : ''; ?>" onclick="location.href='job_seeker_wall.php'">View Posts</div>
+                <div class="submenu-item <?php echo $currentPage == 'my_posts.php' ? 'active' : ''; ?>" onclick="location.href='my_posts.php'">My Posts</div>
             </div>
         </nav>
         <div class="logout" onclick="location.href='../login.html'">

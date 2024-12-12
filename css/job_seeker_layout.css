@@ -1,0 +1,219 @@
+        /* General styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #F0FDFF;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 180px;
+            height: 100%;
+            background: #AAE1DE;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-image {
+            width: 70px;
+        }
+
+        .logo-text {
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFFFFF;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu-item, .logout {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Cabin', sans-serif;
+            font-weight: 400;
+            gap: 18px;
+            border-radius: 8px; 
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Hover effect */
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        /* Hover effect for both menu items and logout */
+        .menu-item:hover,
+        .logout:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            color: #FFFFFF;
+        }
+
+        .logout {
+            margin-top: auto;
+            margin-bottom: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-text {
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            font-weight: 400;
+        }
+
+        .main-content {
+            margin-left: 180px;
+            width: calc(100% - 180px);
+        }
+
+        .header {
+            background: #FFFFFF;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: sticky;
+            z-index: 1000;
+            left: 180px;
+            top: 0;
+            width: calc(100% - 180px)
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px; 
+        }
+
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 0.1px solid #000000;
+            cursor: pointer;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            color: #000000;
+        }
+
+        .user-role {
+            font-size: 14px;
+            color: #A8AAB0;
+        }
+
+        .logout-button {
+            font-size: 14px;
+            color: #000000;
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin-left: 80px;
+            transition: color 0.3s ease; 
+        }
+
+        /* Hover effect */
+        .logout-button:hover {
+            color: #AAE1DE;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center; 
+            justify-content: flex-start; 
+        }
+
+        /* Hidden submenu styles */
+        .submenu {
+            display: none;
+            flex-direction: column;
+            padding-left: 20px;
+        }
+
+        .submenu-item {
+            padding: 10px;
+            cursor: pointer;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-family: 'Cabin', sans-serif;
+            font-weight: 400;
+            border-radius: 8px; 
+        }
+
+        .submenu-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+        }
+
+        /* Active menu item style */
+        .menu-item.active, 
+        .submenu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            color: #FFFFFF;
+        }
+

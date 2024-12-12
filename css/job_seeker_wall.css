@@ -69,7 +69,7 @@ h1{
     display: flex;
     flex-wrap: wrap;
     /* background-color: #b2f1f3; */
-    background: linear-gradient(to bottom, #b2f1f3 50%, #007acc 100%);
+    background: linear-gradient(to bottom, #cbfdff 50%, #6eb6e6 100%);
     justify-content: space-between;
     width: 100%; 
     padding: 20px;
@@ -127,7 +127,7 @@ h3{
 
 .post p strong {
     font-size: 17px;
-    color: #2357e7; 
+    color: #343d51; 
 }
 
 /* .skill-details{
@@ -152,7 +152,7 @@ h3{
 
 /* Chat Button */
 .chat-btn {
-    background-color: #2357e7;
+    background-color: #007bff; /* Button color */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -165,7 +165,7 @@ h3{
 }
 
 .chat-btn:hover {
-    background-color: #9ac5f3;
+    background-color: #0056b3; /* Change color on hover */
 }
 
 /* Pagination */
