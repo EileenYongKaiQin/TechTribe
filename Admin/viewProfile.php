@@ -115,7 +115,7 @@ if (isset($_GET['userID'])) {
                         <h2>Are you sure you want to issue the warning to this user?</h2>
                         <div class="comment-section">
                             <!-- Comment section (optional) -->
-                            <label for="comment">Additional comment:</label><textarea id="warningComment" placeholder="Write comment"></textarea>
+                            <label for="comment">Additional comment:<textarea id="warningComment" placeholder="Write comment"></textarea></label>
                         </div>
                         <div class="modal-buttons">
                             <button id="cancelButton" class="btn cancel" onclick="closeModal('updateModal')">Cancel</button>
