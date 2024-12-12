@@ -55,7 +55,7 @@ include('jobSeeker1.php');
             exit();
         }
 
-        $userID = $_SESSION['userID'];
+        $applicantID = $_SESSION['userID'];
 
         include('../database/config.php'); 
 
@@ -66,7 +66,7 @@ include('jobSeeker1.php');
                 WHERE ja.applicantID = ?";
                 
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $userID);
+        $stmt->bind_param("s", $applicantID);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -76,9 +76,9 @@ include('jobSeeker1.php');
                 <div class='card' style='margin: 20px;'>
                     <div class='card-body'>
                         <h3 class='card-title'><?php echo htmlspecialchars($row['jobTitle']); ?></h3>
-                        <p><strong>Application ID: </strong><?php echo htmlspecialchars($row['applicationID']); ?></p>
+                        <p><strong>Application ID: </strong><?php echo htmlspecialchars($row['applicationID']) ?></p>
                         <p><strong>Applied On:</strong> <?php echo htmlspecialchars($row['applyDate']); ?></p>
-                        <p><strong>Status:</strong> <span id='status-<?php echo $row['applicationID']; ?>' class='status-label <?php echo htmlspecialchars($row['applyStatus']); ?>'><?php echo htmlspecialchars($row['applyStatus']); ?></span></p>
+                        <p><strong>Status:</strong> <span id='status-<?php echo htmlspecialchars($row['applicationID']); ?>' class='status-label <?php echo htmlspecialchars($row['applyStatus']); ?>'><?php echo htmlspecialchars($row['applyStatus']); ?></span></p>
                         
                         <?php if ($row['applyStatus'] === 'Under Review' && !empty($row['additionalDetails'])): ?>
                             <div class='alert alert-warning'>
@@ -86,8 +86,8 @@ include('jobSeeker1.php');
                             </div>
 
                             <?php if (empty($row['applicantResponse'])): ?>
-                                <form id='response-form-<?php echo $row['applicationID']; ?>' class='d-flex align-items-center' onsubmit="return sendResponse(event, '<?php echo $row['applicationID']; ?>');">
-                                    <textarea id='response-<?php echo $row['applicationID']; ?>' class='form-control me-2' rows='2' placeholder='Type your response here...'></textarea>
+                                <form id='response-form-<?php echo htmlspecialchars($row['applicationID']); ?>' class='d-flex align-items-center' onsubmit="return sendResponse(event, '<?php echo $row['applicationID']; ?>');">
+                                    <textarea id='response-<?php echo htmlspecialchars($row['applicationID']); ?>' class='form-control me-2' rows='2' placeholder='Type your response here...'></textarea>
                                     <button type='submit' class='btn btn-success'>Submit</button>
                                 </form>
                             <?php else: ?>
@@ -98,7 +98,7 @@ include('jobSeeker1.php');
                         <?php endif; ?>
 
                         <div class='d-flex justify-content-between mt-3'>
-                            <a href='cancelJob.php?jobPostID=<?php echo $row['jobPostID']; ?>' class='btn btn-primary'>View Job</a>
+                            <a href='cancelJob.php?jobPostID=<?php echo htmlspecialchars($row['jobPostID']); ?>' class='btn btn-primary'>View Job</a>
                         </div>
                     </div>
                 </div>

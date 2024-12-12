@@ -17,6 +17,7 @@ if ($reportID) {
             reportPost.reportStatus,
             reportPost.reporterID,
             reportPost.reportedUserID,
+            reportPost.jobPostID,
             login.role AS reporterRole,
             jobSeeker.fullName AS jobSeekerFullName,
             employer.fullName AS employerFullName,
@@ -70,7 +71,8 @@ if ($reportID) {
             'description' => $report['description'],
             'evidenceLink' => "../reports/" . htmlspecialchars($report['evidence']), // Correct file path
             'reportedUser' => $reportedUserName,
-            'reportedUserID' => $report['reportedUserID']
+            'reportedUserID' => $report['reportedUserID'],
+            'jobPostID' => $report['jobPostID']
             // 'reporterID' => $report['reporterID']
             
         ]);
