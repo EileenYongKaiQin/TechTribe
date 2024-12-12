@@ -148,7 +148,7 @@ $result = $con->query($sql);
             <table id="reporter-table">
                 <tr><th>Reporter Name</th><td id="modalReporterName"></td></tr>
                 <tr><th>Submission Date</th><td id="modalSubmissionDate"></td></tr>
-                <tr><th>Job Post</th><td><button class="btn btn-view">View</button></td></tr>
+                <tr><th>Job Post</th><td><button class="btn btn-view" id="modalViewJobPost" onclick="viewJobPost()" style="display:none;">View</button></td></tr>
                 <tr><th>Reason</th><td id="modalReason"></td></tr>
                 <tr><th>Description</th><td id="modalDescription"></td></tr>
                 <tr><th>Evidence</th><td><a href="#" id="modalEvidence" class="btn btn-view" target="_blank" style="text-decoration: none;">View</a></td></tr>
@@ -269,7 +269,15 @@ document.getElementById('updateResolvedButton').addEventListener('click', () => 
                     document.getElementById('modalEvidence').href = data.evidenceLink;
                     document.getElementById('modalReportedUser').innerText = data.reportedUser;
                     document.getElementById('modalViewProfile').dataset.userId = data.reportedUserID;
+                    
                     // document.getElementById('modalReporterUserID').dataset.userId = data.reporterID;
+
+                    if (data.jobPostID) {
+                        document.getElementById('modalViewJobPost').dataset.jobPostId = data.jobPostID;
+                        document.getElementById('modalViewJobPost').style.display = 'inline-block';
+                    } else {
+                        document.getElementById('modalViewJobPost').style.display = 'none';
+                    }
                     // Show the modal
                     const modal = document.getElementById('detailsModal');
                     modal.classList.remove('hidden');
@@ -291,6 +299,12 @@ document.getElementById('updateResolvedButton').addEventListener('click', () => 
         const profileURL = `viewProfile.php?userID=${encodeURIComponent(userID)}`;
         window.location.href = profileURL;
     }
+
+        function viewJobPost() {
+        const jobPostID = document.getElementById('modalViewJobPost').dataset.jobPostId;
+        const jobPostURL = `viewJobPost.php?jobPostID=${encodeURIComponent(jobPostID)}`;
+        window.location.href = jobPostURL;
+    }   
         
     </script>
 </body>
