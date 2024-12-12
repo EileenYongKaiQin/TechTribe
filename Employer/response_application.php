@@ -72,11 +72,12 @@
         // Check if there are applications to display
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                $userID = $row['applicantID'];
                 echo "
                 <div class='card mb-3'>
                     <div class='card-body'>
                         <h3 class='card-title'>{$row['jobTitle']}</h3>
-                        <p><strong>Applicant Name:</strong><a href='viewJSProfile.php?applicantID={$row['applicantID']}' class='text-decoration-none'> {$row['applicantName']}</a></p>
+                        <p><strong>Applicant Name:</strong><a href='visit_job_seeker.php?userID={$userID}' class='text-decoration-none'> {$row['applicantName']}</a></p>
                         <p><strong>Location:</strong> {$row['location']}</p>
                         <p><strong>Application ID:</strong> {$row['applicationID']}</p>
                         <p><strong>Applied On:</strong> {$row['applyDate']}</p>
