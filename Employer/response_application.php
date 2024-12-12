@@ -59,8 +59,8 @@
                     FROM jobApplication ja 
                     JOIN jobPost jp ON ja.jobPostID = jp.jobPostID 
                     JOIN jobSeeker u ON ja.applicantID = u.userID
-                    WHERE ja.applicantID = ? ";
-                    // WHERE jp.userID = ?";
+                    
+                    WHERE jp.userID = ?";
         
             $stmt = $con->prepare($sql);
             $stmt->bind_param("s", $userID);

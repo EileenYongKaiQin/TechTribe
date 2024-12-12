@@ -1,4 +1,5 @@
 <?php
+$currentPage = basename($_SERVER['PHP_SELF']);
 session_start(); // Start the session
 
 // Include the database configuration file
@@ -121,6 +122,13 @@ if ($result && $result->num_rows > 0) {
             color: #FFFFFF;
         }
 
+        /* Active menu item style */
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+            color: #FFFFFF;
+        }
+
         .logout {
             margin-top: auto;
             margin-bottom: 80px;
@@ -229,25 +237,25 @@ if ($result && $result->num_rows > 0) {
             <h1 class="logo-text">FlexMatch</h1>
         </div>
         <nav class="menu">
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'employer_dashboard.php' ? 'active' : ''; ?>">
                 <img src="../images/dashboardIcon.png" alt="Dashboard Icon" class="menu-icon">
                 <span onclick="location.href='employer_dashboard.php'">Dashboard</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'job_posting_form.php' ? 'active' : ''; ?>">
                 <img src="../images/add_circle.png" alt="Create Job Icon" class="menu-icon">
                 <span onclick="location.href='job_posting_form.php'">Create Job</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'job_posting_list.php' ? 'active' : ''; ?>">
                 <img src="../images/text_snippet.png" alt="Posted Job Icon" class="menu-icon">
                 <span onclick="location.href='job_posting_list.php'">Posted Job</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'response_application.php' ? 'active' : ''; ?>">
                 <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
                 <span onclick="location.href='response_application.php'">Application</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item <?php echo $currentPage == 'job_seeker_wall.php' ? 'active' : ''; ?>">
                 <img src="../images/contacts.png" alt="Job Seeker Wall Icon" class="menu-icon">
-                <span>Job Seeker Wall</span>
+                <span onclick="location.href='job_seeker_wall.php'">Job Seeker Wall</span>
             </div>
         </nav>
         <div class="logout" onclick="location.href='../login.html'">
