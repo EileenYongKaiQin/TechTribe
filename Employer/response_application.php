@@ -59,7 +59,6 @@
                     FROM jobApplication ja 
                     JOIN jobPost jp ON ja.jobPostID = jp.jobPostID 
                     JOIN jobSeeker u ON ja.applicantID = u.userID
-                    
                     WHERE jp.userID = ?";
         
             $stmt = $con->prepare($sql);
@@ -77,7 +76,7 @@
                 <div class='card mb-3'>
                     <div class='card-body'>
                         <h3 class='card-title'>{$row['jobTitle']}</h3>
-                        <p><strong>Applicant Name:</strong><a href='viewProfile.php?applicantID={$row['applicantID']}' class='text-decoration-none'> {$row['applicantName']}</a></p>
+                        <p><strong>Applicant Name:</strong><a href='viewJSProfile.php?applicantID={$row['applicantID']}' class='text-decoration-none'> {$row['applicantName']}</a></p>
                         <p><strong>Location:</strong> {$row['location']}</p>
                         <p><strong>Application ID:</strong> {$row['applicationID']}</p>
                         <p><strong>Applied On:</strong> {$row['applyDate']}</p>

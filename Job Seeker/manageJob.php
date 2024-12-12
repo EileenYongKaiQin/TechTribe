@@ -106,7 +106,7 @@
 
            // Fetch job details from the database
           
-           $sql = "SELECT * FROM jobPost WHERE jobPostID = '$jobPostID'"; // Example jobPostID, adjust dynamically
+           $sql = "SELECT * FROM jobPost WHERE jobPostID = '$jobPostID'";
            $result = $con->query($sql);
 
             if ($result->num_rows > 0) {
@@ -122,6 +122,13 @@
                 echo "Job not found!";
                 exit;
             }
+
+            // Check if the user has already applied for the job
+            $sqlCheck = "SELECT * FROM jobApplication WHERE jobPostID = '$jobPostID' AND applicantID = '$userID'";
+            $resultCheck = $con->query($sqlCheck);
+
+            // Display Apply button only if the user hasn't applied yet
+            $showApplyButton = ($resultCheck->num_rows === 0); // true if user has not applied
     
     ?>
      <!-- Main content -->
@@ -137,44 +144,48 @@
         <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p><br>
         <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p><br>
     </div>
+    <?php if ($showApplyButton) { ?>
     <button id="applyButton" data-job-id="<?php echo $job['jobPostID']; ?>">Apply</button>
+    <?php } else { ?>
+        <p style="font-size: 30px;">You applied for this job.</p>
+    <?php } ?>
   </div>
 
  <script>
        // Handle button click to apply for the job
     document.getElementById('applyButton').addEventListener('click', function() {
-    var jobPostID = this.getAttribute('data-job-id');
+        var jobPostID = this.getAttribute('data-job-id');
 
-    Swal.fire({
-        title: "Are you sure you want to apply for the job?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Yes, apply",
-        cancelButtonText: "No, cancel"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Create FormData object
-            var formData = new FormData();
-            formData.append('jobPostID', jobPostID); // Send the job post ID to the backend
+        Swal.fire({
+            title: "Are you sure you want to apply for the job?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes, apply",
+            cancelButtonText: "No, cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create FormData object
+                var formData = new FormData();
+                formData.append('jobPostID', jobPostID); // Send the job post ID to the backend
 
-            // Make an AJAX request to submit the application
-            fetch('../database/applyForJob.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                Swal.fire('Success!', data.message || 'Application submitted successfully!', 'success');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Failed to apply for the job. Please try again later.', 'error');
-            });
-        } else {
-            Swal.fire('Cancelled', 'Application cancelled.', 'info');
-        }
+                // Make an AJAX request to submit the application
+                fetch('../database/applyForJob.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire('Success!', data.message || 'Application submitted successfully!', 'success');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Failed to apply for the job. Please try again later.', 'error');
+                });
+            } else {
+                Swal.fire('Cancelled', 'Application cancelled.', 'info');
+            }
+        });
     });
-});
 
  </script>
 
