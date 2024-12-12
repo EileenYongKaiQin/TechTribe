@@ -1,7 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('employerNew_nosidebar.php');
+include('employer1_nosidebar.php');
 
 if(!empty($_POST)) 
 {   

@@ -1,7 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('employerNew.php');
+include('employer1.php');
 
 if (!isset($_SESSION['userID'])) {
     header('Location: employer_dashboard.php');

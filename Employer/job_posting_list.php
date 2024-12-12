@@ -123,7 +123,7 @@
 <body>
     <?php
         include('../database/config.php');
-        include('employerNew.php');
+        include('employer1.php');
 
         
         // Fetch all job postings

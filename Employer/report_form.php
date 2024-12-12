@@ -1,6 +1,6 @@
 <?php 
     include('../database/config.php');
-    include('employerNew.php');
+    include('employer1.php');
 
     // Assuming the jobPostID is passed as a GET parameter
     // $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;

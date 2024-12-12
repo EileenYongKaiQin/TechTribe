@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
         echo '<div class="user-info-post"">';
             // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
             echo '<div class="picture">';
-                echo '<a href="../Job Seeker/visit_job_seeker.php?userID=' . $row['userID'] . '">
+                echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">
                 <img src="../images/JobSeeker.png" alt="Profile Picture" class="profile-pic"></a>';
             echo '</div>';
             echo '<div class="name">';

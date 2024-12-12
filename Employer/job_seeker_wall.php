@@ -11,7 +11,7 @@
 
     <?php 
         include('../database/config.php');
-        include('employerNew.php');  // Include header and side menu here
+        include('employer1.php');  // Include header and side menu here
     ?>
 
     <div class="main-content">
