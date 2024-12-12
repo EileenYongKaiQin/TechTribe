@@ -5,6 +5,7 @@ session_start(); // Start the session
 
 // Include the database configuration file
 include '../database/config.php';
+include '../notification/notification.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
@@ -31,6 +32,10 @@ if ($result && $result->num_rows > 0) {
 } else {
     $fullName = "Employer"; // Default fallback if user not found
 }
+
+$noti = fetchNotifications($userID);
+$notiArray = $noti['notifications']->fetch_all(MYSQLI_ASSOC);
+$notiCount = $noti['unreadCount'];
 ?>
 
 <!DOCTYPE html>
@@ -40,6 +45,85 @@ if ($result && $result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/job_seeker_layout.css">
+    <style>
+        /* Notifications */
+        .notification-container {
+            position: absolute;
+            width: 362px;
+            height: auto;
+            top: 60px;
+            right: 380px;
+            background: #F4F4F4;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            display: none;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            position: relative;
+            left: 10px; /* Adjust this value to move it to the right */
+        }
+
+        .notification-item1 {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+
+        .notification-item2 {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: 15px;
+            margin: 5px 0;
+            background: rgba(217, 217, 217, 0.8);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .notification-text {
+            font-weight: 600;
+            font-size: 12px;
+            color: #000000;
+            line-height: 1.5;
+        }
+
+        .notification-time {
+            font-size: 8px;
+            color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            bottom: 5px; 
+            right: 10px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 20px;
+            right: 385px;
+            background-color: red;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-type-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px; /* Add some spacing between the icon and text */
+        }
+    </style>
     <title>FlexMatch</title>
     
 </head>
@@ -78,8 +162,31 @@ if ($result && $result->num_rows > 0) {
     </div>        
     <header class="header">
         <div class="header-right">
-        <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon">
-            <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../employer/employer_job_seeker_list.php'">
+        <div class="notification-item1">
+                    <div class="notification-count" style="<?php echo ($notiCount == 0) ? 'display:none;' : ''; ?>">
+                        <?php echo $notiCount; ?>
+                    </div>
+                        <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon"> &nbsp;
+                        <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../employer/employer_job_seeker_list.php'">
+                    </div>
+                    
+            <div class="notification-container">
+                    <?php foreach($notiArray as $notification): ?>
+                    <div class="notification-item2" style="<?php echo ($notification['isRead'] == 1) ? 'background-color: #e0e0e0;' : ''; ?>">
+                        <div class="notification-type-icon">
+                            <?php
+                            if ($notification['notificationType'] == 'status-change') {
+                                echo '<img src="../images/status-change-icon.png" alt="Status Change Icon" class="icon">';
+                            } elseif ($notification['notificationType'] == 'warning') {
+                                echo '<img src="../images/warning-icon.png" alt="Warning Icon" class="icon">';
+                            }
+                            ?>
+                        </div>
+                        <div class="notification-text"><?php echo $notification['notificationText']; ?></div>
+                        <div class="notification-time" data-timestamp="<?php echo $notification['createdAt']; ?>"></div>
+                    </div>
+                    <?php endforeach; ?>
+            </div>
             <a href="view_employer_profile.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
                 <a href="view_employer_profile.php">    
                     <div class="user-info">
@@ -94,5 +201,80 @@ if ($result && $result->num_rows > 0) {
     </section>
 
     </div>    
+    <script>
+        document.querySelector('.notification-icon').addEventListener('click', function() {
+            const notificationContainer = document.querySelector('.notification-container');
+            const notificationCount = document.querySelector('.notification-count');
+
+            // Fetch the userID from PHP and send the POST request to mark notifications as read
+            fetch('../notification/markNotificationsAsRead.php', {
+                method: 'POST',
+                body: JSON.stringify({ userID: '<?php echo $userID; ?>' }), // Make sure userID is available from PHP
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide the notification count (set to 0 and hide it)
+                    notificationCount.textContent = '0';
+                    notificationCount.style.display = 'none'; // Hide the notification count
+
+                    // Toggle visibility of the notification container
+                    notificationContainer.style.display = (notificationContainer.style.display === 'none' || notificationContainer.style.display === '') ? 'block' : 'none';
+                } else {
+                    console.error("Failed to mark notifications as read");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        function time_ago(timestamp) {
+            const time_ago = new Date(timestamp);
+            const current_time = new Date();
+            const time_difference = current_time - time_ago;
+            const seconds = time_difference / 1000;
+            const minutes = Math.round(seconds / 60);
+            const hours = Math.round(seconds / 3600);
+            const days = Math.round(seconds / 86400);
+            const weeks = Math.round(seconds / 604800);
+            const months = Math.round(seconds / 2629440);
+            const years = Math.round(seconds / 31553280);
+
+            if (seconds <= 60) {
+                return "Just Now";
+            } else if (minutes <= 60) {
+                return minutes === 1 ? "one minute ago" : `${minutes} minutes ago`;
+            } else if (hours <= 24) {
+                return hours === 1 ? "an hour ago" : `${hours} hours ago`;
+            } else if (days <= 7) {
+                return days === 1 ? "yesterday" : `${days} days ago`;
+            } else if (weeks <= 4.3) {
+                return weeks === 1 ? "one week ago" : `${weeks} weeks ago`;
+            } else if (months <= 12) {
+                return months === 1 ? "one month ago" : `${months} months ago`;
+            } else {
+                return years === 1 ? "one year ago" : `${years} years ago`;
+            }
+        }
+
+        // Function to update the notification time dynamically
+        function updateNotificationTimes() {
+            const notificationTimes = document.querySelectorAll('.notification-time');
+
+            notificationTimes.forEach(function(notiTime) {
+                const timestamp = notiTime.getAttribute('data-timestamp');
+                const timeAgo = time_ago(timestamp);
+                notiTime.textContent = timeAgo;
+            });
+        }
+
+        // Update times every minute
+        setInterval(updateNotificationTimes, 60000); // Update every minute
+
+        // Initial update of notification times
+        updateNotificationTimes();
+    </script>
 </body>
 </html>

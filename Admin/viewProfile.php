@@ -21,26 +21,26 @@ if (isset($_GET['userID'])) {
             employer.companyAddress, 
             employer.contactNo,
             employer.profilePic AS employerPic,
-            rp.reportID
+            rp.reportID,
+            rp.jobPostID
         FROM login
         LEFT JOIN jobSeeker ON login.userID = jobSeeker.userID
         LEFT JOIN employer ON login.userID = employer.userID
-        LEFT JOIN reportPost rp ON 
-        CASE 
-            WHEN login.role = 'employer' THEN rp.reportedUserID = login.userID
-            WHEN login.role = 'jobSeeker' THEN rp.reportedUserID = login.userID
-        END
+        LEFT JOIN reportPost rp ON rp.reportedUserID = login.userID
         WHERE login.userID = ?
     ";
 
     $stmt = $con->prepare($sql);
-    $stmt->bind_param('s', $userID);
+    $stmt->bind_param('s',$userID);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+        // Fetch and process each report
+        while ($user = $result->fetch_assoc()) {
 
+        $reportID = $user['reportID'];
+        $jobPostID = $user['jobPostID'];
         $profileData = [
             'name' => $user['role'] == 'jobSeeker' ? $user['jobSeekerName'] : $user['employerName'],
             'contact' => $user['contactNo'],
@@ -51,10 +51,12 @@ if (isset($_GET['userID'])) {
             'email' => $user['email'],
             'company' => $user['role'] == 'employer' ? $user['companyName'] : 'N/A',
             'companyAddress' => $user['role'] == 'employer' ? $user['companyAddress'] : 'N/A',
-            'reportID' => $user['reportID'], // Now this will correctly fetch the report ID
+            'reportID' => $reportID, 
+            'jobPostID' => $jobPostID
         ];
+    }
 
-        ?>
+?>
 
         <!DOCTYPE html>
         <html lang="en">
@@ -155,12 +157,13 @@ if (isset($_GET['userID'])) {
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('Response:', data);
                         if (data.success) {
                             alert('Warning issued successfully.');
                             closeModal('updateModal');
                             window.location.href = 'reviewReport.php';
                         } else {
-                            alert('Failed to issue warning.');
+                            alert('Failed to issue warning.' + data.message);
                         }
                     })
                     .catch(err => {
