@@ -14,7 +14,7 @@ $result = $con->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <title>Select a Job Seeker to Chat</title>
+    <title>Job Seekers List</title>
     <style>
      
         .container {
@@ -27,21 +27,33 @@ $result = $con->query($sql);
             
         }
         table {
-            width: 700px;
+            width: 500px;
             border-collapse: collapse;
             margin-top: 30px;
             margin-left: auto;
             margin-right: auto;
-            
         }
-        th, td {
+
+
+        th {
             padding: 15px;
             text-align: left;
             border: 1px solid #ddd;
         }
-        th {
-            background-color: #f2f2f2;
+
+        td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s ease; /* Smooth transition for background color */
         }
+
+        /* Change background color for the entire row on hover */
+        tr:hover td {
+            background-color: #e6f5f9; /* Light blue color on hover */
+            border-color: #add8e6; /* Change border color to light blue on hover */
+        }
+
         .chat-button {
             padding: 10px 20px;
             color: white;
@@ -50,16 +62,22 @@ $result = $con->query($sql);
             border-radius: 15px;
             cursor: pointer;
             text-decoration: none; /* Remove underline from links */
-            
+            display: inline-block; /* Ensure the button behaves as a block-level element for transform */
+            box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
         }
+
         .chat-button:hover {
             background-color: #009688;
+            transform: scale(1.05); /* Slightly increase the button size */
+            box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
         }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Select a Job Seeker to Chat</h1>
+        <h1>Job Seekers List</h1>
         <table>
             <tr>
                 <th>Name</th>

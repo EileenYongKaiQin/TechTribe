@@ -30,8 +30,11 @@ function sendMessage(event, senderRole, userID) {
     const messageContents = chatInput.value.trim();
     if (!messageContents) return;
 
-    // Add message to the chat section
-    addMessageToChat(messageContents, senderRole);
+    // Get current timestamp
+    const timestamp = new Date().toISOString();
+
+    // Add message to the chat section with timestamp
+    addMessageToChat(messageContents, senderRole, null, timestamp);
     chatInput.value = "";
 
     address = window.location.search 
@@ -44,32 +47,27 @@ function sendMessage(event, senderRole, userID) {
     fetch("../database/chat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&jobSeekerID=${jobSeekerID}`
+        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&jobSeekerID=${jobSeekerID}&timestamp=${timestamp}`
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === "success") {
-            // Instead of showing notification, directly reload the page
             setTimeout(() => {
-                // Auto-response after sending a message
                 const autoResponse = senderRole === 'employer' ? 
                     "Thank you for your message. I will get back to you soon!" : 
                     "Thank you for your message. We will get back to you soon!";
 
-                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer");
-
-                // Send auto-response to the server
+                const autoResponseTimestamp = new Date().toISOString();
+                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
+                location.reload()
                 fetch("../database/chat.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&jobSeekerID=${jobSeekerID}`
+                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&jobSeekerID=${jobSeekerID}&timestamp=${autoResponseTimestamp}`
                 })
                 .then(response => response.json())
-                .then(data => { 
-                    if (data.status === "success") {
-                        // Reload the page after sending the auto-response
-                        location.reload(); // This will reload the page
-                    } else {
+                .then(data => {
+                    if (data.status !== "success") {
                         console.error(data.error);
                     }
                 });
@@ -108,56 +106,51 @@ let lastMessageDate = null; // Variable to store the last message date
 
 function addMessageToChat(messageContents, senderRole, messageID = null, timestamp = null) {
     const chatSection = document.getElementById("chatSection");
-    
+
     // Parse the timestamp if provided
-    const messageDate = timestamp ? new Date(timestamp) : null;
+    const messageDate = timestamp ? new Date(timestamp) : new Date();
 
     // Check if we need to add a date separator
     if (messageDate && (!lastMessageDate || messageDate.toDateString() !== lastMessageDate.toDateString())) {
         addDateSeparator(messageDate);
-        lastMessageDate = messageDate; // Update the last message date
+        lastMessageDate = messageDate;
     }
 
     const messageElement = document.createElement("div");
     messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
+    
     messageElement.innerText = messageContents;
 
     // Set the alignment based on the sender's role
     messageElement.classList.add(senderRole === 'employer' ? 'align-left' : 'align-right');
 
-    // Get the current user role dynamically (replace with your method of retrieving the role)
     const currentUserRole = 'employer'; // This should be dynamically set based on logged-in user
 
-    // Only add the ellipsis button for employer messages
     if (currentUserRole === 'employer' && senderRole === 'employer') {
         const ellipsisButton = document.createElement("button");
         ellipsisButton.innerText = "⋮"; // Three dots
         ellipsisButton.classList.add("ellipsis-button");
         ellipsisButton.onclick = () => toggleEditDeleteMenu(messageElement, messageID, senderRole);
-        ellipsisButton.style.display = "none"; // Initially hide the button
-        
-        // Show the ellipsis button on hover
+        ellipsisButton.style.display = "none";
+
         messageElement.onmouseover = () => {
-            ellipsisButton.style.display = "inline"; // Show the button on hover
+            ellipsisButton.style.display = "inline";
         };
         messageElement.onmouseout = () => {
-            ellipsisButton.style.display = "none"; // Hide the button when not hovering
+            ellipsisButton.style.display = "none";
         };
 
-        // Append the button before the message text
         messageElement.prepend(ellipsisButton);
     }
 
-    // Create a timestamp element
     if (timestamp) {
         const timestampElement = document.createElement("span");
         timestampElement.classList.add("message-timestamp");
-        
-        // Format the time to show only hours and minutes
-        const options = { hour: '2-digit', minute: '2-digit', hour12: false }; // 24-hour format
+
+        const options = { hour: 'numeric', minute: '2-digit', hour12: true };
         timestampElement.innerText = new Date(timestamp).toLocaleTimeString([], options);
-        
-        messageElement.appendChild(timestampElement); // Append timestamp to the message
+
+        messageElement.appendChild(timestampElement);
     }
 
     chatSection.appendChild(messageElement);
@@ -187,13 +180,21 @@ function toggleEditDeleteMenu(messageElement, messageID, senderRole) {
         // Create and append Edit button
         const editButton = document.createElement("button");
         editButton.innerText = "Edit";
-        editButton.onclick = () => editMessage(messageID, messageElement, senderRole);
+        editButton.classList.add("edit-button"); // Add class for Edit button
+        editButton.onclick = () => {
+            editMessage(messageID, messageElement, senderRole);
+            menu.style.display = "none"; // Close the menu after editing
+        };
         menu.appendChild(editButton);
 
         // Create and append Delete button
         const deleteButton = document.createElement("button");
         deleteButton.innerText = "Delete";
-        deleteButton.onclick = () => deleteMessage(messageID, messageElement, senderRole);
+        deleteButton.classList.add("delete-button"); // Add class for Delete button
+        deleteButton.onclick = () => {
+            deleteMessage(messageID, messageElement, senderRole);
+            menu.style.display = "none"; // Close the menu after deleting
+        };
         menu.appendChild(deleteButton);
 
         messageElement.appendChild(menu); // Append the menu to the message element
@@ -232,7 +233,13 @@ window.onclick = function(event) {
 
 function editMessage(messageID, messageElement, senderRole, userID) {
     // Get the current message text without the ellipsis and time
-    const originalMessage = messageElement.innerText.replace(" (edited)", "").split(" ").slice(0, -1).join(" "); // Assuming the last part is the time
+    const originalMessage = messageElement.innerText
+        .replace(/⋮\s*/, '') // Remove the ellipsis
+        .replace(/\s+\d{1,2}:\d{2}\s*[ap]m/i, '') // Remove the time (format like 9:23 pm)
+        .replace(/(Edit|Delete)\s*/g, '') // Remove 'Edit' and 'Delete' options
+        .replace(/\(edited.*\)/, '') // Remove the (edited...) part if it exists
+        .trim(); // Trim whitespace from the ends
+    
     
     // Set the original message in the modal input
     const editMessageInput = document.getElementById("editMessageInput");
@@ -246,7 +253,7 @@ function editMessage(messageID, messageElement, senderRole, userID) {
     const saveEditButton = document.getElementById("saveEditButton");
     saveEditButton.onclick = () => {
         location.reload()
-        const newMessage = editMessageInput.value.trim();
+        const newMessage = editMessageInput.value.trim() + " (edited)";
         if (newMessage && newMessage !== originalMessage) {
             // Update message in the database
             fetch("../database/chat.php", {
@@ -257,8 +264,8 @@ function editMessage(messageID, messageElement, senderRole, userID) {
             .then(data => {
                 if (data.status === "success") {
                     // Update the message in the UI, appending the new time format
-                    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    messageElement.innerText = `${newMessage}`; // Add time and edited note
+                    const currentTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // 12-hour format
+                    messageElement.innerText = `Edited: ${newMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
                     location.reload()
                     //   // Recreate edit and delete buttons
                     
