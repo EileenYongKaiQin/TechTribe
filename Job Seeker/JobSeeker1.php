@@ -182,7 +182,7 @@ if ($noti !== false) {
                         <?php echo $notiCount; ?>
                     </div>
                         <img src="../images/Notification.png" alt="Notification Icon" class="notification-icon"> &nbsp;
-                        <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../Job Seeker/jobSeeker_chat.php'">
+                        <img src="../images/Chat.png" alt="Chat Icon" class="notification-icon" onclick="location.href='../Job Seeker/jobSeeker_employer_list.php'">
                     </div>
                     
             <div class="notification-container">
