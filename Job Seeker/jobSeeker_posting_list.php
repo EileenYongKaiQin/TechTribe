@@ -23,6 +23,52 @@
     <title>Job Portal</title>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../css/view_job.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;    
+            margin-top: 60px;            
+            padding: 20px;
+        }
+
+        .rectangle {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;        
+            display: flex;
+            flex-wrap: wrap;           
+            justify-content: space-between; 
+            width: 75%;                 
+            max-width: 1000px;      
+            padding: 30px 50px;
+            
+        }
+        
+        .job-card {
+            width: 45%; 
+            position: relative;                
+            background: #F0FDFF;
+            border: 1px solid #EFE2F8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px; 
+            margin-bottom: 30px;         
+            box-sizing: border-box;  
+            display: flex;
+            flex-direction: column;     
+            justify-content: space-between;
+        }
+        
+        .search-bar-container {
+                    top: 105px;
+        }
+    </style>
 </head>
 <body>
 <script>
