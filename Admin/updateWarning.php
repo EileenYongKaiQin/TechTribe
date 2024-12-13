@@ -91,8 +91,8 @@ if ($result->num_rows > 0) {
         }
 
          // Create notifications
-        $notiTextReportedUser = "You have received a warning.";
-        $notiTextReporter = "Your report has triggered a warning on $reportedUserName.";
+        $notiTextReportedUser = "You have received a warning for report $reportID.";
+        $notiTextReporter = "Your report $reportID has triggered a warning on $reportedUserName.";
         $notiTextAdmin = "You issued a warning for report $reportID.";
         $notiType = 'warning';
 

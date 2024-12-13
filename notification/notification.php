@@ -71,6 +71,71 @@ function fetchNotifications($userID) {
     return ['notifications' => $result, 'unreadCount' => $unreadCount];
 }
 
+// Fetch all notifications and include related reportID if applicable
+function fetchNotificationsWithReport($userID) {
+    global $con;
+
+    // Fetch notifications with related reportID if applicable
+    $query = "
+        SELECT 
+            n.*, 
+            rp.reportID 
+        FROM 
+            notification n
+        LEFT JOIN 
+            reportPost rp 
+        ON 
+            rp.reporterID = n.userID OR rp.reportedUserID = n.userID
+        WHERE 
+            n.userID = ?
+        ORDER BY 
+            n.createdAt DESC
+    ";
+    $stmt = $con->prepare($query);
+
+    // Check if the preparation is successful
+    if ($stmt === false) {
+        // Error occurred while preparing the query
+        error_log("Error preparing query: " . $con->error);
+        return false; // Or handle it accordingly
+    }
+
+    $stmt->bind_param('s', $userID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Fetch the unread count
+    $unreadCountQuery = "
+        SELECT 
+            COUNT(*) as unreadCount 
+        FROM 
+            notification 
+        WHERE 
+            userID = ? AND isRead = 0
+    ";
+    $stmtUnread = $con->prepare($unreadCountQuery);
+
+    // Check if the preparation is successful
+    if ($stmtUnread === false) {
+        // Error occurred while preparing the query
+        error_log("Error preparing unread count query: " . $con->error);
+        return false; // Or handle it accordingly
+    }
+
+    $stmtUnread->bind_param('s', $userID);
+    $stmtUnread->execute();
+    $unreadResult = $stmtUnread->get_result();
+    
+    if ($unreadResult) {
+        $unreadCount = $unreadResult->fetch_assoc()['unreadCount'];
+    } else {
+        $unreadCount = 0;  // Default if no result found
+    }
+
+    return ['notifications' => $result, 'unreadCount' => $unreadCount];
+}
+
+
 
 // Function to mark a notification as read
 function markNotificationsAsRead($userID) {
