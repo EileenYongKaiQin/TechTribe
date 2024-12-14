@@ -33,7 +33,7 @@ if ($result && $result->num_rows > 0) {
     $fullName = "Employer"; // Default fallback if user not found
 }
 
-$noti = fetchNotifications($userID);
+$noti = fetchNotificationsWithReport($userID);
 // Check if notifications were fetched correctly
 if ($noti !== false) {
     $notiArray = $noti['notifications']->fetch_all(MYSQLI_ASSOC);
@@ -179,7 +179,19 @@ if ($noti !== false) {
                     
             <div class="notification-container">
                     <?php foreach($notiArray as $notification): ?>
-                    <div class="notification-item2" style="<?php echo ($notification['isRead'] == 1) ? 'background-color: #e0e0e0;' : ''; ?>">
+                        <?php
+                        $reportID = $notification['reportID'] ?? null; // Directly use the reportID if available
+                        $notificationType = $notification['notificationType'] ?? null; // Get notificationType
+                        $destination = '#';
+
+                        // Determine the navigation link based on the notification type
+                        if ($notificationType === 'status-change') {
+                            $destination = $reportID ? 'viewReportStatus.php?reportID=' . urlencode($reportID) : '#';
+                        } elseif ($notificationType === 'warning') {
+                            $destination = $reportID ? 'viewWarningComment.php?reportID=' . urlencode($reportID) : '#';
+                        }
+                        ?>
+                    <div class="notification-item2" style="<?php echo ($notification['isRead'] == 1) ? 'background-color: #e0e0e0;' : ''; ?>" onclick="window.location.href='<?php echo $destination; ?>';">
                         <div class="notification-type-icon">
                             <?php
                             if ($notification['notificationType'] == 'status-change') {

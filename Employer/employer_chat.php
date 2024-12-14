@@ -355,6 +355,7 @@ button:hover {
 .job-seeker-name {
     text-align: left; /* Align text to the left */
     font-weight: bold; /* Optional: make the name bold */
+    white-space: nowrap;
 }
 
 .search-container {
@@ -687,7 +688,12 @@ button:hover {
     }
 
     function report() {
-        alert("Reporting...");
+        const jobSeekerID = "<?php echo $jobSeekerID; ?>";
+        if(jobSeekerID) {
+            window.location.href = "report_form.php?reportedUserID=" + jobSeekerID;
+        } else {
+            alert("No job seeker selected to report.")
+        }
     }
 
     window.onclick = function(event) {

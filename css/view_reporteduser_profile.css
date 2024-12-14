@@ -92,7 +92,8 @@ hr.separation-line {
 
 /* Profile Info */
 .userDetails .userName, .userDetails .basic-info,
-.userDetails .company-info {
+.userDetails .company-info, .userDetails .work-experience,
+.userDetails .skills {
     padding: 10px;
 }
 
