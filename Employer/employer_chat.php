@@ -355,10 +355,7 @@ button:hover {
 .job-seeker-name {
     text-align: left; /* Align text to the left */
     font-weight: bold; /* Optional: make the name bold */
-<<<<<<< HEAD
-=======
     white-space: nowrap; /* Prevent the text from wrapping to a new line */
->>>>>>> 81db7e4affa9f9dd77e3bb97d77d74ec3be0ee68
 }
 
 .search-container {
