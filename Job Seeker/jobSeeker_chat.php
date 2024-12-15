@@ -124,7 +124,7 @@ body {
 /* Job Seeker Message */
 .job-seeker-message {
     background-color: rgb(255, 255, 255);
-    align-self: flex-start; /* Align to the left */
+    align-self: flex-end; /* Align to the left */
     text-align: left;
     font-size: 16px;
     border-radius: 15px;
@@ -140,7 +140,7 @@ body {
 /* Employer Message */
 .employer-message {
     background-color: rgb(224, 246, 237);
-    align-self: flex-end; /* Align to the right */
+    align-self: flex-start; /* Align to the right */
     text-align: right;
     font-size: 16px;
     border-radius: 15px;

@@ -53,17 +53,17 @@ function sendMessage(event, senderRole, userID) {
     .then(data => {
         if (data.status === "success") {
             setTimeout(() => {
-                const autoResponse = senderRole === 'job_seeker' ? 
+                const autoResponse = senderRole === 'employer' ? 
                     "Thank you for your message. I will get back to you soon!" : 
                     "Thank you for your message. We will get back to you soon!";
 
                 const autoResponseTimestamp = new Date().toISOString();
-                addMessageToChat(autoResponse, senderRole === "job_seeker" ? "employer" : "job_seeker", null, autoResponseTimestamp);
+                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
                 location.reload()
                 fetch("../database/jobSeekerChat.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderRole=${senderRole === "job_seeker" ? "employer" : "job_seeker"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
+                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -117,12 +117,12 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
     }
 
     const messageElement = document.createElement("div");
-    messageElement.classList.add("chat-message", senderRole === "job_seeker" ? "job-seeker-message" : "employer-message");
+    messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
     
     messageElement.innerText = messageContents;
 
     // Set the alignment based on the sender's role
-    messageElement.classList.add(senderRole === 'job_seeker' ? 'align-left' : 'align-right');
+    messageElement.classList.add(senderRole === 'employer' ? 'align-left' : 'align-right');
 
     const currentUserRole = 'job_seeker'; // This should be dynamically set based on logged-in user
 
