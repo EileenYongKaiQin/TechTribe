@@ -688,7 +688,12 @@ button:hover {
     }
 
     function report() {
-        alert("Reporting...");
+        const employerID = "<?php echo $employerID; ?>";
+        if(employerID) {
+            window.location.href = "report_form.php?reportedUserID=" + employerID;
+        } else {
+            alert("No employer selected to report.")
+        }
     }
 
     window.onclick = function(event) {
