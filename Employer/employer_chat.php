@@ -688,7 +688,12 @@ button:hover {
     }
 
     function report() {
-        alert("Reporting...");
+        const jobSeekerID = "<?php echo $jobSeekerID; ?>";
+        if(jobSeekerID) {
+            window.location.href = "report_form.php?reportedUserID=" + jobSeekerID;
+        } else {
+            alert("No job seeker selected to report.")
+        }
     }
 
     window.onclick = function(event) {

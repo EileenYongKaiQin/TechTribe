@@ -148,7 +148,9 @@ $result = $con->query($sql);
             <table id="reporter-table">
                 <tr><th>Reporter Name</th><td id="modalReporterName"></td></tr>
                 <tr><th>Submission Date</th><td id="modalSubmissionDate"></td></tr>
-                <tr><th>Job Post</th><td><button class="btn btn-view" id="modalViewJobPost" onclick="viewJobPost()" style="display:none;">View</button></td></tr>
+                <tr id="jobPostRow"><th>Job Post</th>
+                    <td><button class="btn btn-view" id="modalViewJobPost" onclick="viewJobPost()" style="display:none;">View</button>
+                    <span id="noJobPost" style="display: none;">N/A</span></td></tr>
                 <tr><th>Reason</th><td id="modalReason"></td></tr>
                 <tr><th>Description</th><td id="modalDescription"></td></tr>
                 <tr><th>Evidence</th><td><a href="#" id="modalEvidence" class="btn btn-view" target="_blank" style="text-decoration: none;">View</a></td></tr>
@@ -272,11 +274,18 @@ document.getElementById('updateResolvedButton').addEventListener('click', () => 
                     
                     // document.getElementById('modalReporterUserID').dataset.userId = data.reporterID;
 
+                    // Handle Job Post row visibility
+                    const jobPostRow = document.getElementById('jobPostRow');
+                    const jobPostButton = document.getElementById('modalViewJobPost');
+                    const noJobPostText = document.getElementById('noJobPost');
+
                     if (data.jobPostID) {
-                        document.getElementById('modalViewJobPost').dataset.jobPostId = data.jobPostID;
-                        document.getElementById('modalViewJobPost').style.display = 'inline-block';
+                        jobPostRow.style.display = ''; // Show the row
+                        jobPostButton.style.display = 'inline-block';
+                        noJobPostText.style.display = 'none';
+                        jobPostButton.dataset.jobPostId = data.jobPostID; // Store jobPostID
                     } else {
-                        document.getElementById('modalViewJobPost').style.display = 'none';
+                        jobPostRow.style.display = 'none'; // Hide the row completely
                     }
                     // Show the modal
                     const modal = document.getElementById('detailsModal');

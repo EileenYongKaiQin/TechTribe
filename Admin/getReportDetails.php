@@ -43,18 +43,9 @@ if ($reportID) {
     if ($result && $result->num_rows > 0) {
         $report = $result->fetch_assoc();
 
-        // Determine the reporter's full name based on the user role
-        $reporterName = '';
-        $reportedUserName = '';
-
-        // If the reporter is a jobSeeker, we take the jobSeeker's name
-        if ($report['reporterRole'] == 'jobSeeker') {
-            $reporterName = $report['jobSeekerFullName']; // Reporter is the job seeker
-        } 
-        // If the reporter is an employer, we take the employer's name
-        else if ($report['reporterRole'] == 'employer') {
-            $reporterName = $report['employerName']; // Reporter is the employer
-        }
+        $reporterName = $report['reporterRole'] === 'jobSeeker' 
+            ? $report['jobSeekerFullName'] 
+            : $report['employerFullName'];
 
         // Determine the reported user's full name based on their role
         if ($report['reportedJobSeekerFullName']) {
@@ -63,16 +54,20 @@ if ($reportID) {
             $reportedUserName = $report['reportedEmployerFullName']; // Reported user is an employer
         }
 
+        $evidenceLink = !empty($report['evidence']) 
+            ? "../reports/" . htmlspecialchars($report['evidence']) 
+            : 'N/A';
+
         // Return the fetched data as JSON
         echo json_encode([
-            'reporterName' => $reporterName,
-            'submissionDate' => $report['createTime'],
-            'reason' => $report['reason'],
-            'description' => $report['description'],
-            'evidenceLink' => "../reports/" . htmlspecialchars($report['evidence']), // Correct file path
+            'reporterName' => $reporterName?? 'N/A',
+            'submissionDate' => $report['createTime']?? 'N/A',
+            'reason' => $report['reason']?? 'N/A',
+            'description' => $report['description']?? 'N/A',
+            'evidenceLink' => $evidenceLink,
             'reportedUser' => $reportedUserName,
-            'reportedUserID' => $report['reportedUserID'],
-            'jobPostID' => $report['jobPostID']
+            'reportedUserID' => $report['reportedUserID']?? 'N/A',
+            'jobPostID' => $report['jobPostID']?? NULL
             // 'reporterID' => $report['reporterID']
             
         ]);
