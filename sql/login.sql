@@ -9,19 +9,26 @@ CREATE TABLE login (
     lastLogin TIMESTAMP NULL DEFAULT NULL
 );
 
-INSERT INTO login (userID, username, password, email, role)
-VALUES ('JS001', 'qiqi03', MD5('chuaqi@123'), 'chloee031023@gmail.com', 'jobSeeker');
-
--- Insert an employer into login
-INSERT INTO login (userID, username, password, email, role)
-VALUES ('EP001', 'eileen', MD5('eileen@123'), 'eileen@gmail.com', 'employer');
-
 -- Insert an admin into login
 INSERT INTO login (userID, username, password, email, role)
 VALUES ('AD001', 'kaixuan', MD5('kaixuan@123'), 'kaixuan@gmail.com', 'admin');
 
--- For delete profile use purpose login
+-- Insert an employer into login
 INSERT INTO login (userID, username, password, email, role)
-VALUES ('JS002', 'jsjessie', MD5('jc123'), 'NULL', 'jobSeeker');
+VALUES ('EP001', 'eileen', MD5('eileen@123'), NULL, 'employer');
 INSERT INTO login (userID, username, password, email, role)
-VALUES ('EP002', 'emjessie', MD5('jc1234'), 'NULL', 'jobSeeker');
+VALUES ('EP002', 'emjessie', MD5('jc123'), NULL, 'employer');
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('EP003', 'alice', MD5('alice123'), NULL, 'employer');
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('EP004', 'bob', MD5('bob123'), NULL, 'employer');
+
+-- Insert a jobseeker into login
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('JS001', 'qiqi03', MD5('chuaqi@123'), NULL, 'jobSeeker');
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('JS002', 'jsjessie', MD5('jc123'), NULL, 'jobSeeker');
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('JS003', 'bernice', MD5('bernice123'), NULL, 'jobSeeker');
+INSERT INTO login (userID, username, password, email, role)
+VALUES ('JS004', 'jesslyn', MD5('kek123'), NULL, 'jobSeeker');

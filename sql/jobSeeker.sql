@@ -15,15 +15,27 @@ CREATE TABLE jobseeker (
   hardSkill text, -- Hardskill
   softSkill text, -- Softskill
   profilePic varchar(100) DEFAULT NULL, -- ProfilePic
-  accountStatus ENUM('Active', 'Inactive', 'Suspended') DEFAULT 'Active', -- Account status
+  accountStatus ENUM(
+      'Active', 
+      'Inactive', 
+      'Suspended-Temporary-6M', 
+      'Suspended-Temporary-2Y', 
+      'Suspended-Temporary-5Y', 
+      'Suspended-Permanently'
+  ) DEFAULT 'Active', -- Account status
   warningHistory INT DEFAULT 0, -- Count of warnings received
+  suspensionEndDate DATE NULL, -- Suspension Date (End)
   FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );
 
 INSERT INTO jobSeeker (userID, fullName, email, contactNo, age, gender, race, location, state, 
-position, company, workExperience, language, hardSkill, softSkill, profilePic, accountStatus, warningHistory) 
+position, company, workExperience, language, hardSkill, softSkill, profilePic, accountStatus, warningHistory, suspensionEndDate) 
 VALUES 
     ('JS001', 'Chua Ern Qi', 'ernqi@graduate.utm.my', '0123456789', '21', 'Female', 'Chinese', 'Kuala Lumpur', 'Selangor', 
-    'Worker', 'Company ABC', '2 years experience in IT', 'English, Malay, Mandarin', 'Java, C++, Python', 'Leadership Skill', NULL, 'Active', 0),
+    'Worker', 'Company ABC', '2 years experience in IT', 'English, Malay, Mandarin', 'Java, C++, Python', 'Leadership Skill', NULL, 'Active', 0, NULL),
     ('JS002', 'Jessie Chang', 'jessie@gmail.com', '012345678901', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor',
-     'Worker', 'Company ABC', '2 years in IT', 'English, Malay, Chinese', 'Javascript, PHP, Microsoft', 'Adaptability, Creativity', NULL, 'Active', 0);
+     'Worker', 'Company ABC', '2 years in IT', 'English, Malay, Chinese', 'Javascript, PHP, Microsoft', 'Adaptability, Creativity', NULL, 'Active', 0, NULL),    
+    ('JS003', 'Bernice Lim', 'bernice@gmail.com', '012345678913', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor', 
+    'Worker', 'Company ABCD ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, PHP, Java', 'Communication, Leadership', NULL, 'Active', 10, NULL),
+    ('JS004', 'Kek Jesslyn', 'kek@gmail.com', '12345678911', '21', 'Female', 'Chinese', 'Kota Syahbandar', 'Malacca', 
+    'Worker', 'Company XYZ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, Java, PHP', 'Communication, Leadership', NULL, 'Active', 10, NULL);
