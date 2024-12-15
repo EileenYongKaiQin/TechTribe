@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     } else {
         // Insert new message
-        $stmt = $con->prepare("INSERT INTO message (userID, senderRole, messageContents, jobSeekerID) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $userID, $senderRole, $messageContents, $jobSeekerID);
+        $stmt = $con->prepare("INSERT INTO message (userID, senderRole, messageContents, jobSeekerID, employerID) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $userID, $senderRole, $messageContents, $jobSeekerID, $userID);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
         } else {

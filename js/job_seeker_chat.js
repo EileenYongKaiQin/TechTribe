@@ -44,7 +44,7 @@ function sendMessage(event, senderRole, userID) {
     const employerID = parameterList.get("employerID"); 
 
     // Send message to the server
-    fetch("../database/chat.php", {
+    fetch("../database/jobSeekerChat.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&employerID=${employerID}&timestamp=${timestamp}`
@@ -53,17 +53,17 @@ function sendMessage(event, senderRole, userID) {
     .then(data => {
         if (data.status === "success") {
             setTimeout(() => {
-                const autoResponse = senderRole === 'employer' ? 
+                const autoResponse = senderRole === 'job_seeker' ? 
                     "Thank you for your message. I will get back to you soon!" : 
                     "Thank you for your message. We will get back to you soon!";
 
                 const autoResponseTimestamp = new Date().toISOString();
-                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
+                addMessageToChat(autoResponse, senderRole === "job_seeker" ? "employer" : "job_seeker", null, autoResponseTimestamp);
                 location.reload()
-                fetch("../database/chat.php", {
+                fetch("../database/jobSeekerChat.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
+                    body: `senderRole=${senderRole === "job_seeker" ? "employer" : "job_seeker"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -117,16 +117,16 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
     }
 
     const messageElement = document.createElement("div");
-    messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
+    messageElement.classList.add("chat-message", senderRole === "job_seeker" ? "job-seeker-message" : "employer-message");
     
     messageElement.innerText = messageContents;
 
     // Set the alignment based on the sender's role
-    messageElement.classList.add(senderRole === 'employer' ? 'align-left' : 'align-right');
+    messageElement.classList.add(senderRole === 'job_seeker' ? 'align-left' : 'align-right');
 
-    const currentUserRole = 'employer'; // This should be dynamically set based on logged-in user
+    const currentUserRole = 'job_seeker'; // This should be dynamically set based on logged-in user
 
-    if (currentUserRole === 'employer' && senderRole === 'employer') {
+    if (currentUserRole === 'job_seeker' && senderRole === 'job_seeker') {
         const ellipsisButton = document.createElement("button");
         ellipsisButton.innerText = "⋮"; // Three dots
         ellipsisButton.classList.add("ellipsis-button");
@@ -256,7 +256,7 @@ function editMessage(messageID, messageElement, senderRole, userID) {
         const newMessage = editMessageInput.value.trim() + " (edited)";
         if (newMessage && newMessage !== originalMessage) {
             // Update message in the database
-            fetch("../database/chat.php", {
+            fetch("../database/jobSeekerChat.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
@@ -308,7 +308,7 @@ function deleteMessage(messageID, messageElement, currentUserRole, userID) {
     confirmDeleteButton.onclick = () => {
         location.reload(); // This will reload the page
         // Send delete request to the server
-        fetch("../database/chat.php", {
+        fetch("../database/jobSeekerChat.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `userID=${userID}&senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
@@ -354,7 +354,7 @@ function closeDeleteModal() {
 
 
 function loadChatHistory(employerID) {
-    var url = `../database/chat.php?employerrID=${employerID}`
+    var url = `../database/jobSeekerChat.php?employerID=${employerID}`
     fetch(url)
         .then(response => response.json())
         .then(chats => {

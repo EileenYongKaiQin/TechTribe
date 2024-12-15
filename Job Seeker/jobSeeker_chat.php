@@ -35,7 +35,7 @@ if (isset($_GET['employerID'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <title>Employer Chat</title>
+    <title>Job Seeker Chat</title>
     <!-- <link rel="stylesheet" href="../css/employer_chat.css"> Link to your CSS file -->
 <style>
 
@@ -355,6 +355,7 @@ button:hover {
 .job-seeker-name {
     text-align: left; /* Align text to the left */
     font-weight: bold; /* Optional: make the name bold */
+    white-space: nowrap; /* Prevent the text from wrapping to a new line */
 }
 
 .search-container {
@@ -367,7 +368,7 @@ button:hover {
     width: 20px; /* Set the size of the icon */
     height: 20px; /* Set the size of the icon */
     margin-right: 10px; /* Space between the icon and input */
-    margin-left: 350px; 
+    margin-left: 340px; 
     margin-top: 0px; /* Adjust this value to move the icon down */
     vertical-align: middle; /* Align the icon vertically with the input */
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -631,7 +632,7 @@ button:hover {
                 <div class="chat-section" id="chatSection"></div>
             </div>
 
-            <form id="chatForm" onsubmit="sendMessage(event, 'employer')">
+            <form id="chatForm" onsubmit="sendMessage(event, 'job_seeker')">
                 <input type="text" id="chatInput" class="chat-input" placeholder="Type a message...">
                 <button type="submit">Send</button>
             </form>
@@ -666,7 +667,7 @@ button:hover {
         </div>
     </div>
 
-    <script src="../js/jobSeeker_chat.js"></script>
+    <script src="../js/job_seeker_chat.js"></script>
     <script>
     function toggleDropdown() {
         const dropdownMenu = document.getElementById("dropdownMenu");
@@ -675,7 +676,7 @@ button:hover {
 
     function viewProfile() {
         const employerID = "<?php echo $employerID; ?>"; // Pass the jobSeekerID from PHP to JavaScript
-        window.location.href = "../Employer/visit_employer.php?userID=" + employerID; // Redirect to the profile page
+        window.location.href = "../Employer/visit_job_seeker.php?userID=" + employerID; // Redirect to the profile page
     }
 
     function searchChat() {
