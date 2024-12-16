@@ -127,10 +127,8 @@
 
         
         // Fetch all job postings
-        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, venue, language, race, workingTime, createTime FROM jobPost";
-
+        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, venue, language, race, workingTimeStart, workingTimeEnd, createTime FROM jobPost";
         $result = mysqli_query($con, $sql);
-
 
         if (mysqli_num_rows($result) > 0) {
             echo '<div class="container mt-5">';
@@ -148,7 +146,6 @@
             echo '<th>Language</th>';
             echo '<th>Race</th>';
             echo '<th>Working Time</th>';
-            echo '<th>Created Date</th>';
             echo '<th>Action</th>';
             echo '</tr>';
             echo '</thead>';
@@ -165,8 +162,7 @@
                 echo '<td>' . htmlspecialchars($row['venue']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['language']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['race']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['workingTime']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['createTime']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['workingTimeStart']) . ' - ' . htmlspecialchars($row['workingTimeEnd']) . '</td>';
                 echo '<td>
                         <div class="action-buttons">
                             <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-edit">
