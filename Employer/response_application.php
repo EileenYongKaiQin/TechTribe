@@ -244,7 +244,7 @@
 
                     <div id='details-{$row['applicationID']}' class='collapse'>
                         <textarea id='message-{$row['applicationID']}' name='additionalDetails' placeholder='Enter your message for the applicant'></textarea>
-                        <button type='button' class='btn btn-primary' onclick='sendRequestMore(\"{$row['applicationID']}\")'>Request More</button>
+                        <button type='button' style='background-color:#5a6268; color:white;' class='btn btn-primary' onclick='sendRequestMore(\"{$row['applicationID']}\")'>Request More</button>
                     </div>";
                 }
 
