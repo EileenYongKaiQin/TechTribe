@@ -14,36 +14,50 @@ if (isset($_GET['userID'])) {
             login.email, 
             login.role, 
             jobSeeker.fullName AS jobSeekerName, 
-            jobSeeker.contactNo, 
+            jobSeeker.contactNo AS jobSeekerContactNo,
+            jobSeeker.age,
+            jobSeeker.gender,
+            jobSeeker.race,
+            jobSeeker.workExperience,
+            jobSeeker.language,
+            jobSeeker.hardSkill,
+            jobSeeker.softSkill,
             jobSeeker.profilePic AS jobSeekerPic, 
             employer.fullName AS employerName, 
             employer.companyName, 
             employer.companyAddress, 
-            employer.contactNo,
+            employer.contactNo AS employerContactNo,
             employer.profilePic AS employerPic,
-            rp.reportID
+            rp.reportID,
+            rp.jobPostID
         FROM login
         LEFT JOIN jobSeeker ON login.userID = jobSeeker.userID
         LEFT JOIN employer ON login.userID = employer.userID
-        LEFT JOIN reportPost rp ON 
-        CASE 
-            WHEN login.role = 'employer' THEN rp.reportedUserID = login.userID
-            WHEN login.role = 'jobSeeker' THEN rp.reportedUserID = login.userID
-        END
+        LEFT JOIN reportPost rp ON rp.reportedUserID = login.userID
         WHERE login.userID = ?
     ";
 
     $stmt = $con->prepare($sql);
-    $stmt->bind_param('s', $userID);
+    $stmt->bind_param('s',$userID);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+        // Fetch and process each report
+        while ($user = $result->fetch_assoc()) {
 
+        $reportID = $user['reportID'];
+        $jobPostID = $user['jobPostID'];
         $profileData = [
             'name' => $user['role'] == 'jobSeeker' ? $user['jobSeekerName'] : $user['employerName'],
-            'contact' => $user['contactNo'],
+            'contact' => $user['role'] == 'jobSeeker' ? $user['jobSeekerContactNo'] : $user['jobSeekerContactNo'],
+            'age' => $user['role'] == 'jobSeeker' ? $user['age'] : 'N/A',
+            'gender' => $user['role'] == 'jobSeeker' ? $user['gender'] : 'N/A',
+            'race' => $user['role'] == 'jobSeeker' ? $user['race'] : 'N/A',
+            'workExperience' => $user['role'] == 'jobSeeker' ? $user['workExperience'] : 'N/A',
+            'language' => $user['role'] == 'jobSeeker' ? $user['language'] : 'N/A',
+            'hardSkill' => $user['role'] == 'jobSeeker' ? $user['hardSkill'] : 'N/A',
+            'softSkill' => $user['role'] == 'jobSeeker' ? $user['softSkill'] : 'N/A',
             'profilePic' => $user['role'] == 'jobSeeker' ? 
                 ($user['jobSeekerPic'] ? "../uploads/profile_pics/" . $user['jobSeekerPic'] : '../images/jobSeeker.png') : 
                 ($user['employerPic'] ? "../uploads/profile_pics/" . $user['employerPic'] : '../images/employer.png'),
@@ -51,10 +65,12 @@ if (isset($_GET['userID'])) {
             'email' => $user['email'],
             'company' => $user['role'] == 'employer' ? $user['companyName'] : 'N/A',
             'companyAddress' => $user['role'] == 'employer' ? $user['companyAddress'] : 'N/A',
-            'reportID' => $user['reportID'], // Now this will correctly fetch the report ID
+            'reportID' => $reportID, 
+            'jobPostID' => $jobPostID
         ];
+    }
 
-        ?>
+?>
 
         <!DOCTYPE html>
         <html lang="en">
@@ -64,6 +80,13 @@ if (isset($_GET['userID'])) {
             <title>View Profile</title>
             <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
             <link rel="stylesheet" href="../css/view_reporteduser_profile.css">
+            <style>
+                .userDetails .userName, .userDetails .basic-info,
+                .userDetails .company-info, .userDetails .work-experience,
+                .userDetails .skills {
+                    padding: 10px;
+                }
+            </style>
             
         </head>
         <body>
@@ -91,8 +114,10 @@ if (isset($_GET['userID'])) {
                         <h1 class="heading">Basic Information</h1>
                         <p>Email: <?php echo $profileData['email']; ?></p>
                         <p>Contact No.: <?php echo $profileData['contact']; ?></p>
-                        <?php if ($profileData['role'] == 'jobSeeker'): ?>
-                            <p>Location: <?php echo $profileData['location']; ?></p>
+                        <?php if ($profileData['role'] == 'JobSeeker'): ?>
+                            <p>Age: <?php echo $profileData['age']; ?></p>
+                            <p>Gender: <?php echo $profileData['gender']; ?></p>
+                            <p>Race: <?php echo $profileData['race']; ?></p>
                         <?php endif; ?>
                     </div>
 
@@ -105,6 +130,27 @@ if (isset($_GET['userID'])) {
                             <p>Address: <?php echo $profileData['companyAddress']; ?></p>
                         <?php endif; ?>
                     </div>
+
+                    <div class="work-experience">
+                        <?php if ($profileData['role'] == 'JobSeeker'): ?>
+                            <h1 class="heading">Work Experience</h1>
+                            <p><?php echo $profileData['workExperience']; ?></p>
+                        <?php endif; ?>
+                    </div>
+
+                    <hr class="separation-line">
+
+                    <div class="skills">
+                        <?php if ($profileData['role'] == 'JobSeeker'): ?>
+                            <h1 class="heading">Skills</h1>
+                            <p><strong>Languages:</strong> <?php echo $profileData['language']; ?></p>
+                            <p><strong>Hard Skills:</strong> <?php echo $profileData['hardSkill']; ?></p>
+                            <p><strong>Soft Skills:</strong> <?php echo $profileData['softSkill']; ?></p>
+                        <?php endif; ?>
+                    </div>
+                    
+
+                    
 
                     
                 </section>
@@ -155,12 +201,13 @@ if (isset($_GET['userID'])) {
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log('Response:', data);
                         if (data.success) {
                             alert('Warning issued successfully.');
                             closeModal('updateModal');
                             window.location.href = 'reviewReport.php';
                         } else {
-                            alert('Failed to issue warning.');
+                            alert('Failed to issue warning.' + data.message);
                         }
                     })
                     .catch(err => {

@@ -11,24 +11,19 @@ if (!isset($_SESSION['userID'])) {
 
 // Retrieve the userID from the session
 $userID = $_SESSION['userID'];
-
-// Check if jobPostID is passed as a POST parameter
-if (isset($_POST['jobPostID'])) {
-    $_SESSION['jobPostID'] = $_POST['jobPostID']; // Store it in the session
-}
-
-$jobPostID = $_SESSION['jobPostID'] ?? null; // Retrieve from session
-
-if (!$jobPostID) {
-    echo "<script>alert('Job post information is missing. Please try again.'); window.location.href = 'jobseeker_dashboard.php';</script>";
-    exit();
-}
+$jobPostID = null;
 
 // Process the submitted form
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $report_reason = isset($_POST["report_reason"]) ? $_POST["report_reason"] : null;
-    $description = isset($_POST["description"]) ? $_POST["description"] : null;
+    $reportedUserID = $_POST['reportedUserID'] ?? null;
+    $report_reason = $_POST["report_reason"] ?? null;
+    $description = $_POST["description"] ?? null;
 
+    if (!$reportedUserID || !$report_reason || !$description) {
+        echo "<script>alert('Missing required fields.'); history.back();</script>";
+        exit();
+    }
+    
     // Handle file uploads
     $uploadedFiles = [];
     $targetDir = "../uploads/reports/";
@@ -71,33 +66,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $newReportID = 'REP001';
     }
 
-    // Get the reported user ID dynamically
-    $reportedUserQuery = $con->prepare("
-        SELECT l.userID AS reportedUserID 
-        FROM jobPost jp
-        INNER JOIN login l ON jp.userID = l.userID
-        WHERE jp.jobPostID = ?
-    ");
-    $reportedUserQuery->bind_param("s", $jobPostID);
-    $reportedUserQuery->execute();
-    $reportedUserResult = $reportedUserQuery->get_result();
-    $reportedUserData = $reportedUserResult->fetch_assoc();
-    $reportedUserID = $reportedUserData['reportedUserID'] ?? null;
-
-    if (!$reportedUserID) {
-        echo "<script>alert('Unable to identify the user associated with this job post. Please try again.'); history.back();</script>";
-        exit();
-    }
-
     // Insert the report into the database
     $stmt = $con->prepare("
         INSERT INTO reportPost (reportID, reason, description, evidence, reporterID, jobPostID, reportedUserID) 
         VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
+    if (!$stmt) {
+        // Log SQL error for debugging
+        error_log("SQL Error: " . $con->error);
+        echo "<script>alert('Database error. Please try again later.'); history.back();</script>";
+        exit();
+    }
     $stmt->bind_param("sssssss", $newReportID, $report_reason, $description, $evidence, $userID, $jobPostID, $reportedUserID);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Report submitted successfully!'); window.location.href = 'jobseeker_dashboard.php';</script>";
+        echo "<script>alert('Report submitted successfully!'); window.location.href = 'employer_dashboard.php';</script>";
     } else {
         echo "<script>alert('Error submitting report. Please try again.'); history.back();</script>";
     }

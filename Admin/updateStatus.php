@@ -1,5 +1,7 @@
 <?php
 include('../database/config.php');
+include('../notification/notification.php');
+session_start();
 
 // Ensure POST request is sent
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,7 +40,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Execute the query
             if ($stmt->execute()) {
-                // Return success response
+                foreach($ids as $id) {
+                    $notiText1 = "The status of $id has been updated to \"$status\".";
+                    $notiText2 = "Your report status has been updated to \"$status\".";
+                    $notiType = 'status-change';
+
+                    $getReporterQuery = "SELECT reporterID FROM reportPost WHERE reportID = ?";
+                    $stmtReporter = $con->prepare($getReporterQuery);
+                    $stmtReporter->bind_param("s",$id);
+                    $stmtReporter->execute();
+                    $resultReporter = $stmtReporter->get_result();
+                    $reporter = $resultReporter->fetch_assoc();
+                    $reporterID = $reporter['reporterID'];
+                    
+                    $adminID = $_SESSION['userID'];
+                    createNotification($reporterID, $notiText2, $notiType);
+                    createNotification($adminID, $notiText1, $notiType);
+                    
+                }
                 echo "success";
             } else {
                 echo "Error: " . $stmt->error; // If execution fails, send error message

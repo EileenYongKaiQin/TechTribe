@@ -2,27 +2,27 @@
     include('../database/config.php');
     include('employer1.php');
 
-    // Assuming the jobPostID is passed as a GET parameter
-    // $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;
-    $jobPostID = 'JP002';
-    // Check if jobPostID exists
-    if ($jobPostID) {
-        // Fetch the employer's username who created the job post
-        $query = $con->prepare("
-            SELECT l.username AS employerUsername
-            FROM jobPost jp
-            INNER JOIN login l ON jp.userID = l.userID
-            WHERE jp.jobPostID = ?
-        ");
-        $query->bind_param("s", $jobPostID);
-        $query->execute();
-        $result = $query->get_result();
-        $employerData = $result->fetch_assoc();
-
-        $employerUsername = $employerData['employerUsername'] ?? 'Unknown Employer';
-    } else {
-        $employerUsername = 'Unknown Employer';
+    // Check if the user is logged in
+    if (!isset($_SESSION['userID'])) {
+        echo "<script>alert('Session expired. Please log in again.'); window.location.href = '../login.html';</script>";
+        exit();
     }
+    
+    // Get the reported user ID if passed
+$reportedUserID = isset($_GET['reportedUserID']) ? $_GET['reportedUserID'] : null;
+
+// Fetch reported user details if available
+if ($reportedUserID) {
+    $query = $con->prepare("SELECT fullName, email FROM jobseeker WHERE userID = ?");
+    $query->bind_param("s", $reportedUserID);
+    $query->execute();
+    $result = $query->get_result();
+    $userData = $result->fetch_assoc();
+} else {
+    $userData = ['fullName' => 'Unknown User', 'email' => 'N/A'];
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +42,11 @@
 <a href="employer_dashboard.php" id="back-btn">Back</a>
 <div class="report-content">
     <!-- Report Form -->
-    <form  id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
+    <form id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="reported_user">Reported User</label>
+        <input type="text" id="reported_user" name="reported_user" value="<?php echo htmlspecialchars($userData['fullName']); ?>" readonly>
+    </div>
     <div class="form-group">
         <label for="report_reason">Reason For the Report</label>
         <select id="report_reason" name="report_reason" required>
@@ -72,6 +76,7 @@
         <div id="file-preview" class="file-preview"></div>
     </div>
 </div>
+    <input type="hidden" name="reportedUserID" value="<?php echo htmlspecialchars($reportedUserID); ?>">
     <!-- Submit Button -->
         <button type="submit" class="show-modal" id="submitBtn" disabled>Submit</button>
 </form>
@@ -103,12 +108,12 @@
             <p>While you wait for our decision, we'd like you to know that <br>there are other steps you can take now.</p>
         </div>
         <div class="modal-body">
-            <div class="modal-actions" onclick="blockUser('<?php echo $employerUsername; ?>')">
-                Block <?php echo $employerUsername; ?>
+            <div class="modal-actions" onclick="blockUser('<?php echo htmlspecialchars($userData['fullName']); ?>')">
+                Block <?php echo htmlspecialchars($userData['fullName']); ?>
                 <span>&#8250;</span> <!-- Right arrow icon -->
             </div>
-            <div class="modal-actions" onclick="restrictUser('<?php echo $employerUsername; ?>')">
-                Restrict <?php echo $employerUsername; ?>
+            <div class="modal-actions" onclick="restrictUser('<?php echo htmlspecialchars($userData['fullName']); ?>')">
+                Restrict <?php echo htmlspecialchars($userData['fullName']); ?>
                 <span>&#8250;</span> <!-- Right arrow icon -->
             </div>
         </div>

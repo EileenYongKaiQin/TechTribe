@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $messageContents = $_POST['messageContents'];  // The message content
     $messageID = isset($_POST['messageID']) ? $_POST['messageID'] : null;
     $delete = isset($_POST['delete']) ? $_POST['delete'] : false;
+    $jobSeekerID = $_POST['jobSeekerID'];
 
     // Debugging: Log the userID and message contents
     error_log("UserID: $userID, SenderRole: $senderRole, Message: $messageContents");
@@ -56,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($messageID) {
         // Update message (edit message)
         $stmt = $con->prepare("UPDATE message SET messageContents = ? WHERE id = ? AND userID = ? AND senderRole = ?");
-        $stmt->bind_param("siis", $messageContents, $messageID, $userID, $senderRole);
+        $stmt->bind_param("siss", $messageContents, $messageID, $userID, $senderRole);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
         } else {
@@ -65,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     } else {
         // Insert new message
-        $stmt = $con->prepare("INSERT INTO message (userID, senderRole, messageContents) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $userID, $senderRole, $messageContents);
+        $stmt = $con->prepare("INSERT INTO message (userID, senderRole, messageContents, jobSeekerID, employerID) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $userID, $senderRole, $messageContents, $jobSeekerID, $userID);
         if ($stmt->execute()) {
             echo json_encode(['status' => 'success']);
         } else {
@@ -78,7 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Handle the GET request (for loading chat history)
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message ORDER BY timestamp ASC";
+    
+    $jobSeekerID = $_GET['jobSeekerID'];
+    $sql = "SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message WHERE jobSeekerID = '".$jobSeekerID."' ORDER BY timestamp ASC";
     $result = $con->query($sql);
 
     $message = array();

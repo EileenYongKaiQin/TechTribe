@@ -1,10 +1,10 @@
 <?php
 include '../database/config.php';
-include 'employer1.php'; // Include session_start and user verification
+include 'jobSeeker1.php'; // Include session_start and user verification
 
 
 // Fetch job seekers from the database
-$sql = "SELECT userID, fullName FROM jobseeker WHERE accountStatus = 'Active'"; // Only select active job seekers
+$sql = "SELECT userID, fullName FROM employer WHERE accountStatus = 'Active'"; // Only select active job seekers
 $result = $con->query($sql);
 ?>
 
@@ -14,7 +14,7 @@ $result = $con->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <title>Job Seekers List</title>
+    <title>Employers List</title>
     <style>
      
         .container {
@@ -77,7 +77,7 @@ $result = $con->query($sql);
 </head>
 <body>
     <div class="container">
-        <h1>Job Seekers List</h1>
+        <h1>Employers List</h1>
         <table>
             <tr>
                 <th>Name</th>
@@ -89,16 +89,16 @@ $result = $con->query($sql);
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['fullName']) . "</td>";
-                    echo "<td><a href='employer_chat.php?jobSeekerID=" . urlencode($row['userID']) . "' class='chat-button'>Chat</a></td>";
+                    echo "<td><a href='jobSeeker_chat.php?employerID=" . urlencode($row['userID']) . "' class='chat-button'>Chat</a></td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='2'>No job seekers found.</td></tr>";
+                echo "<tr><td colspan='2'>No employers found.</td></tr>";
             }
             ?>
         </table>
     </div>
 
-    <script src="../js/employer_chat.php"></script>
+    <script src="../js/jobSeeker_chat.php"></script>
 </body>
 </html>

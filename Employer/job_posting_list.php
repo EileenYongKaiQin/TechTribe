@@ -127,10 +127,8 @@
 
         
         // Fetch all job postings
-        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, createTime FROM jobPost";
-
+        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, venue, language, race, workingTimeStart, workingTimeEnd, createTime FROM jobPost";
         $result = mysqli_query($con, $sql);
-
 
         if (mysqli_num_rows($result) > 0) {
             echo '<div class="container mt-5">';
@@ -141,14 +139,18 @@
             echo '<th>Job Title</th>';
             echo '<th>Working Hour</th>';
             echo '<th>Location</th>';
-            echo '<th>Salary per hour(RM)</th>';
+            echo '<th>Salary per hour (RM)</th>';
             echo '<th>Start Date</th>';
             echo '<th>End Date</th>';
-            echo '<th>Created Date</th>';
+            echo '<th>Venue</th>';
+            echo '<th>Language</th>';
+            echo '<th>Race</th>';
+            echo '<th>Working Time</th>';
             echo '<th>Action</th>';
+            echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
-
+    
             while ($row = mysqli_fetch_assoc($result)) {
                 echo '<tr>';
                 echo '<td>' . htmlspecialchars($row['jobTitle']) . '</td>';
@@ -157,8 +159,11 @@
                 echo '<td>' . number_format($row['salary'], 2) . '</td>';
                 echo '<td>' . htmlspecialchars($row['startDate']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['endDate']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['createTime']) .
-                     '<td>
+                echo '<td>' . htmlspecialchars($row['venue']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['language']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['race']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['workingTimeStart']) . ' - ' . htmlspecialchars($row['workingTimeEnd']) . '</td>';
+                echo '<td>
                         <div class="action-buttons">
                             <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-edit">
                                 <img src="../images/edit.png" alt="Edit" class="icon">
@@ -167,11 +172,10 @@
                                 <img src="../images/trash.png" alt="Delete" class="icon">
                             </a>
                         </div>
-                    </td>
-                    ';
+                    </td>';
                 echo '</tr>';
             }
-
+    
             echo '</tbody>';
             echo '</table>';
             echo '</div>';
