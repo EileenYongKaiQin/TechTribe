@@ -48,7 +48,9 @@ if ($result && $result->num_rows > 0) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <h1 class="logo-text">FlexMatch</h1>
+            <div class="title">
+                <h1 class="logo-text">FlexMatch</h1>        
+            </div>
         </div>
         <nav class="menu">
             <div class="menu-item <?php echo $currentPage == 'jobseeker_dashboard.php' ? 'active' : ''; ?>">
@@ -59,6 +61,7 @@ if ($result && $result->num_rows > 0) {
                 <img src="../images/add_circle.png" alt="Apply Job Icon" class="menu-icon">
                 <span onclick="location.href='jobSeeker_posting_list.php'">Apply Job</span>
             </div>
+
             <div class="menu-item <?php echo $currentPage == 'my_application.php' ? 'active' : ''; ?>">
                 <img src="../images/note_alt.png" alt="Application Icon" class="menu-icon">
                 <span onclick="location.href='my_application.php'">My Application</span>

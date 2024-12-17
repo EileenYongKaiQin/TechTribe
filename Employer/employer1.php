@@ -47,7 +47,9 @@ if ($result && $result->num_rows > 0) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <h1 class="logo-text">FlexMatch</h1>
+            <div class="title">
+                <h1 class="logo-text">FlexMatch</h1>        
+            </div>
         </div>
         <nav class="menu">
         <div class="menu-item <?php echo $currentPage == 'employer_dashboard.php' ? 'active' : ''; ?>">

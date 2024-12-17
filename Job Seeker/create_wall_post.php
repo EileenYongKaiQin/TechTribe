@@ -110,6 +110,8 @@
                     <option value="Sarawak">Sarawak</option>
                     <option value="Selangor">Selangor</option>
                     <option value="Terengganu">Terengganu</option>
+                    <option value="Putrajaya">Putrajaya</option>
+                    <option value="Labuan">Labuan</option>
                 </select>
 
                 <select id="district" name="district" required>
@@ -128,21 +130,23 @@
     </div>
 
     <script>
-        const districtsByState = {
-            "Johor": ["Johor Bahru", "Batu Pahat", "Kluang", "Kota Tinggi", "Muar", "Segamat", "Pontian", "Mersing"],
-            "Kedah": ["Alor Setar", "Kulim", "Langkawi", "Baling", "Pendang", "Sik"],
-            "Kelantan": ["Kota Bharu", "Bachok", "Pasir Mas", "Tanah Merah", "Machang", "Tumpat"],
-            "Kuala Lumpur": ["Bukit Bintang", "Cheras", "Kepong", "Lembah Pantai", "Segambut"],
+        const districtsByState = { 
+            "Johor": ["Johor Bahru", "Batu Pahat", "Kluang", "Kota Tinggi", "Muar", "Segamat", "Pontian", "Mersing", "Tangkak", "Segamat", "Ledang"],
+            "Kedah": ["Alor Setar", "Kulim", "Langkawi", "Baling", "Pendang", "Sik", "Kubang Pasu", "Padang Terap", "Kota Setar", "Bandar Baharu"],
+            "Kelantan": ["Kota Bharu", "Bachok", "Pasir Mas", "Tanah Merah", "Machang", "Tumpat", "Gua Musang", "Jeli", "Kuala Krai"],
+            "Kuala Lumpur": ["Bukit Bintang", "Cheras", "Kepong", "Lembah Pantai", "Segambut", "Wangsa Maju", "Setiawangsa", "Titiwangsa", "Bandar Tun Razak"],
             "Melaka": ["Alor Gajah", "Melaka Tengah", "Jasin"],
-            "Negeri Sembilan": ["Seremban", "Port Dickson", "Jempol", "Rembau", "Tampin"],
-            "Pahang": ["Kuantan", "Bentong", "Cameron Highlands", "Jerantut", "Raub"],
-            "Penang": ["George Town", "Balik Pulau", "Butterworth", "Batu Ferringhi"],
-            "Perak": ["Ipoh", "Taiping", "Teluk Intan", "Batu Gajah", "Sungai Siput"],
+            "Negeri Sembilan": ["Seremban", "Port Dickson", "Jempol", "Rembau", "Tampin", "Kuala Pilah", "Seremban", "Nilai"],
+            "Pahang": ["Kuantan", "Bentong", "Cameron Highlands", "Jerantut", "Raub", "Pekan", "Lipis", "Bera"],
+            "Penang": ["George Town", "Balik Pulau", "Butterworth", "Batu Ferringhi", "Seberang Perai", "Prai", "Nibong Tebal"],
+            "Perak": ["Ipoh", "Taiping", "Teluk Intan", "Batu Gajah", "Sungai Siput", "Manjung", "Parit Buntar", "Kuala Kangsar", "Bidor"],
             "Perlis": ["Kangar", "Arau", "Padang Besar"],
-            "Sabah": ["Kota Kinabalu", "Sandakan", "Tawau", "Lahad Datu"],
-            "Sarawak": ["Kuching", "Sibu", "Miri", "Bintulu"],
-            "Selangor": ["Shah Alam", "Petaling Jaya", "Klang", "Ampang", "Gombak"],
-            "Terengganu": ["Kuala Terengganu", "Kemaman", "Besut", "Dungun"]
+            "Sabah": ["Kota Kinabalu", "Sandakan", "Tawau", "Lahad Datu", "Keningau", "Beaufort", "Ranau", "Papar"],
+            "Sarawak": ["Kuching", "Sibu", "Miri", "Bintulu", "Samarahan", "Sri Aman", "Mukah", "Kapit", "Betong"],
+            "Selangor": ["Shah Alam", "Petaling Jaya", "Klang", "Ampang", "Gombak", "Subang Jaya", "Kajang", "Sepang", "Hulu Langat", "Kuala Selangor"],
+            "Terengganu": ["Kuala Terengganu", "Kemaman", "Besut", "Dungun", "Setiu", "Marang", "Hulu Terengganu"],
+            "Putrajaya": ["Putrajaya", "Cyberjaya"], // Add Putrajaya districts
+            "Labuan": ["Labuan"] // Add Labuan district
         };
 
         function updateDistricts() {

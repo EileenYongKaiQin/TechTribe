@@ -116,6 +116,7 @@ select {
     padding: 8px;
     margin-bottom: 15px;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 /* Style for the location section */

@@ -21,22 +21,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 20px;
+            /* padding-top: 20px; */
+            box-sizing: border-box;
         }
 
         .logo-section {
+            padding-top: 20px;
             text-align: center;
             margin-bottom: 30px;
+            height: 120px;
         }
 
         .logo-image {
             width: 70px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .title{
+            display: flex; /* Enable flexbox */
+            align-items: center; /* Vertically center content */
+            justify-content: center; /* Horizontally center content if needed */
         }
 
         .logo-text {
+            line-height: 24px;
             font-weight: bold;
             font-size: 20px;
             color: #FFFFFF;
+            margin: 0; 
+            
         }
 
         .menu {
@@ -44,6 +58,7 @@
         }
 
         .menu-item, .logout {
+            line-height: 1;
             display: flex;
             align-items: center;
             padding: 15px;
@@ -54,6 +69,7 @@
             font-weight: 400;
             gap: 18px;
             border-radius: 8px; 
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
         }
 
         .menu-icon {
@@ -61,14 +77,6 @@
             height: 24px;
         }
 
-        /* Hover effect */
-        .menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-
-        /* Hover effect for both menu items and logout */
         .menu-item:hover,
         .logout:hover {
             background-color: rgba(255, 255, 255, 0.2);
@@ -198,13 +206,15 @@
             font-family: 'Cabin', sans-serif;
             font-weight: 400;
             border-radius: 8px; 
+            box-sizing: border-box;
         }
 
         .submenu-item:hover {
             background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            transform: none;
             cursor: pointer;
         }
+        
         a {
             text-decoration: none;
         }
@@ -212,8 +222,9 @@
         /* Active menu item style */
         .menu-item.active, 
         .submenu-item.active {
+            line-height: 1;
             background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            transform: none; /* Ensure no scaling effect */
             color: #FFFFFF;
         }
 
