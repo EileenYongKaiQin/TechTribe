@@ -20,7 +20,7 @@
         </div>
 
         <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
-            <label for="skills"><b>Skill:</b></label>
+            <label for="skills"><b>Skill:</b><span class="required">*</span></label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
                 <option value="Customer Service">Customer Service</option>
@@ -47,10 +47,10 @@
             </select><br>
             
 
-            <label for="skillDetails"><b>Skill Details:</b></label>
-            <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="250" placeholder="Describe your skills in this category (max 50 words)" required></textarea><br>
+            <label for="skillDetails"><b>Skill Details:</b><span class="required">*</span></label>
+            <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="100" placeholder="Describe your skills in this category (max 100 words)" required></textarea><br>
 
-            <label><b>Available Time:</b></label>
+            <label><b>Available Time:</b><span class="required">*</span></label>
             <div class="availability-slots">
                 <div class="availability-slot">
                     <label>Monday</label>
@@ -92,7 +92,7 @@
 
         <!-- Location section -->
         <div class="location-section">
-            <label for="state"><b>Location:</b></label><br>
+            <label for="state"><b>Location:</b><span class="required">*</span></label><br>
             <div class="location-selects">
                 <select id="state" name="state" required onchange="updateDistricts()">
                     <option value="">Select a State</option>
@@ -121,8 +121,8 @@
         </div>
 
 
-            <label for="jobPreferences"><b>Job Preferences (max 50 words):</b></label>
-            <textarea id="jobPreferences" name="jobPreferences" rows="3" maxlength="250"></textarea><br>
+            <label for="jobPreferences"><b>Job Preferences (Optional):</b></label>
+            <textarea id="jobPreferences" name="jobPreferences" rows="4" maxlength="100" placeholder="Describe your preference (max 100 words)"></textarea><br>
 
             <button type="submit">Publish</button>
         </form>
