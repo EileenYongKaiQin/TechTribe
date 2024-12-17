@@ -4,97 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlexMatch</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     
     <style>
-        .content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 250px; /* Adjusted for sidebar offset */
-            padding: 20px;
-         }
-
-        .content h1{
-            text-align: center;
-            margin-top:-20px;
-            margin-bottom:10px;
-            font-weight: 700;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
         }
 
-        .jobDescription{
-            margin: 0 auto;
-            padding: 40px 60px 20px 60px;
-            width: 80%;
+        /* Centered container */
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .content h1 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Job Details Card */
+        .jobDescription {
+            width: 90%;
             max-width: 700px;
-            height: auto;
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            line-height: 1.6;
+            color: #333;
         }
 
         .jobDescription p {
-            font-size: 20px;
-            text-align: left;
-            margin-bottom: 5px; 
-        }
-
-        .jobDescription p strong{
-            font-size: 25px;
-        }
-
-        #applyButton{
-            display: block;
-            margin: 0 auto;
-            padding: 20px 40px;
-            width: 180px;
-            height: 58px;
-            background: #BEC6BF;
-            color: #FFFFFF;
-            font-family: 'Inter', sans-serif;
             font-size: 18px;
-            font-weight: 700;
-            border: none;
-            border-radius: 50px;
+            margin: 10px 0;
+        }
+
+        .jobDescription p strong {
+            font-size: 20px;
+            color: #000;
+        }
+
+        /* Buttons */
+        #applyButton, #back-btn {
+            display: inline-block;
             text-align: center;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
             cursor: pointer;
-            line-height: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #applyButton {
+            background-color: #BEC6BF;
+            color: #fff;
+            margin-top: 20px;
         }
 
         #applyButton:hover {
-        background: #8EFAAB;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-        border-radius: 50px;
-        color: #000000; /* Black text color */
-        text-align: center;
+            background-color: #8EFAAB;
+            color: #000;
         }
 
-        /* Back Button */
         #back-btn {
             position: absolute;
-            top: 110px;
-            right: 300px;
-            width: 99px;
-            height: 43px;
-            background: #AAE1DE;
-            border-radius: 50px;
-            text-align: center;
-            line-height: 43px;
-            font-size: 16px;
-            font-weight: 700;
-            color: #000000;
-            text-decoration: none;
-            transition: background 0.3s ease;
+            /* top: 10px; */
+            right: 60px;
+            background-color: #AAE1DE;
         }
 
         #back-btn:hover {
-            background: #8DCBC8;
+            background-color: #8DCBC8;
         }
-                
+
+        /* Alert Styling */
+        .applied-message {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            color: #4caf50;
+        }
     </style>
 </head>
 <body>
@@ -104,90 +109,84 @@
 
         $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : '';
 
-           // Fetch job details from the database
-          
-           $sql = "SELECT * FROM jobPost WHERE jobPostID = '$jobPostID'";
-           $result = $con->query($sql);
+        // Fetch job details from the database
+        $sql = "SELECT * FROM jobPost WHERE jobPostID = '$jobPostID'";
+        $result = $con->query($sql);
 
-            if ($result->num_rows > 0) {
-                // Fetch job details
-                $job = $result->fetch_assoc();
-                $jobTitle = $job['jobTitle'];
-                $location = $job['location'];
-                $salary = $job['salary'];
-                $jobDescription = $job['jobDescription'];
-                $jobRequirement = $job['jobRequirement'];
-                $workingHour = $job['workingHour'];
-            } else {
-                echo "Job not found!";
-                exit;
-            }
+        if ($result->num_rows > 0) {
+            $job = $result->fetch_assoc();
+            $jobTitle = $job['jobTitle'];
+            $location = $job['location'];
+            $salary = $job['salary'];
+            $jobDescription = $job['jobDescription'];
+            $jobRequirement = $job['jobRequirement'];
+            $workingHour = $job['workingHour'];
+        } else {
+            echo "<p>Job not found!</p>";
+            exit;
+        }
 
-            // Check if the user has already applied for the job
-            $sqlCheck = "SELECT * FROM jobApplication WHERE jobPostID = '$jobPostID' AND applicantID = '$userID'";
-            $resultCheck = $con->query($sqlCheck);
+        // Check if the user has already applied for the job
+        $sqlCheck = "SELECT * FROM jobApplication WHERE jobPostID = '$jobPostID' AND applicantID = '$userID'";
+        $resultCheck = $con->query($sqlCheck);
 
-            // Display Apply button only if the user hasn't applied yet
-            $showApplyButton = ($resultCheck->num_rows === 0); // true if user has not applied
-    
+        $showApplyButton = ($resultCheck->num_rows === 0); // true if user has not applied
     ?>
-     <!-- Main content -->
-     <div class="content">
-        <h1>Detail Job Posting</h1>
+
+    <!-- Content -->
+    <div class="content">
         <a href="jobSeeker_posting_list.php" id="back-btn">Back</a>
-    
-    <div class="jobDescription">
-        <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p><br>
-        <p><strong>Location:</strong> <?php echo $location; ?></p><br>
-        <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p><br>
-        <p><strong>Job Description:</strong> <?php echo $jobDescription; ?></p><br>
-        <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p><br>
-        <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p><br>
+        <h1>Detail Job Posting</h1>
+
+        <div class="jobDescription">
+            <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p>
+            <p><strong>Location:</strong> <?php echo $location; ?></p>
+            <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p>
+            <p><strong>Job Description:</strong> <?php echo $jobDescription; ?></p>
+            <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p>
+            <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p>
+        </div>
+
+        <?php if ($showApplyButton) { ?>
+            <button id="applyButton" data-job-id="<?php echo $job['jobPostID']; ?>">Apply</button>
+        <?php } else { ?>
+            <p class="applied-message">You have already applied for this job.</p>
+        <?php } ?>
     </div>
-    <?php if ($showApplyButton) { ?>
-    <button id="applyButton" data-job-id="<?php echo $job['jobPostID']; ?>">Apply</button>
-    <?php } else { ?>
-        <p style="font-size: 30px;">You applied for this job.</p>
-    <?php } ?>
-  </div>
 
- <script>
-       // Handle button click to apply for the job
-    document.getElementById('applyButton').addEventListener('click', function() {
-        var jobPostID = this.getAttribute('data-job-id');
+    <script>
+        document.getElementById('applyButton')?.addEventListener('click', function() {
+            var jobPostID = this.getAttribute('data-job-id');
 
-        Swal.fire({
-            title: "Are you sure you want to apply for the job?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Yes, apply",
-            cancelButtonText: "No, cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Create FormData object
-                var formData = new FormData();
-                formData.append('jobPostID', jobPostID); // Send the job post ID to the backend
+            Swal.fire({
+                title: "Are you sure you want to apply for this job?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, apply",
+                cancelButtonText: "No, cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request
+                    var formData = new FormData();
+                    formData.append('jobPostID', jobPostID);
 
-                // Make an AJAX request to submit the application
-                fetch('../database/applyForJob.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    Swal.fire('Success!', data.message || 'Application submitted successfully!', 'success');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire('Error', 'Failed to apply for the job. Please try again later.', 'error');
-                });
-            } else {
-                Swal.fire('Cancelled', 'Application cancelled.', 'info');
-            }
+                    fetch('../database/applyForJob.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire('Success!', data.message || 'Application submitted successfully!', 'success');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'Failed to apply for the job. Please try again.', 'error');
+                    });
+                } else {
+                    Swal.fire('Cancelled', 'Application cancelled.', 'info');
+                }
+            });
         });
-    });
-
- </script>
-
+    </script>
 </body>
 </html>

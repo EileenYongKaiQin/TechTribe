@@ -5,43 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Container for the content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0 auto;
+            width: 50%;
+            max-width: 600px;
+        }
+
+        /* Title styling */
+        .my-application {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Job Description Container */
+        .jobDescription {
+            margin: 20px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .jobDescription p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .jobDescription p strong {
+            font-size: 20px;
+            color: #000;
+        }
+
+        /* Cancel Button Styling */
+        #cancelButton {
+            display: inline-block;
+            text-align: center;
+            margin: 20px auto;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #cancelButton:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .jobDescription {
+                padding: 20px;
+                width: 95%;
+            }
+
+            .jobDescription p {
+                font-size: 16px;
+            }
+
+            .my-application {
+                font-size: 28px;
+            }
+
+            #cancelButton {
+                padding: 10px 18px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .my-application {
+                font-size: 24px;
+            }
+
+            .jobDescription p strong {
+                font-size: 18px;
+            }
+
+            #cancelButton {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
-<style>
-    .my-application{
-        text-align: center;
-    }
-
-    .jobDescription{
-        margin: 0 auto;
-        padding: 25px 50px;
-        width: 80%;
-        max-width: 700px;
-        background-color: white;
-        border-radius: 20px;
-    }
-
-    .jobDescription p {
-        font-size: 20px;
-        text-align: left;
-    }
-
-    .jobDescription p strong{
-        font-size: 25px;
-    }
-
-    #cancelButton{
-        text-align: center;
-        padding: 15px 20px;
-        margin: 0 auto;
-        border-radius: 0.5rem;
-        color: white;
-        background: #216ce7;
-        border: 2px solid rgb(243, 243, 243);
-    }
-
-</style>
 <body>
     <?php 
         include('../database/config.php');
