@@ -24,7 +24,7 @@ CREATE TABLE jobseeker (
       'Suspended-Permanently'
   ) DEFAULT 'Active', -- Account status
   warningHistory INT DEFAULT 0, -- Count of warnings received
-  suspensionEndDate DATE NULL, -- Suspension Date (End)
+  suspensionEndDate DATETIME NULL, -- Suspension Date (End)
   FOREIGN KEY (userID) REFERENCES login(userID) ON DELETE CASCADE -- Links to login table
 );
 
@@ -36,6 +36,6 @@ VALUES
     ('JS002', 'Jessie Chang', 'jessie@gmail.com', '012345678901', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor',
      'Worker', 'Company ABC', '2 years in IT', 'English, Malay, Chinese', 'Javascript, PHP, Microsoft', 'Adaptability, Creativity', NULL, 'Active', 0, NULL),    
     ('JS003', 'Bernice Lim', 'bernice@gmail.com', '012345678913', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor', 
-    'Worker', 'Company ABCD ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, PHP, Java', 'Communication, Leadership', NULL, 'Active', 10, NULL),
+    'Worker', 'Company ABCD ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, PHP, Java', 'Communication, Leadership', NULL, 'Active', 1, NULL),
     ('JS004', 'Kek Jesslyn', 'kek@gmail.com', '12345678911', '21', 'Female', 'Chinese', 'Kota Syahbandar', 'Malacca', 
-    'Worker', 'Company XYZ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, Java, PHP', 'Communication, Leadership', NULL, 'Active', 10, NULL);
+    'Worker', 'Company XYZ', '2 years in Data Engineering', 'English, Malay, Chinese', 'C++, Java, PHP', 'Communication, Leadership', NULL, 'Active', 2, NULL);
