@@ -54,15 +54,15 @@ body {
     margin-bottom: 10px;      
 }
 
-.date, .location, .salary {
+.dateSalary, .location, .time {
     margin: 0;
 }
 
-.date, .location {
+.dateSalary, .location {
     padding-left: 50px;      
 }
 
-.date {
+.dateSalary {
     margin-bottom: -18px;    
     font-weight: bold;   
 }
@@ -74,7 +74,7 @@ body {
     color: #767F8C;
 }
 
-.salary {
+.time {
     color: #767F8C;      
 }
 
