@@ -8,9 +8,9 @@ if (!isset($_SESSION['userID'])) {
     exit();
 }
 
-$userID = mysqli_real_escape_string($con, $_GET['userID'] ?? $_SESSION['userID']);
+$targetUserID = mysqli_real_escape_string($con, $_GET['userID'] ?? $_SESSION['userID']);
 
-$sql = mysqli_query($con, "SELECT * FROM employer WHERE userID='$userID'");
+$sql = mysqli_query($con, "SELECT * FROM employer WHERE userID='$targetUserID'");
 
 if (!$sql) {
     die("Query failed: " . mysqli_error($con));
@@ -35,7 +35,7 @@ if (!$data) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
 
-    <link rel="stylesheet" href="../css/view_profile.css">
+    <link rel="stylesheet" href="../css/view_profil.css">
 
 </head>
 
@@ -81,7 +81,7 @@ if (!$data) {
                     if ($data['accountStatus'] == 'Active') {
                         $statusColor = '#44bb44';
                     } else if ($data['accountStatus'] == 'Inactive') {
-                        $statusColor = 'rgba(0, 0, 0, 0.8)';
+                        $statusColor = '#757575';
                     } else if ($data['accountStatus'] == 'Suspended-Temporary-6M' || $data['accountStatus'] == 'Suspended-Temporary-2Y' || $data['accountStatus'] == 'Suspended-Temporary-5Y' || $data['accountStatus'] == 'Suspended-Permanently') {
                         $statusColor = 'red';
                     }?>
@@ -108,7 +108,7 @@ if (!$data) {
             <div class="btns">
                 <ul>
                     <li class="reportUser">
-                        <button class="btn report" onClick="window.location.href='suspendAccount.php'">Report User</button>
+                        <button class="btn report" onClick="window.location.href='suspendAccount.php?userID=<?php echo $targetUserID;?>'">Report User</button>
                     </li>
 
                     <li class="sendmsg">
