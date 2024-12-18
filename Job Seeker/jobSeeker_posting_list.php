@@ -101,8 +101,8 @@
             }
 
             .salary-line {
-                border-top: 1px solid #dcdcdc; /* Light grey line */
-                margin: 0px 0; /* Adjust vertical spacing */
+                border-top: 1px solid #dcdcdc; 
+                margin: 0px 0; 
             }
     </style>
 </head>

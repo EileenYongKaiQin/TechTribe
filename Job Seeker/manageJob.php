@@ -23,11 +23,12 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
+            margin-left: 250px;
         }
 
         .content h1 {
-            margin-top: 0;
-            margin-bottom: 20px;
+            margin-top: -15px;
+            margin-bottom: 15px;
             font-size: 2em;
             text-align: center;
             color: #333;
@@ -44,6 +45,7 @@
             box-sizing: border-box;
             line-height: 1.6;
             color: #333;
+            text-align: left;
         }
 
         .jobDescription p {
@@ -121,6 +123,13 @@
             $jobDescription = $job['jobDescription'];
             $jobRequirement = $job['jobRequirement'];
             $workingHour = $job['workingHour'];
+            $venue = $job['venue'];
+            $startDate = $job['startDate'];
+            $endDate = $job['endDate'];
+            $workingTimeStart = $job['workingTimeStart'];
+            $workingTimeEnd = $job['workingTimeEnd'];
+            $language = $job['language'];
+            $race = $job['race'];
         } else {
             echo "<p>Job not found!</p>";
             exit;
@@ -140,11 +149,20 @@
 
         <div class="jobDescription">
             <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p>
-            <p><strong>Location:</strong> <?php echo $location; ?></p>
+            <p><strong>Venue:</strong> <?php echo htmlspecialchars($venue); ?></p>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($location); ?></p>
             <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p>
-            <p><strong>Job Description:</strong> <?php echo $jobDescription; ?></p>
-            <p><strong>Requirements:</strong> <?php echo $jobRequirement; ?></p>
-            <p><strong>Working Hours:</strong> <?php echo $workingHour; ?></p>
+            <p><strong>Job Duration:</strong> <?php echo htmlspecialchars($startDate) . " - " . htmlspecialchars($endDate); ?></p>
+            <p><strong>Working Time:</strong> 
+                <?php 
+                    echo date("h:i A", strtotime($workingTimeStart)) . " - " . date("h:i A", strtotime($workingTimeEnd)); 
+                ?>
+            </p>
+            <p><strong>Working Hours:</strong> <?php echo htmlspecialchars($workingHour); ?></p>
+            <p><strong>Language Requirement:</strong> <?php echo htmlspecialchars($language); ?></p>
+            <p><strong>Race Preference:</strong> <?php echo htmlspecialchars($race); ?></p>
+            <p><strong>Job Description:</strong> <?php echo nl2br(htmlspecialchars($jobDescription)); ?></p>
+            <p><strong>Requirements:</strong> <?php echo nl2br(htmlspecialchars($jobRequirement)); ?></p>
         </div>
 
         <?php if ($showApplyButton) { ?>
