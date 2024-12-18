@@ -73,37 +73,37 @@
                 margin: 0;
             }
 
-            .date, .salary, .location {
-                padding-left: 50px;      
-            }
+        .date, .salary, .location {
+            padding-left: 50px;      
+        }
 
-            .date {
-                margin-bottom: -18px;    
-                font-weight: bold;   
-            }
+        .date {
+            margin-bottom: -18px;    
+            font-weight: bold;   
+        }
 
-            .salary { 
-                margin-top: -5px;
-                margin-bottom: 25px;   
-                font-weight: bold;   
-                color: #333333;
-            }
+        .salary { 
+            margin-top: -5px;
+            margin-bottom: 25px;   
+            font-weight: bold;   
+            color: #333333;
+        }
 
-            .location {
-                display: flex;
-                align-items: center; 
-                margin-bottom: 5px;  
-                color: #767F8C;
-            }
+        .location {
+            display: flex;
+            align-items: center; 
+            margin-bottom: 5px;  
+            color: #767F8C;
+        }
 
-            .time {
-                color: #767F8C;      
-            }
+        .time {
+            color: #767F8C;      
+        }
 
-            .salary-line {
-                border-top: 1px solid #dcdcdc; 
-                margin: 0px 0; 
-            }
+        .salary-line {
+            border-top: 1px solid #dcdcdc; 
+            margin: 0px 0; 
+        }
     </style>
 </head>
 <body>
