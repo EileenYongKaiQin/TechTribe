@@ -39,18 +39,24 @@
             width: 90%;
             max-width: 700px;
             background-color: #fff;
-            padding: 30px;
+            padding: 5px 30px 30px 30px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
             line-height: 1.6;
             color: #333;
-            text-align: left;
+            align-items: left;
+        }
+
+        .jobDescription h2 {
+            font-size: 28px;
+            margin: 20px 0;
         }
 
         .jobDescription p {
             font-size: 18px;
             margin: 10px 0;
+            text-align:  left;
         }
 
         .jobDescription p strong {
@@ -102,6 +108,29 @@
             text-align: center;
             color: #4caf50;
         }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background-color: #aaa;
+            margin: 15px 0;
+        }
+
+         /* Styled h2 with icon */
+         .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            margin: 10px 0;
+            justify-content: center; 
+        }
+
+        .section-title img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -148,10 +177,22 @@
         <h1>Detail Job Posting</h1>
 
         <div class="jobDescription">
+            <div class="section-title">
+                <img src="../images/description.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Description</h2>
+            </div>
             <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p>
+            <p><strong>Job Description:</strong> <?php echo nl2br(htmlspecialchars($jobDescription)); ?></p>
             <p><strong>Venue:</strong> <?php echo htmlspecialchars($venue); ?></p>
             <p><strong>Location:</strong> <?php echo htmlspecialchars($location); ?></p>
             <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p>
+
+            <div class="divider"></div>
+
+            <div class="section-title">
+                <img src="../images/duration.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Duration & Time</h2>
+            </div>
             <p><strong>Job Duration:</strong> <?php echo htmlspecialchars($startDate) . " - " . htmlspecialchars($endDate); ?></p>
             <p><strong>Working Time:</strong> 
                 <?php 
@@ -159,9 +200,15 @@
                 ?>
             </p>
             <p><strong>Working Hours:</strong> <?php echo htmlspecialchars($workingHour); ?></p>
+
+            <div class="divider"></div>
+
+            <div class="section-title">
+                <img src="../images/requirement.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Requirement</h2>
+            </div>
             <p><strong>Language Requirement:</strong> <?php echo htmlspecialchars($language); ?></p>
             <p><strong>Race Preference:</strong> <?php echo htmlspecialchars($race); ?></p>
-            <p><strong>Job Description:</strong> <?php echo nl2br(htmlspecialchars($jobDescription)); ?></p>
             <p><strong>Requirements:</strong> <?php echo nl2br(htmlspecialchars($jobRequirement)); ?></p>
         </div>
 
