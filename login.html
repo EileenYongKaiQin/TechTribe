@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlexMatch - Login/Register</title>
     <link rel="shortcut icon" href="images/FlexMatchLogo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
@@ -33,7 +34,7 @@
             <div class="input-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" class="input-field" placeholder="Enter your Password" required>
-                <div id="toggle" onclick="showHide();"></div>
+                <span class="toggle" onclick="togglePassword('password')"></span>
             </div>
 
             <!-- Remember Me and Forgot Password -->
@@ -52,12 +53,35 @@
         <form id="register-form" action="register.php" method="POST" style="display: none;">
             <div class="input-group">
                 <label for="reg-username">Username</label>
-                <input type="text" id="reg-username" name="username" class="input-field" placeholder="Enter your Username" required>
+                <input type="text" id="reg-username" name="username" class="input-field" placeholder="Enter your Username" required minlength="6">
             </div>
-            <div class="input-group">
-                <label for="reg-password">Password</label>
-                <input type="password" id="reg-password" name="password" class="input-field" placeholder="Enter your Password" required>
-            </div>
+            <div class="pswd-strength">
+                <div class="input-group password">
+                    <div class="input-pswd">
+                        <label for="reg-password" class="password-label">
+                            <span>Password</span>
+                            <span class="password-guidance" onclick="toggleGuidance()">
+                                <i class="material-icons">info_outline</i>
+                            </span>
+                        </label>  
+                        <div class="guidance-tooltip">
+                            <strong>Password must contain:</strong>
+                            <ul>
+                                <li>At least 8 characters</li>
+                                <li>At least one uppercase letter (A-Z)</li>
+                                <li>At least one lowercase letter (a-z)</li>
+                                <li>At least one number (0-9)</li>
+                                <li>At least one special character (!@#$%^&*)</li>
+                            </ul>
+                        </div>
+                        <input type="password" id="reg-password" name="password" class="input-field" 
+                            placeholder="Enter your Password" required onkeyup="checkPasswordStrength(this.value)">
+                        <span class="toggle" onclick="togglePassword('reg-password')"></span>
+                    </div>    
+                    <div class="password-strength-meter"></div>
+                    <div class="strength-text"></div>
+                </div>
+            </div>   
             <div class="input-group">
                 <label for="role">Select Role</label>
                 <select id="role" name="role" class="input-field" required>
@@ -65,8 +89,7 @@
                     <option value="employer">Employer</option>
                 </select>
             </div>
-
-            <!-- Register Button -->
+    
             <button type="submit" class="login-btn">Register</button>
         </form>
     </div>
@@ -94,15 +117,70 @@
             }
         }
 
-        const password = document.getElementById('password');
-        const toggle = document.getElementById('toggle');
-        function showHide() {
-            if (password.type === 'password') {
-                password.setAttribute('type', 'text');
-                toggle.classList.add('hide');
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.classList.add('hide');
             } else {
-                password.setAttribute('type', 'password');
-                toggle.classList.remove('hide');
+                passwordInput.type = 'password';
+                toggleButton.classList.remove('hide');
+            }
+        }
+        function toggleGuidance() {
+            const tooltip = document.querySelector('.guidance-tooltip');
+            tooltip.style.display = tooltip.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const meter = document.querySelector('.password-strength-meter');
+            const text = document.querySelector('.strength-text');
+            const registerBtn = document.querySelector('#register-form .login-btn');
+
+            meter.className = 'password-strength-meter';
+            text.className = 'strength-text';
+
+            if (password.length >= 8) strength += 1;
+            if (password.match(/[A-Z]/)) strength += 1;
+            if (password.match(/[a-z]/)) strength += 1;
+            if (password.match(/[0-9]/)) strength += 1;
+            if (password.match(/[^A-Za-z0-9]/)) strength += 1;
+
+            if (password.length > 0) {
+                meter.classList.add('strength-' + strength);
+                text.classList.add('text-' + strength);
+
+                switch (strength) {
+                    case 1:
+                        text.textContent = 'Very Weak';
+                        break;
+                    case 2:
+                        text.textContent = 'Weak';
+                        break;
+                    case 3:
+                        text.textContent = 'Medium';
+                        break;
+                    case 4:
+                        text.textContent = 'Strong';
+                        break;
+                    case 5:
+                        text.textContent = 'Very Strong';
+                        break;
+                    default:
+                        text.textContent = '';
+                }
+
+                if (strength >= 4) {
+                    registerBtn.disabled = false;
+                } else {
+                    registerBtn.disabled = true;
+                }
+            } else {
+                text.textContent = '';
+                registerBtn.disabled = true;
             }
         }
     </script>
