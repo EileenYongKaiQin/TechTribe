@@ -643,19 +643,20 @@ button:hover {
     background: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: calc(100% - 40px); /* Adjust based on your layout */
+    width: calc(60% - 40px); /* Adjust based on your layout */
     max-height: 300px; /* Scrollable area */
     overflow-y: auto;
     z-index: 1000;
     margin-top: 10px;
     padding: 10px;
     display: none;
-    border-radius: 5px;
+    border-radius: 15px;
+    right: 0px;
 }
 .search-results .message {
     margin-bottom: 10px;
     padding: 5px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 2px solid grey;
 }
 .search-results .message:last-child {
     border-bottom: none;
@@ -738,6 +739,18 @@ button:hover {
         dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
     }
 
+    // Close the dropdown menu when clicking outside of it
+document.addEventListener("click", function (event) {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const arrowIcon = document.querySelector('.arrow-icon');
+
+    // Check if the click was outside the dropdown menu and the arrow icon
+    if (!dropdownMenu.contains(event.target) && !arrowIcon.contains(event.target)) {
+        dropdownMenu.style.display = "none";
+    }
+});
+
+
     function viewProfile() {
         const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Pass the jobSeekerID from PHP to JavaScript
         window.location.href = "../Job Seeker/visit_job_seeker.php?userID=" + jobSeekerID; // Redirect to the profile page
@@ -747,6 +760,25 @@ button:hover {
         const filterContainer = document.getElementById("filterContainer");
         filterContainer.style.display = filterContainer.style.display === "block" ? "none" : "block";
     }
+
+    // Close the filter menu and dropdown menu when clicking outside of them
+    document.addEventListener("click", function (event) {
+        const filterContainer = document.getElementById("filterContainer");
+        const filterIcon = document.querySelector('.filter-icon');
+        
+        // Check if the click was outside the filter container and the filter icon
+        if (!filterContainer.contains(event.target) && !filterIcon.contains(event.target)) {
+            filterContainer.style.display = "none";
+        }
+
+        // Close the dropdown menu when clicking outside of it
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        const arrowIcon = document.querySelector('.arrow-icon');
+
+        if (!dropdownMenu.contains(event.target) && !arrowIcon.contains(event.target)) {
+            dropdownMenu.style.display = "none";
+        }
+    });
 
     function applyDateFilter() {
         const selectedDate = document.getElementById("filterDate").value;
@@ -790,6 +822,8 @@ button:hover {
 
     function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
+    const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Include jobSeekerID from PHP
+    const userID = "<?php echo $userID; ?>"; // Include userID from PHP
 
     if (!searchQuery) {
         alert("Please enter a search term.");
@@ -797,7 +831,7 @@ button:hover {
     }
 
     // Make an AJAX request to search the chat history
-    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}`)
+    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
         .then(response => response.json())
         .then(data => {
             const searchResults = document.getElementById("searchResults");
@@ -839,6 +873,8 @@ button:hover {
         });
 }
 
+
+
 // Close the search results when clicking outside
 document.addEventListener("click", function (event) {
     const searchResults = document.getElementById("searchResults");
@@ -848,6 +884,7 @@ document.addEventListener("click", function (event) {
         searchResults.style.display = "none";
     }
 });
+
 
 
 
