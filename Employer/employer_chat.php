@@ -637,6 +637,30 @@ button:hover {
     font-weight: bold;
 }
 
+
+.search-results {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 40px); /* Adjust based on your layout */
+    max-height: 300px; /* Scrollable area */
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 10px;
+    padding: 10px;
+    display: none;
+    border-radius: 5px;
+}
+.search-results .message {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.search-results .message:last-child {
+    border-bottom: none;
+}
+
 </style>
 </head>
 <body>
@@ -650,16 +674,16 @@ button:hover {
                     <!-- <span id="jobSeekerName"><?php echo $jobSeekerID; ?></span> -->
                     <img src="../images/down-arrow.png" alt="Toggle Dropdown" class="arrow-icon" onclick="toggleDropdown()">
                     <div class="search-container">
-                    <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
+    <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
     <input type="text" id="searchBar" class="search-bar" placeholder="Search chat...">
-
-                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
-                        <div id="filterContainer" class="filter-container" style="display: none;">
-                            <label for="filterDate">Filter by Date:</label>
-                            <input type="date" id="filterDate">
-                            <button onclick="applyDateFilter()">Apply</button>
-                        </div>
-                    </div>
+    <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
+    <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
+    <div id="filterContainer" class="filter-container" style="display: none;">
+        <label for="filterDate">Filter by Date:</label>
+        <input type="date" id="filterDate">
+        <button onclick="applyDateFilter()">Apply</button>
+    </div>
+</div>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
                             <li onclick="viewProfile()">View Profile</li>
@@ -776,16 +800,15 @@ button:hover {
     fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}`)
         .then(response => response.json())
         .then(data => {
-            const chatSection = document.getElementById("chatSection");
-            chatSection.innerHTML = ""; // Clear current chat display
+            const searchResults = document.getElementById("searchResults");
+            searchResults.innerHTML = ""; // Clear current results
 
             if (data.status === "error") {
-                alert(data.message); // Show error message
+                searchResults.innerHTML = `<div>${data.message}</div>`;
             } else {
-                // Populate the chat section with filtered messages
+                // Populate the search results window with filtered messages
                 if (data.messages && data.messages.length > 0) {
                     data.messages.forEach(message => {
-                        // Highlight the search term in the message contents
                         const highlightedContent = message.messageContents.replace(
                             new RegExp(`(${searchQuery})`, 'gi'),
                             "<b>$1</b>"
@@ -800,12 +823,15 @@ button:hover {
                             </div>
                             <div class="message-body">${highlightedContent}</div>
                         `;
-                        chatSection.appendChild(messageDiv);
+                        searchResults.appendChild(messageDiv);
                     });
                 } else {
-                    chatSection.innerHTML = "<div>No messages found for the search term.</div>";
+                    searchResults.innerHTML = "<div>No messages found for the search term.</div>";
                 }
             }
+
+            // Display the results window
+            searchResults.style.display = "block";
         })
         .catch(error => {
             console.error("Error searching chat history:", error);
@@ -813,6 +839,34 @@ button:hover {
         });
 }
 
+// Close the search results when clicking outside
+document.addEventListener("click", function (event) {
+    const searchResults = document.getElementById("searchResults");
+    const searchBar = document.getElementById("searchBar");
+
+    if (!searchResults.contains(event.target) && !searchBar.contains(event.target)) {
+        searchResults.style.display = "none";
+    }
+});
+
+
+
+function jumpToMessage(messageId) {
+    const chatSection = document.getElementById("chatSection");
+    const messages = chatSection.getElementsByClassName("message");
+
+    // Loop through messages to find the one with the given ID
+    for (let i = 0; i < messages.length; i++) {
+        // Assuming the message divs have a data-id attribute with the message ID
+        if (messages[i].dataset.id == messageId) {
+            messages[i].scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the message
+            break;
+        }
+    }
+
+    // Optionally, hide the search results
+    document.getElementById("searchResults").style.display = "none";
+}
 
 
 
