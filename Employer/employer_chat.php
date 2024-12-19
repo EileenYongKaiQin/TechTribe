@@ -125,7 +125,7 @@ body {
 .job-seeker-message {
     background-color: rgb(255, 255, 255);
     align-self: flex-start; /* Align to the left */
-    text-align: left;
+    text-align: center;
     font-size: 16px;
     border-radius: 15px;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -141,7 +141,7 @@ body {
 .employer-message {
     background-color: rgb(224, 246, 237);
     align-self: flex-end; /* Align to the right */
-    text-align: right;
+    text-align: center;
     font-size: 16px;
     border-radius: 15px;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -603,6 +603,40 @@ button:hover {
 .arrow-icon:hover {
     transform: scale(1.1); /* Slightly increase the button size */
 }
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: absolute;
+    z-index: 10;
+    left: 75%;
+    top: 135%;
+}
+.filter-container input {
+    margin-top: 5px;
+    padding: 5px;
+}
+.filter-container button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.filter-container button:hover {
+    background-color: #45a049;
+}
+
+.message-body b {
+    color: #ff5722; /* Example: Orange text */
+    font-weight: bold;
+}
+
 </style>
 </head>
 <body>
@@ -616,9 +650,15 @@ button:hover {
                     <!-- <span id="jobSeekerName"><?php echo $jobSeekerID; ?></span> -->
                     <img src="../images/down-arrow.png" alt="Toggle Dropdown" class="arrow-icon" onclick="toggleDropdown()">
                     <div class="search-container">
-                        <img src="../images/Search.png" alt="Search" class="search-icon" onclick="seachChat()"> <!-- Adjust the path as necessary -->
-                        <input type="text" id="searchBar" class="search-bar" placeholder="Search chat...">
-                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="filterChat()">
+                    <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
+    <input type="text" id="searchBar" class="search-bar" placeholder="Search chat...">
+
+                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
+                        <div id="filterContainer" class="filter-container" style="display: none;">
+                            <label for="filterDate">Filter by Date:</label>
+                            <input type="date" id="filterDate">
+                            <button onclick="applyDateFilter()">Apply</button>
+                        </div>
                     </div>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
@@ -679,13 +719,103 @@ button:hover {
         window.location.href = "../Job Seeker/visit_job_seeker.php?userID=" + jobSeekerID; // Redirect to the profile page
     }
 
-    function searchChat() {
-        alert("Searching chat...");
+    function toggleDateFilter() {
+        const filterContainer = document.getElementById("filterContainer");
+        filterContainer.style.display = filterContainer.style.display === "block" ? "none" : "block";
     }
 
-    function deleteChat() {
-        alert("Deleting chat...");
+    function applyDateFilter() {
+        const selectedDate = document.getElementById("filterDate").value;
+
+        if (!selectedDate) {
+            alert("Please select a date to filter.");
+            return;
+        }
+
+        // Make an AJAX request to filter chats by the selected date
+        fetch(`../database/filter_chat.php?date=${encodeURIComponent(selectedDate)}`)
+            .then(response => response.json())
+            .then(data => {
+                const chatSection = document.getElementById("chatSection");
+                chatSection.innerHTML = ""; // Clear current chat display
+
+                if (data.status === "error") {
+                    alert(data.message); // Show error message
+                } else if (data.status === "nextAvailableDate") {
+                    alert(`No chat history found for ${selectedDate}. Showing history for ${data.nextDate}.`);
+                }
+
+                // Populate the chat section with filtered messages
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(message => {
+                        const messageDiv = document.createElement("div");
+                        messageDiv.className = "message"; // Apply your message styling
+                        messageDiv.innerHTML = `
+                            <div class="message-header">
+                                <span><b>${message.senderRole}</b></span>
+                                <span>${message.formatted_date}</span>
+                            </div>
+                            <div class="message-body">${message.messageContents}</div>
+                        `;
+                        chatSection.appendChild(messageDiv);
+                    });
+                }
+            })
+            .catch(error => console.error("Error filtering chat history:", error));
     }
+
+    function searchChat() {
+    const searchQuery = document.getElementById("searchBar").value.trim();
+
+    if (!searchQuery) {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    // Make an AJAX request to search the chat history
+    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatSection = document.getElementById("chatSection");
+            chatSection.innerHTML = ""; // Clear current chat display
+
+            if (data.status === "error") {
+                alert(data.message); // Show error message
+            } else {
+                // Populate the chat section with filtered messages
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(message => {
+                        // Highlight the search term in the message contents
+                        const highlightedContent = message.messageContents.replace(
+                            new RegExp(`(${searchQuery})`, 'gi'),
+                            "<b>$1</b>"
+                        );
+
+                        const messageDiv = document.createElement("div");
+                        messageDiv.className = "message"; // Apply your message styling
+                        messageDiv.innerHTML = `
+                            <div class="message-header">
+                                <span><b>${message.senderRole}</b></span>
+                                <span>${message.formatted_date}</span>
+                            </div>
+                            <div class="message-body">${highlightedContent}</div>
+                        `;
+                        chatSection.appendChild(messageDiv);
+                    });
+                } else {
+                    chatSection.innerHTML = "<div>No messages found for the search term.</div>";
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error searching chat history:", error);
+            alert("An error occurred while searching. Please try again.");
+        });
+}
+
+
+
+
 
     function report() {
         const jobSeekerID = "<?php echo $jobSeekerID; ?>";
