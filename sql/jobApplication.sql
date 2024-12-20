@@ -5,7 +5,7 @@ CREATE TABLE jobApplication (
     applyDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Time when the application was submitted
     applyStatus ENUM('Pending', 'Accepted', 'Rejected', 'Under Review') DEFAULT 'Pending', -- Status of the application
     additionalDetails TEXT,                 -- Stores additional details requested from the employer
-    applicantResponse TEXT,                 -- Stores responses from job seeker
+    applicantResponse TEXT,                -- Stores responses from job seeker
     FOREIGN KEY (jobPostID) REFERENCES jobPost(jobPostID) ON DELETE CASCADE,  -- Link to the job post
     FOREIGN KEY (applicantID) REFERENCES login(userID) ON DELETE CASCADE   -- Link to the applicant 
 );

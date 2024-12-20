@@ -172,6 +172,10 @@ if ($noti !== false) {
                 <div class="submenu-item <?php echo $currentPage == 'job_seeker_wall.php' ? 'active' : ''; ?>" onclick="location.href='job_seeker_wall.php'">View Posts</div>
                 <div class="submenu-item <?php echo $currentPage == 'my_posts.php' ? 'active' : ''; ?>" onclick="location.href='my_posts.php'">My Posts</div>
             </div>
+            <div class="menu-item <?php echo $currentPage == 'job_history.php'? 'active' : ''; ?>">
+                <img src="../images/history.png" alt="Job History Icon" class="menu-icon">
+                <span onclick="location.href='job_history.php'">Job History</span>
+            </div>
         </nav>
         <div class="logout" onclick="location.href='../login.html'">
             <img src="../images/vector.png" alt="Logout Icon" class="menu-icon">

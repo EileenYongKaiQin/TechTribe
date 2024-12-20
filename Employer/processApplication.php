@@ -14,7 +14,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['applicationID'], $_PO
         $stmt->bind_param("ss", $status, $applicationID);
 
         if ($stmt->execute()) {
-            $_SESSION['flash_message'] = "Application status successfully updated to '$status'.";
+            // If the action is accepted, it will add to jobHistory
+            $historyQuery = "SELECT jobPostID, applicantID FROM jobApplication WHERE applicationID = ?";
+            $historystmt = $con->prepare($historyQuery);
+            $historystmt->bind_param("s", $applicationID);
+            $historystmt->execute();
+            $historyResult = $historystmt->get_result();
+
+            if($historyResult->num_rows > 0) {
+                $row = $historyResult->fetch_assoc();
+                $jobPostID = $row['jobPostID'];
+                $jobSeekerID = $row['applicantID'];
+
+                $insertHistorySQL = "INSERT INTO jobHistory(applicationID, jobPostID, jobSeekerID, acceptedDate) VALUES (?, ?, ?, NOW())";
+                $insertHistoryStmt = $con->prepare($insertHistorySQL);
+                $insertHistoryStmt->bind_param("sss", $applicationID, $jobPostID, $jobSeekerID);
+            
+            if($insertHistoryStmt->execute()) {
+                $_SESSION['flash_message'] = "Application status successfully updated to '$status'.";
+            } 
+            $insertHistoryStmt->close();
+            } 
+            $historystmt->close();
+            
         } else {
             $_SESSION['flash_message'] = "Failed to update application status.";
         }

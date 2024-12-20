@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #F0FDFF;
+}
+
+.main-content {
+    display: block;
+    margin-left: 35%;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-top: -5%;
+}
+
+
+.image-section img {
+    width: 50%;
+    margin-bottom: 30px;
+}
+
+.text-section .thank-you {
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
+    margin-bottom: 40px;
+    margin-left: 7%;
+    font-style: normal;
+}
+/* Thank you for your feedback. Have a nice day! */
+
+
+.button-section .home-button {
+    margin-left: 20%;
+    background: #AAE1DE;
+    color: #FFFFFF;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s ease;
+}
+
+.button-section .home-button:hover {
+    background: #008C85;
+}
