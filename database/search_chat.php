@@ -1,18 +1,21 @@
 <?php
+session_start();
 include '../database/config.php'; // Ensure this path is correct
 
 // Enable error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Check if the search query is provided
-if (isset($_GET['query'])) {
+// Check if the search query and IDs are provided
+if (isset($_GET['query']) && isset($_GET['jobSeekerID']) && isset($_SESSION['userID'])) {
     $query = '%' . $_GET['query'] . '%'; // Prepare for LIKE statement
+    $jobSeekerID = $_GET['jobSeekerID'];
+    $userID = $_SESSION['userID']; // Get userID from session
 
     // Prepare and execute the query
-    $sql = "SELECT * FROM message WHERE messageContents LIKE ? ORDER BY timestamp DESC"; // Fetching recent messages first
+    $sql = "SELECT * FROM message WHERE (messageContents LIKE ?) AND (jobSeekerID = ? AND userID = ?) ORDER BY timestamp DESC"; // Fetching recent messages first
     if ($stmt = $con->prepare($sql)) {
-        $stmt->bind_param("s", $query);
+        $stmt->bind_param("sss", $query, $jobSeekerID, $userID);
         if ($stmt->execute()) {
             $result = $stmt->get_result();
             $messages = [];
@@ -31,6 +34,6 @@ if (isset($_GET['query'])) {
         echo json_encode(['status' => 'error', 'message' => 'Statement preparation failed.']);
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'No search query provided']);
+    echo json_encode(['status' => 'error', 'message' => 'No search query or IDs provided']);
 }
 ?>

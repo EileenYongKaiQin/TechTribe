@@ -677,6 +677,30 @@ button:hover {
 }
 
 
+/* Style for the message container */
+.message-header {
+    font-size: 14px; /* Adjust as needed */
+    color: #888; /* Light gray for subtle text */
+    text-align: left; /* Align date to the right */
+    padding: 5px 10px; /* Add some spacing around the header */
+    border-bottom: 1px solid #ddd; /* Optional border for separation */
+}
+
+/* Style for the message body */
+.message-body {
+    font-size: 16px; /* Slightly larger for better readability */
+    color: #333; /* Darker text for contrast */
+    background-color: #f9f9f9; /* Light background for body text */
+    padding: 10px; /* Add some padding inside the body */
+    border-radius: 5px; /* Rounded corners for modern look */
+    margin: 5px 0; /* Spacing between messages */
+    word-wrap: break-word; /* Prevent long words or URLs from overflowing */
+    white-space: pre-wrap; /* Preserve line breaks in text */
+    text-align: left; /* Align date to the right */
+
+}
+
+
 </style>
 </head>
 <body>
@@ -824,7 +848,7 @@ document.addEventListener("click", function (event) {
                         messageDiv.className = "message"; // Apply your message styling
                         messageDiv.innerHTML = `
                             <div class="message-header">
-                                <span><b>${message.senderRole}</b></span>
+                              
                                 <span>${message.formatted_date}</span>
                             </div>
                             <div class="message-body">${message.messageContents}</div>
@@ -838,8 +862,7 @@ document.addEventListener("click", function (event) {
 
     function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
-    const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Include jobSeekerID from PHP
-    const userID = "<?php echo $userID; ?>"; // Include userID from PHP
+    const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Get jobSeekerID from PHP
 
     if (!searchQuery) {
         alert("Please enter a search term.");
@@ -847,7 +870,7 @@ document.addEventListener("click", function (event) {
     }
 
     // Make an AJAX request to search the chat history
-    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
+    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}`)
         .then(response => response.json())
         .then(data => {
             const searchResults = document.getElementById("searchResults");
@@ -868,7 +891,6 @@ document.addEventListener("click", function (event) {
                         messageDiv.className = "message"; // Apply your message styling
                         messageDiv.innerHTML = `
                             <div class="message-header">
-                                <span><b>${message.senderRole}</b></span>
                                 <span>${message.formatted_date}</span>
                             </div>
                             <div class="message-body">${highlightedContent}</div>
@@ -888,6 +910,7 @@ document.addEventListener("click", function (event) {
             alert("An error occurred while searching. Please try again.");
         });
 }
+
 
 
 
