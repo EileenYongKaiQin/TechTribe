@@ -1,6 +1,6 @@
 <?php
+session_start();
 include '../database/config.php';
-include 'employer1.php'; // Include session_start and user verification
 
 if (!isset($_GET['date'])) {
     echo json_encode(['status' => 'error', 'message' => 'No date provided']);
