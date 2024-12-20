@@ -368,7 +368,7 @@ button:hover {
     width: 20px; /* Set the size of the icon */
     height: 20px; /* Set the size of the icon */
     margin-right: 10px; /* Space between the icon and input */
-    margin-left: 350px; 
+    margin-left: 320px; 
     margin-top: 0px; /* Adjust this value to move the icon down */
     vertical-align: middle; /* Align the icon vertically with the input */
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -662,6 +662,21 @@ button:hover {
     border-bottom: none;
 }
 
+.clear-icon {
+    color: gray; /* Change color as needed */
+    font-size: 25px; /* Adjust size as needed */
+
+    width: 20px; /* Set the size of the icon */
+    height: 20px; /* Set the size of the icon */
+    margin-right: 10px; /* Space between the icon and input */
+    margin-left: 10px; 
+    margin-top: 0px; /* Adjust this value to move the icon down */
+    vertical-align: middle; /* Align the icon vertically with the input */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+
 </style>
 </head>
 <body>
@@ -675,16 +690,17 @@ button:hover {
                     <!-- <span id="jobSeekerName"><?php echo $jobSeekerID; ?></span> -->
                     <img src="../images/down-arrow.png" alt="Toggle Dropdown" class="arrow-icon" onclick="toggleDropdown()">
                     <div class="search-container">
-    <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
-    <input type="text" id="searchBar" class="search-bar" placeholder="Search chat...">
-    <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
-    <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
-    <div id="filterContainer" class="filter-container" style="display: none;">
-        <label for="filterDate">Filter by Date:</label>
-        <input type="date" id="filterDate">
-        <button onclick="applyDateFilter()">Apply</button>
-    </div>
-</div>
+                        <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
+                        <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..."  oninput="toggleClearButton()">
+                        <span id="clearSearch" class="clear-icon" onclick="clearSearch()" style="display: none;">&times;</span>
+                        <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
+                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
+                        <div id="filterContainer" class="filter-container" style="display: none;">
+                            <label for="filterDate">Filter by Date:</label>
+                            <input type="date" id="filterDate">
+                            <button onclick="applyDateFilter()">Apply</button>
+                        </div>
+                    </div>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
                             <li onclick="viewProfile()">View Profile</li>
@@ -886,6 +902,24 @@ document.addEventListener("click", function (event) {
 });
 
 
+function toggleClearButton() {
+    const searchBar = document.getElementById("searchBar");
+    const clearSearch = document.getElementById("clearSearch");
+    
+    // Show the "x" button if there is text in the search bar
+    if (searchBar.value.trim() !== "") {
+        clearSearch.style.display = "inline"; // or "block" depending on your styling
+    } else {
+        clearSearch.style.display = "none"; // Hide if input is empty
+    }
+}
+
+function clearSearch() {
+    const searchBar = document.getElementById("searchBar");
+    searchBar.value = ""; // Clear the search input
+    toggleClearButton(); // Update the clear button visibility
+    searchResults.style.display = "none"; // Optionally hide search results
+}
 
 
 function jumpToMessage(messageId) {
