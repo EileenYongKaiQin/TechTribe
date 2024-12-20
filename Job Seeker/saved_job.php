@@ -39,53 +39,52 @@ $con->close();
     <style>
         .main-content {
             display: flex;
-            justify-content: center;  
-            margin-top: 0px; 
-            padding: 20px;           
+            justify-content: center;              
+            padding: 20px;
+            margin-top: -20px;
         }
 
         .content h1{        
             margin-left: 190px; 
             text-align: center;
             margin-top:-20px;
-     
             font-weight: 700;
         }
 
         .date, .salary, .location, .time {
-                margin: 0;
-            }
+            margin: 0;
+        }
 
         .date, .salary, .location {
-            padding-left: 50px;      
+        padding-left: 50px;      
         }
 
         .date {
-            margin-bottom: -18px;    
-            font-weight: bold;   
+        margin-bottom: -18px;    
+        font-weight: bold;   
         }
 
         .salary { 
-            margin-top: -5px;
-            margin-bottom: 25px;   
-            font-weight: bold;   
-            color: #333333;
+        margin-top: -5px;
+        margin-bottom: 25px;   
+        font-weight: bold;   
+        color: #333333;
         }
 
         .location {
-            display: flex;
-            align-items: center; 
-            margin-bottom: 5px;  
-            color: #767F8C;
+        display: flex;
+        align-items: center; 
+        margin-bottom: 5px;  
+        color: #767F8C;
         }
 
         .time {
-            color: #767F8C;      
+        color: #767F8C;      
         }
 
         .salary-line {
-            border-top: 1px solid #dcdcdc; 
-            margin: 0px 0; 
+        border-top: 1px solid #dcdcdc; 
+        margin: 0px 0; 
         }
     </style>
 </head>
@@ -144,6 +143,7 @@ $con->close();
                         <button class="view-details-btn" onclick="location.href='manageJob.php?jobPostID=<?php echo $job['jobPostID']; ?>'">View Details</button>
                     </div>
                 </div>
+            </div>
 
             <?php
                 }

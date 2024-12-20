@@ -23,12 +23,12 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
-            margin-left: 250px;
+            margin-left: 240px;
         }
 
         .content h1 {
-            margin-top: -15px;
-            margin-bottom: 15px;
+            margin-top: -20px;
+            margin-bottom: 10px;
             font-size: 2em;
             text-align: center;
             color: #333;
