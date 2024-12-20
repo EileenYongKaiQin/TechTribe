@@ -3,6 +3,11 @@ include('../database/config.php');
 
 // Get search criteria from URL parameters
 $keyword = isset($_GET['keyword']) ? $con->real_escape_string($_GET['keyword']) : '';
+// Filters
+$skillCategories = isset($_GET['skillCategory']) ? $_GET['skillCategory'] : [];
+$locations = isset($_GET['location']) ? $_GET['location'] : [];
+$availableTimes = isset($_GET['availableTime']) ? $_GET['availableTime'] : [];
+
 
 // Set the current page number (default is 1)
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -20,6 +25,28 @@ if (!empty($keyword)) {
     $sql .= " AND (wp.skillCategory LIKE '%$keyword%' 
                  OR wp.skillDetails LIKE '%$keyword%' 
                  OR wp.jobPreferences LIKE '%$keyword%')";
+}
+// Add filter for skill categories
+if (!empty($skillCategories)) {
+    $skills = implode("','", array_map([$con, 'real_escape_string'], $skillCategories));
+    $sql .= " AND wp.skillCategory IN ('$skills')";
+}
+
+// Add filter for location
+if (!empty($locations)) {
+    $locs = implode("','", array_map([$con, 'real_escape_string'], $locations));
+    $sql .= " AND wp.state IN ('$locs')";
+}
+
+// Add filter for available time
+if (!empty($availableTimes)) {
+    foreach ($availableTimes as $day) {
+        $escapedDay = $con->real_escape_string($day);
+
+        // Check if the day exists and the times are not empty
+        $sql .= " AND JSON_UNQUOTE(JSON_EXTRACT(wp.availableTime, '$.\"$escapedDay\"[0]')) != '' 
+                  AND JSON_UNQUOTE(JSON_EXTRACT(wp.availableTime, '$.\"$escapedDay\"[1]')) != ''";
+    }
 }
 
 // Add ordering and pagination
@@ -85,25 +112,75 @@ if ($result->num_rows > 0) {
                           OR wp.jobPreferences LIKE '%$keyword%')";
     }
 
+    if (!empty($skillCategories)) {
+        $sqlTotalPosts .= " AND wp.skillCategory IN ('$skills')";
+    }
+
+if (!empty($locations)) {
+    $sqlTotalPosts .= " AND wp.state IN ('$locs')";
+}
+
+
+if (!empty($availableTimes)) {
+    foreach ($availableTimes as $day) {
+        $escapedDay = $con->real_escape_string($day);
+
+        // Same filter applied to total post query
+        $sqlTotalPosts .= " AND JSON_UNQUOTE(JSON_EXTRACT(wp.availableTime, '$.\"$escapedDay\"[0]')) != '' 
+                            AND JSON_UNQUOTE(JSON_EXTRACT(wp.availableTime, '$.\"$escapedDay\"[1]')) != ''";
+    }
+}
+
     $resultTotalPosts = $con->query($sqlTotalPosts);
     $totalPosts = $resultTotalPosts->fetch_assoc()['total'];
     $totalPages = ceil($totalPosts / $postsPerPage);
 
-    echo '<div class="pagination">';
-    if ($page > 1) {
-        echo '<a href="job_seeker_wall.php?page=' . ($page - 1) . '&keyword=' . urlencode($keyword) . '">Previous</a>';
-    }
-    for ($i = 1; $i <= $totalPages; $i++) {
-        if ($i == $page) {
-            echo '<a style="background-color: #2357e7; color: #fff;">' . $i . '</a>';
+ echo '<div class="pagination">';
+
+// Helper function to build query string
+function buildQueryString($params) {
+    $query = [];
+    foreach ($params as $key => $values) {
+        if (is_array($values)) {
+            foreach ($values as $value) {
+                $query[] = urlencode($key) . '[]=' . urlencode($value);
+            }
         } else {
-            echo '<a href="job_seeker_wall.php?page=' . $i . '&keyword=' . urlencode($keyword) . '">' . $i . '</a>';
+            $query[] = urlencode($key) . '=' . urlencode($values);
         }
     }
-    if ($page < $totalPages) {
-        echo '<a href="job_seeker_wall.php?page=' . ($page + 1) . '&keyword=' . urlencode($keyword) . '">Next</a>';
+    return implode('&', $query);
+}
+
+// Base parameters
+$params = [
+    'keyword' => $keyword,
+    'skillCategory' => $skillCategories,
+    'location' => $locations,
+    'availableTime' => $availableTimes
+];
+
+// Previous button
+if ($page > 1) {
+    echo '<a href="job_seeker_wall.php?page=' . ($page - 1) . '&' . buildQueryString($params) . '">Previous</a>';
+}
+
+// Page numbers
+for ($i = 1; $i <= $totalPages; $i++) {
+    if ($i == $page) {
+        echo '<a style="background-color: #2357e7; color: #fff;">' . $i . '</a>';
+    } else {
+        echo '<a href="job_seeker_wall.php?page=' . $i . '&' . buildQueryString($params) . '">' . $i . '</a>';
     }
-    echo '</div>';
+}
+
+// Next button
+if ($page < $totalPages) {
+    echo '<a href="job_seeker_wall.php?page=' . ($page + 1) . '&' . buildQueryString($params) . '">Next</a>';
+}
+
+echo '</div>';
+
 } else {
     echo '<p>No posts available.</p>';
 }

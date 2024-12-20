@@ -18,6 +18,10 @@ body {
     margin: 0 auto;
 }
 
+hr{
+    margin: 10px 0;
+}
+
 /* Search and Filter Bar */
 /* .search-filter-bar {
     margin-left: 5%;
@@ -259,7 +263,7 @@ h3{
     padding: 0 20px;
     outline: none;
 }
-.clear-btn {
+.clear-search-btn {
     position: absolute;
     right: 10px;
     border: none;
@@ -268,7 +272,7 @@ h3{
     cursor: pointer;
     color: #555;
 }
-.clear-btn:hover {
+.clear-search-btn:hover {
     color: #000;
 }
 
@@ -295,33 +299,107 @@ h3{
     margin-left: 20px;
 }
 
+.filter-section {
+    margin-left: 70%;
+}
 
 .filter-btn {
-    /* display: flex; */
     align-items: center;
     justify-content: space-between;
     width: 160px;
     height: 45px;
     margin-left: 10px; 
-    /* margin-right: -200px;  */
     padding: 0 15px; 
     background: #F0FDFF;
     border: 2px solid #A8AAB0;
     border-radius: 10px;
     font-size: 16px;
-
     color: #A8AAB0;
     cursor: pointer;
     transition: background 0.3s;
 }
 
-.filter-btn .dropdown-icon {
-    margin-left: 8px;
-    font-size: 12px;
-}
-
 .filter-btn:hover {
     background: #F7F7F7;
+}
+
+.filter-dropdown {
+    display: none; /* Initially hidden */
+    position: absolute; /* Absolute positioning */
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    z-index: 100;
+    width: 300px; /* Fixed width */
+}
+
+.filter-dropdown.active {
+    display: block; /* Show when active */
+}
+
+.filter-group h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filter-action{
+    margin-top: 20px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.apply-filter-btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.apply-filter-btn:hover{
+    background-color: #95efaa;    
+}
+
+.clear-filter-btn{
+    background-color: #e62525;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.clear-filter-btn:hover{
+    background-color: #d76460
+}
+
+#toggle-skill-visibility {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+}
+#skill-list {
+    max-height: 100px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+#skill-list.expanded {
+    max-height: none;
 }
 
 

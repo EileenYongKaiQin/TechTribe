@@ -25,7 +25,8 @@
                 <option value="" disabled selected>Select a category</option>
                 <option value="Customer Service">Customer Service</option>
                 <option value="Technology">Technology</option>
-                <option value="Photographic">Photographic</option>
+                <option value="Photography">Photography</option>
+                <option value="Accounting">Accounting</option>
                 <option value="Creative Skills">Creative Skills</option>
                 <option value="Teaching and Tutoring">Teaching and Tutoring</option>
                 <option value="Writing and Editing">Writing and Editing</option>
@@ -101,7 +102,7 @@
                     <option value="Kelantan">Kelantan</option>
                     <option value="Kuala Lumpur">Kuala Lumpur</option>
                     <option value="Melaka">Melaka</option>
-                    <option value="Negeri Sembilan">Negeri Sembilan</option>
+                    <option value="Sembilan">Sembilan</option>
                     <option value="Pahang">Pahang</option>
                     <option value="Penang">Penang</option>
                     <option value="Perak">Perak</option>
