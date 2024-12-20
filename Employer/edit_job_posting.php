@@ -184,7 +184,7 @@
 
                 <div class="form-group">
                     <label for="jobDescription">Job Description: <span class="required">*</span></label>
-                    <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required><?php echo htmlspecialchars($job['jobDescription'] ?? ''); ?> required</textarea>
+                    <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required><?php echo htmlspecialchars($job['jobDescription'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="form-group">
@@ -215,23 +215,64 @@
 
         // When the start date changes, dynamically set the minimum selectable date of the end date.
         function updateEndDate() {
-            const startDate = document.getElementById('startDate').value;
-            const endDateInput = document.getElementById('endDate');
+        const startDate = document.getElementById('startDate').value;
+        const endDateInput = document.getElementById('endDate');
 
-            if (startDate) {
-                const start = new Date(startDate);
-                const minEndDate = new Date(start);
-                minEndDate.setDate(minEndDate.getDate() + 1);
+        if (startDate) {
+            const start = new Date(startDate);
+            const minEndDate = new Date(start);
+            minEndDate.setDate(minEndDate.getDate());
 
-                // Set end date's minimum value
-                const year = minEndDate.getFullYear();
-                const month = String(minEndDate.getMonth() + 1).padStart(2, '0');
-                const day = String(minEndDate.getDate()).padStart(2, '0');
-                endDateInput.min = `${year}-${month}-${day}`;
-            }
+            // Set end date's minimum value
+            const year = minEndDate.getFullYear();
+            const month = String(minEndDate.getMonth() + 1).padStart(2, '0');
+            const day = String(minEndDate.getDate()).padStart(2, '0');
+            endDateInput.min = `${year}-${month}-${day}`;
         }
+    }
 
     // Limit workingTime to a maximum of 12 hours
+    function validateWorkingHours() {
+        const startTimeStr = document.getElementById('workingTimeStart').value;
+        const endTimeStr = document.getElementById('workingTimeEnd').value;
+
+        if (!startTimeStr || !endTimeStr) {
+            return true;
+        }
+
+        const [startHours, startMinutes] = startTimeStr.split(':').map(num => parseInt(num));
+        const [endHours, endMinutes] = endTimeStr.split(':').map(num => parseInt(num));
+
+        const startTime = new Date();
+        startTime.setHours(startHours, startMinutes, 0, 0);
+
+        const endTime = new Date();
+        endTime.setHours(endHours, endMinutes, 0, 0);
+
+        if (endTime <= startTime) {
+            alert('Working time cannot exceed 12 hours.');
+            return false;
+        }
+
+        const diffMilliseconds = endTime - startTime;
+        const diffHours = diffMilliseconds / (1000 * 60 * 60);
+
+        if (diffHours > 12) {
+            alert('Working time cannot exceed 12 hours.');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Attach the validate function to the form's submit event
+    document.querySelector('form').onsubmit = function(event) {
+        if (!validateWorkingHours()) {
+            event.preventDefault(); // Prevent the form submission
+        }
+    };
+
+    // When the working time is updated, we will check the time limit
     function updateEndTimeRange() {
         const startTimeStr = document.getElementById('workingTimeStart').value;
         const endTimeInput = document.getElementById('workingTimeEnd');
@@ -243,24 +284,19 @@
         startTime.setHours(parseInt(startHours), parseInt(startMinutes));
 
         const maxEndTime = new Date(startTime.getTime());
-        maxEndTime.setHours(startTime.getHours() + 12);
+        maxEndTime.setHours(startTime.getHours() + 12); // Set max end time to 12 hours after start time
 
         const maxEndHours = String(maxEndTime.getHours()).padStart(2, '0');
         const maxEndMinutes = String(maxEndTime.getMinutes()).padStart(2, '0');
         const maxEndTimeStr = `${maxEndHours}:${maxEndMinutes}`;
 
-        console.log('New max end time:', maxEndTimeStr);
+        endTimeInput.max = maxEndTimeStr;
 
-        const endTimeInputField = document.getElementById('workingTimeEnd');
-        endTimeInputField.max = maxEndTimeStr;
-
-        if (endTimeInputField.value > maxEndTimeStr) {
-            endTimeInputField.value = maxEndTimeStr;
+        if (endTimeInput.value > maxEndTimeStr) {
+            endTimeInput.value = maxEndTimeStr;
         }
     }
-
     </script>
-
 </body>
 </html>
 
