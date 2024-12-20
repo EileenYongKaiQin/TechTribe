@@ -3,68 +3,73 @@ ob_start();
 include('../database/config.php');
 include('admin.php');
 
-$targetUserID = mysqli_real_escape_string($con, $_GET['userID'] ?? $_POST['userID']);
+function getUserDetails($con, $userID) {
+    $employerQuery = mysqli_prepare($con, "SELECT * FROM employer WHERE userID = ?");
+    mysqli_stmt_bind_param($employerQuery, "s", $userID);
+    mysqli_stmt_execute($employerQuery);
+    $employerResult = mysqli_stmt_get_result($employerQuery);
 
-$employerQuery = mysqli_query($con, "SELECT * FROM employer WHERE userID='$targetUserID'");
-$jobSeekerQuery = mysqli_query($con, "SELECT * FROM jobseeker WHERE userID='$targetUserID'");
+    $jobSeekerQuery = mysqli_prepare($con, "SELECT * FROM jobseeker WHERE userID = ?");
+    mysqli_stmt_bind_param($jobSeekerQuery, "s", $userID);
+    mysqli_stmt_execute($jobSeekerQuery);
+    $jobSeekerResult = mysqli_stmt_get_result($jobSeekerQuery);
 
-$userData = null;
-$userType = '';
-$tableName = '';
+    if (mysqli_num_rows($employerResult) > 0) {
+        $userData = mysqli_fetch_assoc($employerResult);
+        $userData['role'] = 'employer';
+        return ['data' => $userData, 'type' => 'employer', 'table' => 'employer'];
+    } elseif (mysqli_num_rows($jobSeekerResult) > 0) {
+        $userData = mysqli_fetch_assoc($jobSeekerResult);
+        $userData['role'] = 'jobseeker';
+        return ['data' => $userData, 'type' => 'jobseeker', 'table' => 'jobseeker'];
+    }
 
-if (mysqli_num_rows($employerQuery) > 0) {
-    $userData = mysqli_fetch_assoc($employerQuery);
-    $userType = 'employer';
-    $tableName = 'employer';
-} elseif (mysqli_num_rows($jobSeekerQuery) > 0) {
-    $userData = mysqli_fetch_assoc($jobSeekerQuery);
-    $userType = 'jobseeker';
-    $tableName = 'jobseeker';
-} else {
-    die("User not found");
+    return null;
 }
 
-// Fetch violation history
-$violationQuery = mysqli_query($con, "SELECT COUNT(*) as violation_count FROM accountIssue WHERE accountIssueID='$targetUserID'");
-$violationHistory = mysqli_fetch_assoc($violationQuery)['violation_count'];
+function getViolationHistory($con, $userID) {
+    $violationQuery = mysqli_prepare($con, "SELECT COUNT(*) as violation_count FROM accountIssue WHERE accountIssueID = ?");
+    mysqli_stmt_bind_param($violationQuery, "s", $userID);
+    mysqli_stmt_execute($violationQuery);
+    $violationResult = mysqli_stmt_get_result($violationQuery);
+    $violationData = mysqli_fetch_assoc($violationResult);
+    return $violationData['violation_count'] ?? 0;
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize input
-    $suspendReason = mysqli_real_escape_string($con, $_POST['suspend-reason']);
-    $suspendDuration = mysqli_real_escape_string($con, $_POST['suspend-duration']);
-    
+function generateIssueID($con) {
     $lastIssueQuery = mysqli_query($con, "SELECT issueID FROM accountIssue ORDER BY issueID DESC LIMIT 1");
-    if ($lastIssueQuery && mysqli_num_rows($lastIssueQuery) > 0) {
+    
+    if (mysqli_num_rows($lastIssueQuery) > 0) {
         $lastIssueRow = mysqli_fetch_assoc($lastIssueQuery);
         $lastIssueID = $lastIssueRow['issueID'];
         
-        // Extract the numeric part and increment it
-        $lastNumericPart = intval(substr($lastIssueID, 2)); // Remove 'IS' and convert to integer
+        $lastNumericPart = intval(substr($lastIssueID, 2));
         $nextNumericPart = $lastNumericPart + 1;
         
-        // Format the new ID as 'ISXXX' (padded with leading zeros)
-        $issueID = 'IS' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
-    } else {
-        // If no previous issue IDs exist, start with IS001
-        $issueID = 'IS001';
+        return 'IS' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
     }
     
+    return 'IS001';
+}
+
+function determineSuspensionDetails($violationHistory, $suspendDuration) {
+    date_default_timezone_set('Asia/Kuala_Lumpur');
     $permanentSuspension = false;
-    $expirationDate = null;
+    $expirationDateTime = null;
     $accountStatus = '';
     
     if ($suspendDuration === 'Temporary') {
         switch ($violationHistory) {
             case 0:
-                $expirationDate = date('Y-m-d', strtotime('+6 months'));
+                $expirationDateTime = date('Y-m-d H:i:s', strtotime('+6 months'));
                 $accountStatus = 'Suspended-Temporary-6M';
                 break;
             case 1:
-                $expirationDate = date('Y-m-d', strtotime('+2 years'));
+                $expirationDateTime = date('Y-m-d H:i:s', strtotime('+2 years'));
                 $accountStatus = 'Suspended-Temporary-2Y';
                 break;
             case 2:
-                $expirationDate = date('Y-m-d', strtotime('+5 years'));
+                $expirationDateTime = date('Y-m-d H:i:s', strtotime('+5 years'));
                 $accountStatus = 'Suspended-Temporary-5Y';
                 break;
             default:
@@ -77,11 +82,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $accountStatus = 'Suspended-Permanently';
     }
     
-    // Update user account status
-    $updateUserStatus = mysqli_query($con, "UPDATE $tableName SET accountStatus = '$accountStatus', suspensionEndDate  = " . ($expirationDate ? "'$expirationDate'" : "NULL") . " WHERE userID='$targetUserID'");
+    return [
+        'permanent_suspension' => $permanentSuspension,
+        'expiration_datetime' => $expirationDateTime,
+        'account_status' => $accountStatus
+    ];
+}
+
+function suspendAccount($con, $userID, $userData, $suspendReason, $suspendDuration) {
+    $violationHistory = getViolationHistory($con, $userID);
     
-    // Insert account issue record
-    $insertIssueQuery = mysqli_query($con, "INSERT INTO accountIssue (
+    $issueID = generateIssueID($con);
+
+    $suspensionDetails = determineSuspensionDetails($violationHistory, $suspendDuration);
+    
+    // Update user status with prepared statement
+    $updateUserStatus = mysqli_prepare($con, "UPDATE {$userData['table']} SET 
+        accountStatus = ?, 
+        suspensionEndDate = ?
+        WHERE userID = ?");
+    
+    mysqli_stmt_bind_param($updateUserStatus, "sss", 
+        $suspensionDetails['account_status'], 
+        $suspensionDetails['expiration_datetime'], 
+        $userID
+    );
+    
+    $insertIssueQuery = mysqli_prepare($con, "INSERT INTO accountIssue (
         issueID, 
         issueDate,
         suspendReason, 
@@ -89,75 +116,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         violation, 
         accountIssueID,
         expirationDate
-    ) VALUES (
-        '$issueID',
-        NOW(), 
-        '$suspendReason', 
-        '$suspendDuration', 
-        " . ($violationHistory + 1) . ", 
-        '$userID',
-        " . ($expirationDate ? "'$expirationDate'" : "NULL") . "
-    )");
+    ) VALUES (?, NOW(), ?, ?, ?, ?, ?)");
     
-    if ($updateUserStatus && $insertIssueQuery) {
-        // Redirect with success message
+    $violationCount = $violationHistory + 1;
+    mysqli_stmt_bind_param($insertIssueQuery, "sssiss", 
+        $issueID, 
+        $suspendReason, 
+        $suspendDuration, 
+        $violationCount, 
+        $userID, 
+        $suspensionDetails['expiration_datetime']
+    );
+    
+    // Execute both queries
+    if (mysqli_stmt_execute($updateUserStatus) && mysqli_stmt_execute($insertIssueQuery)) {
+        return true;
+    }
+    
+    return false;
+}
+
+function reactivateExpiredAccounts($con) {
+    date_default_timezone_set('Asia/Kuala_Lumpur');
+    $currentDateTime = date('Y-m-d H:i:s');
+    
+    try {
+        $employerQuery = mysqli_prepare($con, "
+            UPDATE employer 
+            SET 
+                accountStatus = 'Inactive', 
+                suspensionEndDate = NULL 
+            WHERE 
+                (accountStatus LIKE 'Suspended-Temporary-6M' 
+                OR accountStatus LIKE 'Suspended-Temporary-2Y' 
+                OR accountStatus LIKE 'Suspended-Temporary-5Y')
+                AND suspensionEndDate IS NOT NULL 
+                AND suspensionEndDate <= ?
+        ");
+        
+        mysqli_stmt_bind_param($employerQuery, "s", $currentDateTime);
+        $employerExecuteResult = mysqli_stmt_execute($employerQuery);
+        
+        $jobseekerQuery = mysqli_prepare($con, "
+            UPDATE jobseeker 
+            SET 
+                accountStatus = 'Inactive', 
+                suspensionEndDate = NULL 
+            WHERE 
+                (accountStatus LIKE 'Suspended-Temporary-6M' 
+                OR accountStatus LIKE 'Suspended-Temporary-2Y' 
+                OR accountStatus LIKE 'Suspended-Temporary-5Y')
+                AND suspensionEndDate IS NOT NULL 
+                AND suspensionEndDate <= ?
+        ");
+        
+        mysqli_stmt_bind_param($jobseekerQuery, "s", $currentDateTime);
+        $jobseekerExecuteResult = mysqli_stmt_execute($jobseekerQuery);
+
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+$reactivationResults = reactivateExpiredAccounts($con);
+
+$error = '';
+$userID = isset($_GET['userID']) ? $_GET['userID'] : 
+          (isset($_POST['userID']) ? $_POST['userID'] : null);
+
+if (!$userID) {
+    die("No user ID provided");
+}
+
+$userData = getUserDetails($con, $userID);
+
+if (!$userData) {
+    die("User not found");
+}
+
+$violationHistory = getViolationHistory($con, $userID);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $suspendReason = mysqli_real_escape_string($con, $_POST['suspend-reason']);
+    $suspendDuration = mysqli_real_escape_string($con, $_POST['suspend-duration']);
+    
+    if (suspendAccount($con, $userID, $userData, $suspendReason, $suspendDuration)) {
         header("Location: accountIssueList.php?message=" . urlencode("Account suspended successfully"));
-        ob_end_flush(); // Send the buffered output
+        ob_end_flush();
         exit();
     } else {
         $error = "Failed to suspend account: " . mysqli_error($con);
     }
 }
-
-function reactivateExpiredAccounts($con) {
-    $currentDate = date('Y-m-d');
-
-    $employerQuery = "UPDATE employer 
-        SET accountStatus = 'Active', 
-            suspensionEndDate  = NULL 
-        WHERE accountStatus LIKE 'Suspended-Temporary-%' 
-        AND suspensionEndDate  IS NOT NULL 
-        AND suspensionEndDate  <= '$currentDate'";
-    
-    $jobseekerQuery = "UPDATE jobseeker 
-        SET accountStatus = 'Active', 
-            suspensionEndDate  = NULL 
-        WHERE accountStatus LIKE 'Suspended-Temporary-%' 
-        AND suspensionEndDate  IS NOT NULL 
-        AND suspensionEndDate  <= '$currentDate'";
-
-    $employerResult = mysqli_query($con, $employerQuery);
-    $employerReactivated = mysqli_affected_rows($con);
-
-    $jobseekerResult = mysqli_query($con, $jobseekerQuery);
-    $jobseekerReactivated = mysqli_affected_rows($con);
-
-    // Enhanced logging
-    $logMessage = "Account Reactivation - " . date('Y-m-d H:i:s') . "\n";
-    $logMessage .= "Employers Reactivated: $employerReactivated\n";
-    $logMessage .= "Job Seekers Reactivated: $jobseekerReactivated\n";
-    
-    // Log queries for debugging
-    $logMessage .= "Queries Executed:\n";
-    $logMessage .= "Employer Query: " . ($employerResult ? "Success" : "Failed") . "\n";
-    $logMessage .= "Jobseeker Query: " . ($jobseekerResult ? "Success" : "Failed") . "\n";
-    
-    // Optional: Log any MySQL errors
-    if (!$employerResult || !$jobseekerResult) {
-        $logMessage .= "Employer Error: " . mysqli_error($con) . "\n";
-        $logMessage .= "Jobseeker Error: " . mysqli_error($con) . "\n";
-    }
-
-    // Write to log file (optional but recommended)
-    file_put_contents('account_reactivation.log', $logMessage, FILE_APPEND);
-
-    return [
-        'employers_reactivated' => $employerReactivated,
-        'jobseekers_reactivated' => $jobseekerReactivated
-    ];
-}
-$reactivationResults = reactivateExpiredAccounts($con);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,6 +227,7 @@ $reactivationResults = reactivateExpiredAccounts($con);
             display: flex;
             justify-self: start;
             align-self: end;
+            z-index: 2000px;
             margin-top: 125px;
             margin-right: 100px;
             width: 100px;
@@ -269,7 +322,6 @@ $reactivationResults = reactivateExpiredAccounts($con);
             color: #000000;
         }
 
-        /* Modal Styling */
         .modal {
             display: none;
             position: fixed;
@@ -285,12 +337,11 @@ $reactivationResults = reactivateExpiredAccounts($con);
             justify-content: center;
         }
 
-        /* Modal Content */
         .modal-content {
             position: absolute;
-            top: 50%; /* Center content vertically */
-            left: 50%; /* Center content horizontally */
-            transform: translate(-50%, -50%); /* Center adjustments */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 731px;
             padding: 30px 40px;
             background: #FFFFFF;
@@ -302,7 +353,6 @@ $reactivationResults = reactivateExpiredAccounts($con);
             box-sizing: border-box;
         }
 
-        /* Close Button */
         .close-btn {
             position: absolute;
             top: 20px;
@@ -350,69 +400,73 @@ $reactivationResults = reactivateExpiredAccounts($con);
         }
     </style>
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const submitBtn = document.getElementById('submit-btn');
-        const formFields = document.querySelectorAll('#suspendForm [required]');
-        const modal = document.getElementById('firstModal');
-        const submitModalBtn = document.getElementById('submit-modal-btn');
+        document.addEventListener('DOMContentLoaded', function () {
+            const suspendDurationSelect = document.getElementById('suspend-duration');
+            const submitBtn = document.getElementById('submit-btn');
+            const formFields = document.querySelectorAll('#suspendForm [required]');
+            const modal = document.getElementById('firstModal');
+            const submitModalBtn = document.getElementById('submit-modal-btn');
 
-        // Validate form fields before enabling the submit button
-        function validateForm() {
-            let isValid = true;
+            <?php if ($violationHistory >= 4): ?>
+                suspendDurationSelect.value = 'Permanent';
+                suspendDurationSelect.querySelector('option[value="Temporary"]').disabled = true;
+            <?php endif; ?>
+            
+            function validateForm() {
+                let isValid = true;
+                formFields.forEach(field => {
+                    if (field.value.trim() === '') {
+                        isValid = false;
+                    }
+                });
+
+                submitBtn.disabled = !isValid;
+                submitBtn.classList.toggle('active', isValid);
+            }
+
             formFields.forEach(field => {
-                if (field.value.trim() === '') {
-                    isValid = false;
-                }
+                field.addEventListener('input', validateForm);
+            });
+            validateForm();
+
+            submitBtn.addEventListener('click', function (e) {
+                e.preventDefault(); 
+                modal.style.display = 'flex'; 
             });
 
-            submitBtn.disabled = !isValid;
-            submitBtn.classList.toggle('active', isValid);
-        }
+            function closeFirstModal() {
+                modal.style.display = 'none';
+            }
 
-        // Attach input listeners to form fields
-        formFields.forEach(field => {
-            field.addEventListener('input', validateForm);
+            submitModalBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+                document.getElementById('suspendForm').submit();
+            });
+
+            document.getElementById('cancel-modal-btn').addEventListener('click', closeFirstModal);
+            document.querySelector('.close-btn').addEventListener('click', closeFirstModal);
         });
-        validateForm();
-
-        // Open the modal on form submission
-        submitBtn.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default form submission
-            modal.style.display = 'flex'; // Show the modal
-        });
-
-        // Close the modal
-        function closeFirstModal() {
-            modal.style.display = 'none'; // Hide the modal
-        }
-
-        // Handle modal confirmation
-        submitModalBtn.addEventListener('click', function () {
-            modal.style.display = 'none'; // Hide the modal
-            document.getElementById('suspendForm').submit(); // Submit the form
-        });
-
-        // Close modal on cancel or close button
-        document.getElementById('cancel-modal-btn').addEventListener('click', closeFirstModal);
-        document.querySelector('.close-btn').addEventListener('click', closeFirstModal);
-    });
     </script>
+
 </head>
 <body>
-    <h1 class="profile-h1">Suspend Account</h1>
+<h1 class="profile-h1">Suspend Account</h1>
     <button onClick="window.location.href='accountIssueList.php'" class="back-btn">Back</button>
     
     <?php if (isset($error)): ?>
         <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
+    
     <div class="suspend-container">
         <div class="suspend-form">
             <form id="suspendForm" action="suspendAccount.php" method="POST">
+                <input type="hidden" name="userID" value="<?php echo htmlspecialchars($userID); ?>">
+                
                 <h3 class="profile-h3">Suspension Form</h3>
 
                 <!-- Violation Frequency -->
                 <div class="form-group">
-                    <label for="violation">Violation Frequence</label>
+                    <label for="violation">Violation Frequency</label>
                     <input type="text" value="<?php 
                         if ($violationHistory == 0) {
                             echo "First violation: 6 months suspension";
@@ -423,7 +477,7 @@ $reactivationResults = reactivateExpiredAccounts($con);
                         } else {
                             echo "4 or more violations: Permanent suspension";
                         }
-                        ?> " readonly>    
+                        ?>" readonly>    
                 </div>
 
                 <!-- Issue Date -->
@@ -436,9 +490,11 @@ $reactivationResults = reactivateExpiredAccounts($con);
                 <div class="form-group">
                     <label>User Details</label>
                     <input type="text" value="<?php 
-                        echo htmlspecialchars($userData['fullName'] . ' (' . 
-                        $userData['email'] . ') - ' . 
-                        ucfirst($userType)); 
+                        $fullName = $userData['data']['fullName'] ?? 'N/A';
+                        $email = $userData['data']['email'] ?? 'N/A';
+                        $userType = $userData['type'] ?? 'Unknown';
+                        
+                        echo htmlspecialchars("{$fullName} ({$email}) - " . ucfirst($userType)); 
                     ?>" readonly>
                 </div>
 
@@ -450,21 +506,33 @@ $reactivationResults = reactivateExpiredAccounts($con);
                         <option value="Fraud or Scam">Fraud or Scam</option>
                         <option value="Share False Information">Sharing False Information</option>
                         <option value="Spam">Spam</option>
-                        <option value="<?php echo $userType == 'employer' ? 'Employer' : 'Job Seeker'; ?> Misconduct">
-                            <?php echo $userType == 'employer' ? 'Employer' : 'Job Seeker'; ?> Misconduct
+                        <option value="<?php echo $userData['type'] == 'employer' ? 'Employer' : 'Job Seeker'; ?> Misconduct">
+                            <?php echo $userData['type'] == 'employer' ? 'Employer' : 'Job Seeker'; ?> Misconduct
                         </option>
                         <option value="Inappropriate Behavior">Inappropriate Behavior</option>
                         <option value="Others">Others</option>
                     </select>
                 </div>
 
-                <!-- Suspend Duration-->
+                <!-- Suspend Duration -->
                 <div class="form-group">
                     <label for="suspend-duration">Suspend Duration</label>
                     <select id="suspend-duration" name="suspend-duration" required>
                         <option value="">-- Select --</option>
-                        <option value="Temporary">Temporary (based on violation history)</option>
-                        <option value="Permanent">Permanent</option>
+                        <option value="Temporary" 
+                        <?php
+                        if ($violationHistory >= 3) {
+                            echo 'disabled title="Not available for repeated violations"';
+                        }
+                        ?>
+                    >Temporary (based on violation history)</option>
+                    <option value="Permanent" 
+                        <?php
+                        if ($violationHistory >= 3) {
+                            echo 'selected';
+                        }
+                        ?>
+                    >Permanent</option>
                     </select>
                 </div>
 

@@ -6,33 +6,36 @@ $baseQuery = "
     SELECT 
         l.userID,
         l.username,
-        l.role,
+        CASE
+            WHEN l.role = 'jobSeeker' THEN 'Job Seeker'
+            WHEN l.role = 'employer' THEN 'Employer'
+            ELSE 'Unknown'
+        END AS role,
         CASE
             WHEN l.role = 'jobSeeker' THEN js.fullName
             WHEN l.role = 'employer' THEN emp.fullName
             ELSE 'Unknown'
         END AS fullName,
         CASE
+            WHEN l.role = 'jobSeeker' THEN js.accountStatus
+            WHEN l.role = 'employer' THEN emp.accountStatus
+            ELSE 'Active'
+        END AS accountStatus,
+        CASE
             WHEN l.role = 'jobSeeker' THEN js.warningHistory
             WHEN l.role = 'employer' THEN emp.warningHistory
             ELSE 0
         END AS warningFrequency,
-        l.email,
         CASE
-            WHEN l.role = 'jobSeeker' THEN js.contactNo
-            WHEN l.role = 'employer' THEN emp.contactNo
-            ELSE 'N/A'
-        END AS contactNo,
-        ai.issueID,
-        ai.issueDate,
-        ai.suspendReason,
-        ai.suspendDuration
+            WHEN l.role = 'jobSeeker' THEN js.suspensionEndDate
+            WHEN l.role = 'employer' THEN emp.suspensionEndDate
+            ELSE NULL
+        END AS suspensionEndDate
     FROM login l
     LEFT JOIN jobSeeker js ON l.userID = js.userID
     LEFT JOIN employer emp ON l.userID = emp.userID
-    LEFT JOIN accountIssue ai ON l.userID = ai.accountIssueID
     WHERE 
-        (js.warningHistory >= 10 OR emp.warningHistory >= 10)
+        (js.warningHistory >= 1 OR emp.warningHistory >= 1)
 ";
 
 $result = $result_count = null;
@@ -57,6 +60,9 @@ if (isset($_GET['search'])) {
         case 'role':
             $searchQuery .= " AND l.role = '$search_value'";
             break;
+        case 'accountStatus':
+            $searchQuery .= " AND (js.accountStatus LIKE '%$search_value%' OR emp.accountStatus LIKE '%$search_value%')";
+            break;
     }
 
     $searchQuery .= " ORDER BY 
@@ -79,8 +85,38 @@ if (!$result) {
     error_log("Database Query Failed: " . mysqli_error($con));
     die("An error occurred while fetching data.");
 }
-?>
 
+function reactivateExpiredAccounts($con) {
+    date_default_timezone_set('Asia/Kuala_Lumpur');
+    $currentDateTime = date('Y-m-d H:i:s');
+    
+    $employerQuery = "
+        UPDATE employer e
+        SET 
+            e.accountStatus = 'Inactive', 
+            e.suspensionEndDate = NULL
+        WHERE 
+            (e.accountStatus IN ('Suspended-Temporary-6M', 'Suspended-Temporary-2Y', 'Suspended-Temporary-5Y'))
+            AND e.suspensionEndDate IS NOT NULL 
+            AND e.suspensionEndDate <= '$currentDateTime'
+    ";
+    $employerResult = mysqli_query($con, $employerQuery);
+
+    $jobseekerQuery = "
+        UPDATE jobseeker js
+        SET 
+            js.accountStatus = 'Inactive', 
+            js.suspensionEndDate = NULL
+        WHERE 
+            (js.accountStatus IN ('Suspended-Temporary-6M', 'Suspended-Temporary-2Y', 'Suspended-Temporary-5Y'))
+            AND js.suspensionEndDate IS NOT NULL 
+            AND js.suspensionEndDate <= '$currentDateTime'
+    ";
+    $jobseekerResult = mysqli_query($con, $jobseekerQuery);
+
+}
+$reactivationResults = reactivateExpiredAccounts($con);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,6 +161,7 @@ if (!$result) {
             font-weight: bold;
             text-decoration: none;
             background-color: black;
+            margin-right: 5px;
         }
         .search-btn:hover, .reset-btn:hover{
             color: black;
@@ -161,12 +198,18 @@ if (!$result) {
             background-color: #000000;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 9px 16px;
             text-decoration: none;
             display: inline-block;
             border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
+        }
+        .search-btn {
+            margin-left: 5px;
+        }
+        .view-btn {
+            margin: 0px 5px;
         }
         .view-btn:hover {
             background-color: #AAE1DE;
@@ -180,7 +223,7 @@ if (!$result) {
 </head>
 <body>
     <div class="container">
-        <h1 class="htitle">Accounts with High Warning Frequencies</h1>
+        <h1 class="htitle">Reported Account with Issues</h1>
         <form class="search-form" action="accountIssueList.php" method="GET">
             <select name="search_criteria" class="search-criteria" required>
                 <option value="" disabled selected hidden>- Select Option -</option>
@@ -188,6 +231,7 @@ if (!$result) {
                 <option value="username">Username</option>
                 <option value="fullName">Account User</option>
                 <option value="role">Role</option>
+                <option value="accountStatus">Account Status</option>
             </select>
             <input class="search-input" type="text" name="search_value" required> 
             <input class="search-btn" type="submit" name="search" id="search" value="Search"/>
@@ -202,6 +246,7 @@ if (!$result) {
                         <th>Account User's Name</th>
                         <th>Role</th>
                         <th>Warning Frequency</th>
+                        <th>Account Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -216,6 +261,17 @@ if (!$result) {
                             <td><?= htmlspecialchars($row['role']) ?></td>
                             <td class="warning-high"><?= htmlspecialchars($row['warningFrequency']) ?></td>
                             <td>
+                                <?php $statusColor = '';
+                                if ($row['accountStatus'] == 'Active') {
+                                    $statusColor = '#44bb44';
+                                } else if ($row['accountStatus'] == 'Inactive') {
+                                    $statusColor = '#757575';
+                                } else if ($row['accountStatus'] == 'Suspended-Temporary-6M' || $row['accountStatus'] == 'Suspended-Temporary-2Y' || $row['accountStatus'] == 'Suspended-Temporary-5Y' || $row['accountStatus'] == 'Suspended-Permanently') {
+                                    $statusColor = 'red';
+                                }?>
+                                <span style="color: <?php echo $statusColor; ?>;"><?PHP echo $row['accountStatus'];?></span>
+                            </td>
+                            <td>
                                 <button 
                                     class="view-btn" 
                                     onclick="viewProfile('<?= htmlspecialchars($row['userID']) ?>', '<?= htmlspecialchars($row['role']) ?>')">
@@ -228,7 +284,7 @@ if (!$result) {
             </table>
         <?php else: ?>
             <tr>
-                <td colspan="6" style="padding: 16px;">No accounts with high warning frequencies found.</td>
+                <td colspan="7" style="padding: 16px;">No accounts found.</td>
             </tr>
         <?php endif; ?>
     </div>
@@ -255,10 +311,10 @@ function viewProfile(userID, role) {
 
     let profileURL;
     switch (role) {
-        case 'jobSeeker':
+        case 'Job Seeker':
             profileURL = `view_jobseeker_profile.php?userID=${encodeURIComponent(userID)}`;
             break;
-        case 'employer':
+        case 'Employer':
             profileURL = `view_employer_profile.php?userID=${encodeURIComponent(userID)}`;
             break;
         default:
@@ -275,6 +331,5 @@ function viewProfile(userID, role) {
 </html>
 
 <?php
-// Close database connection
 mysqli_close($con);
 ?>

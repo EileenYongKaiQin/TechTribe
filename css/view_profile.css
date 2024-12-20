@@ -49,7 +49,7 @@ html {
   --xs-fs: 1.2rem;
 
   /* =====>>  Margin  <<===== */
-  --m-2-5: 2.5rem;
+  --m-2-4: 2.4rem;
   --m-1-8: 1.8rem;
   --m-1-5: 1.5rem;
   --m-0-8: 0.8rem;
@@ -118,7 +118,7 @@ html {
 
 .timeline_about {
   grid-area: timeline_about;
-  min-height: 45vh;
+  min-height: 50vh;
 }
 
 /* ===== =====>>  Container Cards Css  <<===== =====  */
@@ -286,18 +286,25 @@ html {
   margin-bottom: var(--m-0-6);
 }
 
-.userDetails .basic-info .employer-info li{
+.userDetails .basic-info .employer-info li,
+.userDetails .basic-info .jobseeker-info li {
   display: flex;
 }
 
-.userDetails .basic-info .employer-info h1{
-  min-width: 12rem;
+.userDetails .basic-info .employer-info h1 {
+  min-width: 10rem;
   font-size: var(--s-fs);
   color: var(--f4-color);
   font-weight: 600;
 }
 
-.userDetails .basic-info p,
+.userDetails .basic-info .jobseeker-info h1{
+  min-width: 6.5rem;
+  font-size: var(--s-fs);
+  color: var(--f4-color);
+  font-weight: 600;
+}
+
 .userDetails .basic-info ul li span {
   font-size: var(--s-fs);
   color: var(--f4-color);
@@ -316,7 +323,7 @@ html {
 }
 
 .userDetails .btns ul li {
-  margin-right: var(--m-2-5);
+  margin-right: var(--m-1-8);
   border-radius: 0.5rem;
 }
 
@@ -538,7 +545,7 @@ input[type='radio'] {
     overflow-x: hidden;
     overflow-y: inherit;
     padding: 0;
-    width: 90%;
+    width: 85%;
     height: 100%;
     box-shadow: none;
   }
@@ -570,4 +577,3 @@ input[type='radio'] {
     animation: none;
   }
 }
-
