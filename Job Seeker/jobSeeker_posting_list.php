@@ -37,6 +37,19 @@
             padding: 20px;
         }
 
+        .job-header {
+            width: 100%; 
+            overflow: hidden; 
+        }
+
+        .job-title {
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            display: block; 
+            max-width: 310px; 
+        }
+
         .rectangle {
             background: #FFFFFF;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
@@ -197,7 +210,7 @@
                 </div>
 
                 <div class="job-header">
-                    <h3><?php echo htmlspecialchars($job['jobTitle']); ?></h3>
+                    <h3 class="job-title"><?php echo htmlspecialchars($job['jobTitle']); ?></h3>
                 </div>
                 <div class="job-details">
                     <!-- Working Hours -->
