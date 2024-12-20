@@ -613,8 +613,8 @@ button:hover {
     padding: 10px;
     position: absolute;
     z-index: 10;
-    left: 75%;
-    top: 135%;
+    left: 100%;
+    top: -15px;
 }
 .filter-container input {
     margin-top: 5px;
@@ -724,6 +724,7 @@ button:hover {
                             <input type="date" id="filterDate">
                             <button onclick="applyDateFilter()">Apply</button>
                         </div>
+                        <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
                     </div>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
@@ -834,16 +835,18 @@ document.addEventListener("click", function (event) {
     fetch(`../database/filter_chat.php?date=${encodeURIComponent(selectedDate)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
         .then(response => response.json())
         .then(data => {
-            const chatSection = document.getElementById("chatSection");
-            chatSection.innerHTML = ""; // Clear current chat display
+            const searchResults = document.getElementById("searchResults");
+            searchResults.innerHTML = ""; // Clear current search results display
+            searchResults.style.display = "none"; // Hide search results by default
 
             if (data.status === "error") {
                 alert(data.message); // Show error message
+                return; // Exit early on error
             } else if (data.status === "nextAvailableDate") {
                 alert(`No chat history found for ${selectedDate}. Showing history for ${data.nextDate}.`);
             }
 
-            // Populate the chat section with filtered messages
+            // Populate the search results with filtered messages
             if (data.messages && data.messages.length > 0) {
                 data.messages.forEach(message => {
                     const messageDiv = document.createElement("div");
@@ -854,8 +857,9 @@ document.addEventListener("click", function (event) {
                         </div>
                         <div class="message-body">${message.messageContents}</div>
                     `;
-                    chatSection.appendChild(messageDiv);
+                    searchResults.appendChild(messageDiv);
                 });
+                searchResults.style.display = "block"; // Show search results if there are messages
             }
         })
         .catch(error => console.error("Error filtering chat history:", error));
