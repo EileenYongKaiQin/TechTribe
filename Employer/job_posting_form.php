@@ -96,7 +96,6 @@
             }
         }
     }
-    
     ?>
 
     <div class="content">
@@ -230,7 +229,7 @@
         if (startDate) {
             const start = new Date(startDate);
             const minEndDate = new Date(start);
-            minEndDate.setDate(minEndDate.getDate() + 1);
+            minEndDate.setDate(minEndDate.getDate());
 
             // Set end date's minimum value
             const year = minEndDate.getFullYear();
@@ -267,7 +266,6 @@
             endTimeInputField.value = maxEndTimeStr;
         }
     }
-
     </script>
 </body>
 </html>

@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-        font-family: 'Arial', sans-serif;
-        font-weight: 500;
-        background-color: #F0FDFF;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: row;
+            font-family: 'Arial', sans-serif;
+            font-weight: 500;
+            background-color: #F0FDFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
         }
 
         .container {
@@ -41,7 +41,6 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
-            
         }
 
         thead {
@@ -125,10 +124,16 @@
         include('../database/config.php');
         include('employer1.php');
 
-        
-        // Fetch all job postings
-        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, venue, language, race, workingTimeStart, workingTimeEnd, createTime FROM jobPost";
-        $result = mysqli_query($con, $sql);
+        $userID = $_SESSION['userID']; // Ensure userID is stored in session upon login
+
+        // Fetch job postings specific to the logged-in user
+        $sql = "SELECT jobPostID, jobTitle, workingHour, location, salary, startDate, endDate, venue, language, race, workingTimeStart, workingTimeEnd, createTime 
+                FROM jobPost 
+                WHERE userID = ?";
+        $stmt = mysqli_prepare($con, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $userID);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         if (mysqli_num_rows($result) > 0) {
             echo '<div class="container mt-5">';
@@ -182,10 +187,9 @@
         } else {
             echo '<div class="content"><p>No job postings found.</p></div>';
         }
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
     ?>
 </body>
 </html>
-
-<?php
-mysqli_close($con);
-?>
