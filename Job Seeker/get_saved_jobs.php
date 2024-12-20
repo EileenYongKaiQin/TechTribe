@@ -16,8 +16,8 @@ try {
     // Query the savedJob table to get the jobPostID saved by the user
     $placeholders = implode(",", array_fill(0, count($jobPostIDs), "?"));
     $stmt = $con->prepare("SELECT jobPostID FROM savedJob WHERE userID = ? AND jobPostID IN ($placeholders)");
-    $types = str_repeat("s", count($jobPostIDs) + 1); // 绑定参数类型
-    $params = array_merge([$userID], $jobPostIDs); // 合并参数
+    $types = str_repeat("s", count($jobPostIDs) + 1);
+    $params = array_merge([$userID], $jobPostIDs);
     $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $result = $stmt->get_result();
