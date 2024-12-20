@@ -3,21 +3,6 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `flexmatch_db`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wallpost`
---
-
 CREATE TABLE `wallpost` (
   `postID` varchar(10) NOT NULL,
   `skillCategory` varchar(255) NOT NULL,
@@ -29,10 +14,6 @@ CREATE TABLE `wallpost` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
   `userID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `wallpost`
---
 
 INSERT INTO `wallpost` (`postID`, `skillCategory`, `skillDetails`, `availableTime`, `state`, `district`, `jobPreferences`, `createdAt`, `userID`) VALUES
 ('WP0001', 'Customer Service', 'Provide customer support through phone and email', '{\"Monday\":[\"09:00\",\"17:00\"],\"Tuesday\":[\"09:00\",\"17:00\"],\"Wednesday\":[\"09:00\",\"17:00\"],\"Thursday\":[\"09:00\",\"17:00\"],\"Friday\":[\"09:00\",\"17:00\"],\"Saturday\":[\"10:00\",\"14:00\"],\"Sunday\":[\"00:00\",\"00:00\"]}', 'Sarawak', 'Kuching', 'Full-time', '2024-11-26 01:00:00', 'JS001'),
@@ -57,18 +38,8 @@ INSERT INTO `wallpost` (`postID`, `skillCategory`, `skillDetails`, `availableTim
 ('WP0020', 'Photography', 'Portrait and product photography', '{\"Friday\":[\"08:00\",\"12:00\"],\"Saturday\":[\"08:00\",\"12:00\"]}', 'Pahang', 'Kuantan', 'Freelance', '2024-11-26 20:30:00', 'JS002'),
 ('WP0021', 'Customer Service', 'Support via phone and chat Support via phone and chat Support via phone and chat Support via phone ', '{\"Monday\":[\"09:00\",\"17:00\"],\"Tuesday\":[\"09:00\",\"17:00\"],\"Wednesday\":[\"\",\"\"],\"Thursday\":[\"\",\"\"],\"Friday\":[\"\",\"\"],\"Saturday\":[\"\",\"\"],\"Sunday\":[\"\",\"\"]}', 'Sarawak', 'Miri', 'Full-time', '2024-11-26 21:00:00', 'JS001');
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `wallpost`
---
 ALTER TABLE `wallpost`
   ADD PRIMARY KEY (`postID`),
   ADD KEY `userID` (`userID`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
