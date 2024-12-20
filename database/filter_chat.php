@@ -21,7 +21,11 @@ if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
 $sql = "
     SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
     FROM message
-    WHERE DATE(timestamp) = ? AND ((userID = ? AND senderRole = 'employer' AND jobSeekerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND jobSeekerID = ?))
+    WHERE DATE(timestamp) = ? 
+      AND (
+          (userID = ? AND jobSeekerID = ?) 
+          OR (jobSeekerID = ? AND userID = ?)
+      )
     ORDER BY timestamp ASC
 ";
 $stmt = $con->prepare($sql);
@@ -62,11 +66,15 @@ if ($result->num_rows > 0) {
 
         // Fetch messages for the next available date
         $nextMessagesQuery = "
-            SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
-            FROM message
-            WHERE DATE(timestamp) = ? AND ((userID = ? AND senderRole = 'employer' AND jobSeekerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND jobSeekerID = ?))
-            ORDER BY timestamp ASC
-        ";
+        SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
+        FROM message
+        WHERE DATE(timestamp) = ? 
+          AND (
+              (userID = ? AND jobSeekerID = ?) 
+              OR (jobSeekerID = ? AND userID = ?)
+          )
+        ORDER BY timestamp ASC
+    ";
         $nextMessagesStmt = $con->prepare($nextMessagesQuery);
         $nextMessagesStmt->bind_param("sssss", $nextDate, $userID, $jobSeekerID, $jobSeekerID, $userID);
         $nextMessagesStmt->execute();

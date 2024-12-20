@@ -823,7 +823,7 @@ document.addEventListener("click", function (event) {
     function applyDateFilter() {
     const selectedDate = document.getElementById("filterDate").value;
     const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Get jobSeekerID from PHP
-    const userID = "<?php echo $_SESSION['userID']; ?>"; // Get userID from PHP
+    const userID = "<?php echo htmlspecialchars($userID); ?>"; // Get userID from PHP
 
     if (!selectedDate) {
         alert("Please select a date to filter.");
