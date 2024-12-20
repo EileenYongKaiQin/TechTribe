@@ -613,8 +613,8 @@ button:hover {
     padding: 10px;
     position: absolute;
     z-index: 10;
-    left: 100%;
-    top: -15px;
+    left: 75%;
+    top: 45px;
 }
 .filter-container input {
     margin-top: 5px;
@@ -857,6 +857,18 @@ document.addEventListener("click", function (event) {
                         </div>
                         <div class="message-body">${message.messageContents}</div>
                     `;
+                    
+                    // Set a click event listener to scroll to the specific message in the chat section
+                    messageDiv.addEventListener("click", () => {
+                        const chatMessage = document.getElementById(`message-${message.id}`);
+                        if (chatMessage) {
+                            chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+                        } else {
+                            console.log(`Message with ID: message-${message.id} not found`); // Debugging line
+                            alert("Message not found in chat section.");
+                        }
+                    });
+
                     searchResults.appendChild(messageDiv);
                 });
                 searchResults.style.display = "block"; // Show search results if there are messages
@@ -864,6 +876,7 @@ document.addEventListener("click", function (event) {
         })
         .catch(error => console.error("Error filtering chat history:", error));
 }
+
 
 
     function searchChat() {

@@ -118,7 +118,12 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
 
     const messageElement = document.createElement("div");
     messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
-    
+
+    // Set a unique ID for the message element based on messageID
+    if (messageID) {
+        messageElement.id = `message-${messageID}`; // Unique ID for each message
+    }
+
     messageElement.innerText = messageContents;
 
     // Set the alignment based on the sender's role
@@ -155,7 +160,10 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
 
     chatSection.appendChild(messageElement);
     chatSection.scrollTop = chatSection.scrollHeight;
+
+    console.log(`Added message with ID: ${messageID}`); // Debugging line
 }
+
 
 
 function addDateSeparator(date) {
