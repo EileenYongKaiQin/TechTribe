@@ -21,7 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal</title>
-    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <link rel="shortcut icoAn" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../css/view_job.css">
     <style>
         body {
@@ -104,6 +104,52 @@
             border-top: 1px solid #dcdcdc; 
             margin: 0px 0; 
         }
+
+        .search-input {
+            border: none;
+            outline: none; 
+        }
+
+        
+        .search-btn {
+            background-color:rgb(211, 211, 211);
+        }
+        .clear-icon {
+            margin-top: 30px;
+            margin-right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 25px;
+            color: #767F8C;
+            display: none;
+        }
+
+        .search-bar:hover {
+            background-color: #F7F7F7;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: #AAE1DE;
+            color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease; 
+            cursor: pointer;
+        }
+
+        .clear-icon:hover {
+            color: #AAE1DE;
+
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus + .clear-icon,
+        .search-input:not(:placeholder-shown) + .clear-icon {
+            display: inline; 
+        }
+
     </style>
 </head>
 <body>
@@ -114,11 +160,13 @@
     <div class="search-bar-container">
         <div class="search-bar">
             <img src="../images/Search.png" alt="Search Icon" class="search-icon" />
-            <input type="text" class="search-input" placeholder="Enter job title" />
+            <input type="text" name="jobTitle" class="search-input" placeholder="Enter job title" />
+            <span class="clear-icon" onclick="clearSearch('jobTitle')">×</span>
             <span class="divider"></span>
             <img src="../images/location.png" alt="Location Icon" class="search-icon" />
-            <input type="text" class="search-input" placeholder="Enter location" />
-            <button class="search-btn">Search</button>
+            <input type="text" name="location" class="search-input" placeholder="Enter location" />
+            <span class="clear-icon" onclick="clearSearch('location')">×</span>
+            <button type="submit" class="search-btn">Search</button>
         </div>
         <button class="filter-btn">Filter <span class="dropdown-icon">▼</span></button>
     </div>
@@ -265,17 +313,18 @@
             fetch("get_saved_jobs.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ jobPostIDs, userID }), 
+                body: JSON.stringify({ jobPostIDs, userID }),
             })
+
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const savedJobs = data.savedJobs; 
+                    const savedJobs = data.savedJobs;
                     jobCards.forEach(card => {
                         const jobPostID = card.getAttribute("data-id");
                         const iconElement = card.querySelector(".bookmark-icon");
                         iconElement.src = savedJobs.includes(jobPostID)
-                            ? "../images/Saved.png" 
+                            ? "../images/Saved.png"
                             : "../images/BookmarkSimple.png";
                     });
                 } else {
@@ -283,37 +332,152 @@
                 }
             })
             .catch(error => console.error("Error:", error));
+
+            // Handle 'Enter' keypress in search inputs
+            const searchInputs = document.querySelectorAll('.search-input');
+            searchInputs.forEach(input => {
+                input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        document.querySelector('.search-btn').click(); 
+                    }
+                });
+            });
         });
+
 
         //Save or unsave function
         function saveJob(jobPostID, iconElement) {
-        // Determine the current state: Saved (saved) or BookmarkSimple (unsaved)
-        const isSaved = iconElement.src.includes("Saved.png");
+            // Determine the current state: Saved (saved) or BookmarkSimple (unsaved)
+            const isSaved = iconElement.src.includes("Saved.png");
 
-        // Set the request URL and updated icon
-        const url = isSaved ? "unsave_job.php" : "save_job.php";
-        const newIcon = isSaved ? "../images/BookmarkSimple.png" : "../images/Saved.png";
+            // Set the request URL and updated icon
+            const url = isSaved ? "unsave_job.php" : "save_job.php";
+            const newIcon = isSaved ? "../images/BookmarkSimple.png" : "../images/Saved.png";
 
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ jobPostID, userID }),
-        })
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jobPostID, userID }),
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update icon status
                     iconElement.src = newIcon;
-                } else {
-                    
-                }
+                } else { }
             })
             .catch(error => {
                 console.error("Error:", error);
                 showNotification("Error occurred while processing the request.");
             });
-    }
+        }
 
-</script>
+        function clearSearch(inputName) {
+            const input = document.querySelector(`input[name="${inputName}"]`);
+            if (input) {
+                input.value = '';
+                input.focus(); 
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInputs = document.querySelectorAll('.search-input');
+
+            // press enter to search
+            searchInputs.forEach(input => {
+                input.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        document.querySelector('.search-btn').click();
+                    }
+                });
+            });
+
+            // fetch search results dynamically and update the DOM
+            document.querySelector('.search-btn').addEventListener('click', function () {
+                const jobTitle = document.querySelector('input[name="jobTitle"]').value.trim();
+                const location = document.querySelector('input[name="location"]').value.trim();
+
+                fetch('search_jobs.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jobTitle, location })
+                })
+                .then(response => response.json())
+                .then(jobs => {
+                    const rectangle = document.querySelector('.rectangle');
+                    rectangle.innerHTML = '';   // Clear existing job cards
+
+                    if (jobs.length === 0) {
+                        rectangle.innerHTML = "<p class='no-jobs-container'>No jobs found.</p>";
+                        return;
+                    }
+
+                    const jobPostIDs = jobs.map(job => job.jobPostID);
+
+                    fetch('get_saved_jobs.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ jobPostIDs, userID })
+                    })
+                    .then(response => response.json())
+                    .then(savedData => {
+                        if (!savedData.success) {
+                            console.error('Error fetching saved jobs:', savedData.error);
+                            return;
+                        }
+
+                        const savedJobs = savedData.savedJobs;
+
+                        jobs.forEach(job => {
+                            const jobCard = document.createElement('div');
+                            jobCard.classList.add('job-card');
+                            jobCard.dataset.id = job.jobPostID;
+
+                            const isSaved = savedJobs.includes(job.jobPostID);
+
+                            jobCard.innerHTML = `
+                                <div class="top-right-icons">
+                                    <img src="../images/${isSaved ? 'Saved.png' : 'BookmarkSimple.png'}" alt="Bookmark" class="bookmark-icon ${isSaved ? 'saved' : ''}" onclick="saveJob('${job.jobPostID}', this)">
+                                    <img src="../images/more_vert.png" alt="More Options" class="more-options-icon" onclick="toggleDropdown(this)">
+                                    <div class="dropdown-menu">
+                                        <div class="dropdown-item" onclick="navigateToReport('${job.jobPostID}')">
+                                            <img src="../images/sms_failed.png" alt="Report Icon">
+                                            <span>Report Post</span>
+                                        </div>
+                                        <div class="dropdown-item" onclick="hidePost(this)">
+                                            <img src="../images/cancel_presentation.png" alt="Hide Icon">
+                                            <span>Hide Post</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="job-header">
+                                    <h3>${job.jobTitle}</h3>
+                                </div>
+                                <div class="job-details">
+                                    <p class="time">
+                                        <span class="time-label ${job.workingHour === 'Day Shift' ? 'day' : 'night'}">
+                                            ${job.workingHour}
+                                        </span>
+                                        ${job.workingTimeStart} - ${job.workingTimeEnd}
+                                    </p>
+                                    <p class="date">${job.startDate} - ${job.endDate}</p>
+                                    <p class="location"><img src="../images/MapPin.png" alt="Location Icon" class="map-pin"> ${job.venue}, ${job.location}</p>
+                                    <div class="salary-line"></div>
+                                    <p class="salary">Salary: RM ${parseFloat(job.salary).toFixed(2)} / hour</p>
+                                    <div class="job-details-buttons">
+                                        <button class="view-details-btn" onclick="location.href='manageJob.php?jobPostID=${job.jobPostID}'">View Details</button>
+                                    </div>
+                                </div>
+                            `;
+                            rectangle.appendChild(jobCard);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching saved jobs:', error));
+                })
+                .catch(error => console.error('Error fetching jobs:', error));
+            });
+        });
+    </script>
 </body>
 </html>
