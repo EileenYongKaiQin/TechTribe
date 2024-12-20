@@ -2,12 +2,14 @@
 session_start();
 include '../database/config.php';
 
-if (!isset($_GET['date'])) {
-    echo json_encode(['status' => 'error', 'message' => 'No date provided']);
+if (!isset($_GET['date'], $_GET['jobSeekerID'], $_GET['userID'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Required parameters missing']);
     exit;
 }
 
 $date = $_GET['date'];
+$jobSeekerID = $_GET['jobSeekerID'];
+$userID = $_GET['userID'];
 
 // Validate date format
 if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
@@ -15,15 +17,15 @@ if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
     exit;
 }
 
-// Query to fetch messages for the given date
+// Query to fetch messages for the given date, userID, and jobSeekerID
 $sql = "
     SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
     FROM message
-    WHERE DATE(timestamp) = ?
+    WHERE DATE(timestamp) = ? AND ((userID = ? AND senderRole = 'employer' AND jobSeekerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND jobSeekerID = ?))
     ORDER BY timestamp ASC
 ";
 $stmt = $con->prepare($sql);
-$stmt->bind_param("s", $date);
+$stmt->bind_param("sssss", $date, $userID, $jobSeekerID, $jobSeekerID, $userID);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -45,12 +47,12 @@ if ($result->num_rows > 0) {
     $nextDateQuery = "
         SELECT DATE(timestamp) AS nextDate
         FROM message
-        WHERE DATE(timestamp) > ?
+        WHERE DATE(timestamp) > ? AND ((userID = ? AND senderRole = 'employer' AND jobSeekerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND jobSeekerID = ?))
         ORDER BY DATE(timestamp) ASC
         LIMIT 1
     ";
     $nextDateStmt = $con->prepare($nextDateQuery);
-    $nextDateStmt->bind_param("s", $date);
+    $nextDateStmt->bind_param("sssss", $date, $userID, $jobSeekerID, $jobSeekerID, $userID);
     $nextDateStmt->execute();
     $nextDateResult = $nextDateStmt->get_result();
 
@@ -62,11 +64,11 @@ if ($result->num_rows > 0) {
         $nextMessagesQuery = "
             SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
             FROM message
-            WHERE DATE(timestamp) = ?
+            WHERE DATE(timestamp) = ? AND ((userID = ? AND senderRole = 'employer' AND jobSeekerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND jobSeekerID = ?))
             ORDER BY timestamp ASC
         ";
         $nextMessagesStmt = $con->prepare($nextMessagesQuery);
-        $nextMessagesStmt->bind_param("s", $nextDate);
+        $nextMessagesStmt->bind_param("sssss", $nextDate, $userID, $jobSeekerID, $jobSeekerID, $userID);
         $nextMessagesStmt->execute();
         $nextMessagesResult = $nextMessagesStmt->get_result();
 
@@ -94,4 +96,5 @@ if ($result->num_rows > 0) {
 
 $stmt->close();
 $con->close();
+
 ?>

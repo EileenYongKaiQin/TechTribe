@@ -821,44 +821,46 @@ document.addEventListener("click", function (event) {
     });
 
     function applyDateFilter() {
-        const selectedDate = document.getElementById("filterDate").value;
+    const selectedDate = document.getElementById("filterDate").value;
+    const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Get jobSeekerID from PHP
+    const userID = "<?php echo $_SESSION['userID']; ?>"; // Get userID from PHP
 
-        if (!selectedDate) {
-            alert("Please select a date to filter.");
-            return;
-        }
-
-        // Make an AJAX request to filter chats by the selected date
-        fetch(`../database/filter_chat.php?date=${encodeURIComponent(selectedDate)}`)
-            .then(response => response.json())
-            .then(data => {
-                const chatSection = document.getElementById("chatSection");
-                chatSection.innerHTML = ""; // Clear current chat display
-
-                if (data.status === "error") {
-                    alert(data.message); // Show error message
-                } else if (data.status === "nextAvailableDate") {
-                    alert(`No chat history found for ${selectedDate}. Showing history for ${data.nextDate}.`);
-                }
-
-                // Populate the chat section with filtered messages
-                if (data.messages && data.messages.length > 0) {
-                    data.messages.forEach(message => {
-                        const messageDiv = document.createElement("div");
-                        messageDiv.className = "message"; // Apply your message styling
-                        messageDiv.innerHTML = `
-                            <div class="message-header">
-                              
-                                <span>${message.formatted_date}</span>
-                            </div>
-                            <div class="message-body">${message.messageContents}</div>
-                        `;
-                        chatSection.appendChild(messageDiv);
-                    });
-                }
-            })
-            .catch(error => console.error("Error filtering chat history:", error));
+    if (!selectedDate) {
+        alert("Please select a date to filter.");
+        return;
     }
+
+    // Make an AJAX request to filter chats by the selected date
+    fetch(`../database/filter_chat.php?date=${encodeURIComponent(selectedDate)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatSection = document.getElementById("chatSection");
+            chatSection.innerHTML = ""; // Clear current chat display
+
+            if (data.status === "error") {
+                alert(data.message); // Show error message
+            } else if (data.status === "nextAvailableDate") {
+                alert(`No chat history found for ${selectedDate}. Showing history for ${data.nextDate}.`);
+            }
+
+            // Populate the chat section with filtered messages
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(message => {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.className = "message"; // Apply your message styling
+                    messageDiv.innerHTML = `
+                        <div class="message-header">
+                            <span>${message.formatted_date}</span>
+                        </div>
+                        <div class="message-body">${message.messageContents}</div>
+                    `;
+                    chatSection.appendChild(messageDiv);
+                });
+            }
+        })
+        .catch(error => console.error("Error filtering chat history:", error));
+}
+
 
     function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
