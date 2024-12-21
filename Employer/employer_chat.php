@@ -368,7 +368,7 @@ button:hover {
     width: 20px; /* Set the size of the icon */
     height: 20px; /* Set the size of the icon */
     margin-right: 10px; /* Space between the icon and input */
-    margin-left: 320px; 
+    margin-left: 310px; 
     margin-top: 0px; /* Adjust this value to move the icon down */
     vertical-align: middle; /* Align the icon vertically with the input */
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -615,11 +615,22 @@ button:hover {
     z-index: 10;
     left: 75%;
     top: 45px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
 }
+
+.filter-container:hover {
+    transform: scale(1.02); /* Slightly increase the button size */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
 .filter-container input {
     margin-top: 5px;
     padding: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
+
 }
+
 .filter-container button {
     margin-top: 10px;
     padding: 5px 10px;
@@ -627,9 +638,15 @@ button:hover {
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 8px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.3s ease; 
 }
+
 .filter-container button:hover {
     background-color: #45a049;
+    transform: scale(1.05); /* Slightly increase the button size */
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
 }
 
 .message-body b {
@@ -646,26 +663,39 @@ button:hover {
     width: calc(60% - 40px); /* Adjust based on your layout */
     max-height: 300px; /* Scrollable area */
     overflow-y: auto;
-    z-index: 1000;
-    margin-top: 10px;
-    padding: 10px;
+    z-index: 1000; 
     display: none;
     border-radius: 15px;
+    top: 43px;
     right: 0px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.3s ease; 
 }
+
+.search-results:hover {
+    transform: scale(1.02); 
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
 .search-results .message {
-    margin-bottom: 10px;
     padding: 5px;
-    border-bottom: 2px solid grey;
+    border-bottom: 0.5px solid grey;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+
 }
 .search-results .message:last-child {
     border-bottom: none;
 }
 
+.search-results .message:hover {
+    background-color: #efefef;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+
+}
+
 .clear-icon {
     color: gray; /* Change color as needed */
-    font-size: 25px; /* Adjust size as needed */
-
+    font-size: 30px; /* Adjust size as needed */
     width: 20px; /* Set the size of the icon */
     height: 20px; /* Set the size of the icon */
     margin-right: 10px; /* Space between the icon and input */
@@ -676,6 +706,9 @@ button:hover {
     cursor: pointer;
 }
 
+.clear-icon:hover {
+    transform: scale(1.1);
+}
 
 /* Style for the message container */
 .message-header {
@@ -690,19 +723,20 @@ button:hover {
 .message-body {
     font-size: 16px; /* Slightly larger for better readability */
     color: #333; /* Darker text for contrast */
-    background-color: #f9f9f9; /* Light background for body text */
     padding: 10px; /* Add some padding inside the body */
     border-radius: 5px; /* Rounded corners for modern look */
     margin: 5px 0; /* Spacing between messages */
     word-wrap: break-word; /* Prevent long words or URLs from overflowing */
     white-space: pre-wrap; /* Preserve line breaks in text */
     text-align: left; /* Align date to the right */
-
+    
 }
 
 .highlight-message {
-    background-color: yellow;
-    transition: background-color 0.5s ease;
+    transform: scale(1.02);
+    background-color: #efefef;
+    transition: background-color 0.3s ease;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
 }
 
 </style>
@@ -719,7 +753,7 @@ button:hover {
                     <img src="../images/down-arrow.png" alt="Toggle Dropdown" class="arrow-icon" onclick="toggleDropdown()">
                     <div class="search-container">
                         <img src="../images/Search.png" alt="Search" class="search-icon" onclick="searchChat()">
-                        <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..."  oninput="toggleClearButton()">
+                        <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..." oninput="toggleClearButton()" onkeydown="checkEnter(event)">
                         <span id="clearSearch" class="clear-icon" onclick="clearSearch()" style="display: none;">&times;</span>
                         <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
                         <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
@@ -825,6 +859,12 @@ document.addEventListener("click", function (event) {
         }
     });
 
+    function checkEnter(event) {
+    if (event.key === "Enter") {
+        searchChat();
+    }
+}
+
     function applyDateFilter() {
     const selectedDate = document.getElementById("filterDate").value;
     const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Get jobSeekerID from PHP
@@ -869,7 +909,7 @@ document.addEventListener("click", function (event) {
                             chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
                             // Optionally highlight the message for better visibility
                             chatMessage.classList.add("highlight-message");
-                            setTimeout(() => chatMessage.classList.remove("highlight-message"), 2000);
+                            setTimeout(() => chatMessage.classList.remove("highlight-message"), 1000);
                         } else {
                             alert("Message not found in chat section.");
                         }
@@ -930,7 +970,7 @@ function searchChat() {
                                 chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
                                 // Optionally highlight the message for better visibility
                                 chatMessage.classList.add("highlight-message");
-                                setTimeout(() => chatMessage.classList.remove("highlight-message"), 2000);
+                                setTimeout(() => chatMessage.classList.remove("highlight-message"), 1000);
                             } else {
                                 console.error("Message not found in chat section:", message.id); // Debugging line
                                 alert("Message not found in chat section.");

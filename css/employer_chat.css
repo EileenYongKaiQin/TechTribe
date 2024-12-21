@@ -49,7 +49,7 @@ body {
     border-bottom-left-radius: 15px; /* No rounding for bottom left corner */
     border-bottom-right-radius: 15px; 
     padding: 10px;
-    background-color: #efefef;
+    background-color: #efefef;;
     display: flex; /* Ensure chat section uses flexbox */
     flex-direction: column; /* Stack messages vertically */
     
