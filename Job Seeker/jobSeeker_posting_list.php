@@ -21,7 +21,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal</title>
-    <link rel="shortcut icoAn" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../css/view_job.css">
     <style>
         body {
@@ -162,7 +162,130 @@
         .search-input:not(:placeholder-shown) + .clear-icon {
             display: inline; 
         }
+        
 
+        .filter-btn:hover {
+            background-color: #AAE1DE; /* Hover background color */
+            color: #FFFFFF; /* Hover text color */
+            border-color: #84C5C2; /* Hover border color */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow on hover */
+            border: none; 
+        }
+
+        .filter-btn:active {
+            background-color: #84C5C2; /* Active state background */
+        
+            transform: translateY(0); /* Reset lift effect */
+        }
+
+        /* Filter Panel (Hidden by Default) */
+        .filter-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 335px;
+            height: 100%;
+            background: #F7F7F7;
+            border-left: 1.5px solid #F2F2F2;
+            border-radius: 10px 0 0 10px;
+            padding: 20px;
+            box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(100%); /* Initially hidden */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .filter-panel.visible {
+            transform: translateX(0); /* Slide into view */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .filter-content h3 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: #333333;
+        }
+
+        .filter-content input[type="number"] {
+            width: 48%;
+            padding: 8px;
+            margin-right: 4%;
+            border: 1px solid #CCCCCC;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .filter-content input[type="number"]:last-child {
+            margin-right: 0;
+        }
+
+        /* Salary Range Section */
+        .salary-range-section {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .salary-range-label {
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 14px;
+            color: #303030;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .salary-input-container {
+            display: flex;
+            gap: 12px; /* Space between inputs */
+        }
+
+        .salary-input {
+            box-sizing: border-box;
+            width: 132px;
+            height: 32px;
+            background: #FFFFFF;
+            border: 1px solid #DDE2E4;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+            color: #303030;
+        }
+
+        .salary-input::placeholder {
+            color: #A0A0A0;
+        }
+
+        .checkbox-container label {
+            display: block;
+            margin-bottom: 6px;
+            color: #767F8C;
+        }
+
+        .apply-filter-btn {
+            background: #AAE1DE;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .apply-filter-btn:hover {
+            background: #84C5C2;
+        }
     </style>
 </head>
 <body>
@@ -181,8 +304,49 @@
             <span class="clear-icon" onclick="clearSearch('location')">×</span>
             <button type="submit" class="search-btn">Search</button>
         </div>
-        <button class="filter-btn">Filter <span class="dropdown-icon">▼</span></button>
+        <button class="filter-btn" id="filterBtn">Filter <span class="dropdown-icon">▼</span></button>
+        </div>
+
+<!-- Filter Panel -->
+<div class="filter-panel" id="filterPanel">
+    <div class="filter-content">
+    <div class="salary-range-section">
+    <label class="salary-range-label" for="salary-range">Salary Range</label>
+    <div class="salary-input-container">
+        <input type="number" id="minSalary" class="salary-input" placeholder="Min">
+        <input type="number" id="maxSalary" class="salary-input" placeholder="Max">
     </div>
+</div>
+
+        <hr>
+        <h3>Location</h3>
+        <div class="checkbox-container">
+            <label><input type="checkbox" value="Johor"> Johor</label>
+            <label><input type="checkbox" value="Melaka"> Melaka</label>
+            <label><input type="checkbox" value="Negeri Sembilan"> Negeri Sembilan</label>
+            <label><input type="checkbox" value="Selangor"> Selangor</label>
+            <label><input type="checkbox" value="Kuala Lumpur"> Kuala Lumpur</label>
+            <label><input type="checkbox" value="Pahang"> Pahang</label>
+            <label><input type="checkbox" value="Perak"> Perak</label>
+            <label><input type="checkbox" value="Kelantan"> Kelantan</label>
+            <label><input type="checkbox" value="Terengganu"> Terengganu</label>
+            <label><input type="checkbox" value="Penang"> Penang</label>
+            <label><input type="checkbox" value="Kedah"> Kedah</label>
+            <label><input type="checkbox" value="Perlis"> Perlis</label>
+            <label><input type="checkbox" value="Sabah"> Sabah</label>
+            <label><input type="checkbox" value="Sarawak"> Sarawak</label>
+
+        </div>
+        <hr>
+        <h3>Working Hour</h3>
+        <div class="checkbox-container">
+            <label><input type="checkbox" value="Day Shift"> Day Shift</label>
+            <label><input type="checkbox" value="Night Shift"> Night Shift</label>
+        </div>
+        <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
+    </div>
+</div>
+
 
     <!-- Main Content -->
     <div class="main-content">
@@ -259,238 +423,7 @@
             }
             ?>
         </div>
-    </div>
-
-    <script>
-        function toggleDropdown(element) {
-            const dropdownMenu = element.nextElementSibling;
-            dropdownMenu.classList.toggle('show');
-        }
-
-        function navigateToReport(jobPostID) {
-            window.location.href = `report_form.php?jobPostID=${jobPostID}`;
-        }
-
-        function hidePost(element) {
-            const jobCard = element.closest('.job-card');
-            const jobContainer = jobCard.parentElement;
-
-            const placeholder = document.createElement('div');
-            placeholder.classList.add('job-placeholder');
-            placeholder.dataset.hiddenJobCardId = jobCard.dataset.id;
-
-            placeholder.style.height = `${jobCard.offsetHeight}px`;
-            placeholder.style.width = `${jobCard.offsetWidth}px`;
-            placeholder.style.margin = window.getComputedStyle(jobCard).margin;
-
-            const modal = document.createElement('div');
-            modal.classList.add('hide-post-modal');
-            modal.innerHTML = `
-                <span class="hide-post-text">Hiding posts helps us find the suitable jobs for you</span>
-                <button class="undo-btn" onclick="showPost('${jobCard.dataset.id}')">Undo</button>
-            `;
-            placeholder.appendChild(modal);
-
-            jobCard.style.display = 'none';
-            jobContainer.insertBefore(placeholder, jobCard);
-        }
-
-        function showPost(hiddenJobCardId) {
-            const placeholder = document.querySelector(`.job-placeholder[data-hidden-job-card-id='${hiddenJobCardId}']`);
-
-            if (placeholder) {
-                const jobCard = document.querySelector(`.job-card[data-id='${hiddenJobCardId}']`);
-                if (jobCard) {
-                    jobCard.style.display = 'block';
-                }
-                placeholder.remove();
-            }
-        }
-
-        document.addEventListener('click', function (event) {
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach((dropdown) => {
-                if (!dropdown.contains(event.target) && !event.target.matches('.more-options-icon')) {
-                    dropdown.classList.remove('show');
-                }
-            });
-        });
-
-        // Set the initial icon state when the page loads
-        document.addEventListener("DOMContentLoaded", function () {
-            const jobCards = document.querySelectorAll(".job-card");
-
-            // Collect all jobPostIDs
-            const jobPostIDs = Array.from(jobCards).map(card => card.getAttribute("data-id"));
-
-            fetch("get_saved_jobs.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ jobPostIDs, userID }),
-            })
-
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const savedJobs = data.savedJobs;
-                    jobCards.forEach(card => {
-                        const jobPostID = card.getAttribute("data-id");
-                        const iconElement = card.querySelector(".bookmark-icon");
-                        iconElement.src = savedJobs.includes(jobPostID)
-                            ? "../images/Saved.png"
-                            : "../images/BookmarkSimple.png";
-                    });
-                } else {
-                    console.error("Failed to fetch saved jobs:", data.error);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-
-            // Handle 'Enter' keypress in search inputs
-            const searchInputs = document.querySelectorAll('.search-input');
-            searchInputs.forEach(input => {
-                input.addEventListener('keydown', function (event) {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        document.querySelector('.search-btn').click(); 
-                    }
-                });
-            });
-        });
-
-
-        //Save or unsave function
-        function saveJob(jobPostID, iconElement) {
-            // Determine the current state: Saved (saved) or BookmarkSimple (unsaved)
-            const isSaved = iconElement.src.includes("Saved.png");
-
-            // Set the request URL and updated icon
-            const url = isSaved ? "unsave_job.php" : "save_job.php";
-            const newIcon = isSaved ? "../images/BookmarkSimple.png" : "../images/Saved.png";
-
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ jobPostID, userID }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    iconElement.src = newIcon;
-                } else { }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                showNotification("Error occurred while processing the request.");
-            });
-        }
-
-        function clearSearch(inputName) {
-            const input = document.querySelector(`input[name="${inputName}"]`);
-            if (input) {
-                input.value = '';
-                input.focus(); 
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchInputs = document.querySelectorAll('.search-input');
-
-            // press enter to search
-            searchInputs.forEach(input => {
-                input.addEventListener('keydown', function (event) {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        document.querySelector('.search-btn').click();
-                    }
-                });
-            });
-
-            // fetch search results dynamically and update the DOM
-            document.querySelector('.search-btn').addEventListener('click', function () {
-                const jobTitle = document.querySelector('input[name="jobTitle"]').value.trim();
-                const location = document.querySelector('input[name="location"]').value.trim();
-
-                fetch('search_jobs.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jobTitle, location })
-                })
-                .then(response => response.json())
-                .then(jobs => {
-                    const rectangle = document.querySelector('.rectangle');
-                    rectangle.innerHTML = '';   // Clear existing job cards
-
-                    if (jobs.length === 0) {
-                        rectangle.innerHTML = "<p class='no-jobs-container'>No jobs found.</p>";
-                        return;
-                    }
-
-                    const jobPostIDs = jobs.map(job => job.jobPostID);
-
-                    fetch('get_saved_jobs.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ jobPostIDs, userID })
-                    })
-                    .then(response => response.json())
-                    .then(savedData => {
-                        if (!savedData.success) {
-                            console.error('Error fetching saved jobs:', savedData.error);
-                            return;
-                        }
-
-                        const savedJobs = savedData.savedJobs;
-
-                        jobs.forEach(job => {
-                            const jobCard = document.createElement('div');
-                            jobCard.classList.add('job-card');
-                            jobCard.dataset.id = job.jobPostID;
-
-                            const isSaved = savedJobs.includes(job.jobPostID);
-
-                            jobCard.innerHTML = `
-                                <div class="top-right-icons">
-                                    <img src="../images/${isSaved ? 'Saved.png' : 'BookmarkSimple.png'}" alt="Bookmark" class="bookmark-icon ${isSaved ? 'saved' : ''}" onclick="saveJob('${job.jobPostID}', this)">
-                                    <img src="../images/more_vert.png" alt="More Options" class="more-options-icon" onclick="toggleDropdown(this)">
-                                    <div class="dropdown-menu">
-                                        <div class="dropdown-item" onclick="navigateToReport('${job.jobPostID}')">
-                                            <img src="../images/sms_failed.png" alt="Report Icon">
-                                            <span>Report Post</span>
-                                        </div>
-                                        <div class="dropdown-item" onclick="hidePost(this)">
-                                            <img src="../images/cancel_presentation.png" alt="Hide Icon">
-                                            <span>Hide Post</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="job-header">
-                                    <h3>${job.jobTitle}</h3>
-                                </div>
-                                <div class="job-details">
-                                    <p class="time">
-                                        <span class="time-label ${job.workingHour === 'Day Shift' ? 'day' : 'night'}">
-                                            ${job.workingHour}
-                                        </span>
-                                        ${job.workingTimeStart} - ${job.workingTimeEnd}
-                                    </p>
-                                    <p class="date">${job.startDate} - ${job.endDate}</p>
-                                    <p class="location"><img src="../images/MapPin.png" alt="Location Icon" class="map-pin"> ${job.venue}, ${job.location}</p>
-                                    <div class="salary-line"></div>
-                                    <p class="salary">Salary: RM ${parseFloat(job.salary).toFixed(2)} / hour</p>
-                                    <div class="job-details-buttons">
-                                        <button class="view-details-btn" onclick="location.href='manageJob.php?jobPostID=${job.jobPostID}'">View Details</button>
-                                    </div>
-                                </div>
-                            `;
-                            rectangle.appendChild(jobCard);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching saved jobs:', error));
-                })
-                .catch(error => console.error('Error fetching jobs:', error));
-            });
-        });
-    </script>
+    </div>   
+    <script src="../js/view_jobs.js" data-user-id="<?php echo $userID; ?>"></script>
 </body>
 </html>
