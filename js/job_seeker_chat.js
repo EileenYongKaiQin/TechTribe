@@ -119,6 +119,12 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
     const messageElement = document.createElement("div");
     messageElement.classList.add("chat-message", senderRole === "employer" ? "employer-message" : "job-seeker-message");
     
+    // Set the unique ID for the message
+    if (messageID) {
+        messageElement.id = `message-${messageID}`;  // Use backticks for template literals
+        console.log(`Adding message with ID: ${messageElement.id}`); // Debugging line
+    }
+    
     messageElement.innerText = messageContents;
 
     // Set the alignment based on the sender's role
