@@ -11,11 +11,11 @@ if (isset($_GET['userID'])) {
         SELECT 
             login.userID, 
             login.username, 
-            login.email, 
             login.role, 
             jobSeeker.fullName AS jobSeekerName, 
             jobSeeker.contactNo AS jobSeekerContactNo,
             jobSeeker.age,
+            jobSeeker.email AS jobSeekerEmail,
             jobSeeker.gender,
             jobSeeker.race,
             jobSeeker.workExperience,
@@ -25,6 +25,7 @@ if (isset($_GET['userID'])) {
             jobSeeker.profilePic AS jobSeekerPic, 
             employer.fullName AS employerName, 
             employer.companyName, 
+            employer.email AS employerEmail,
             employer.companyAddress, 
             employer.contactNo AS employerContactNo,
             employer.profilePic AS employerPic,
@@ -38,6 +39,9 @@ if (isset($_GET['userID'])) {
     ";
 
     $stmt = $con->prepare($sql);
+    if (!$stmt) {
+        die("SQL Error: " . $con->error);
+    }
     $stmt->bind_param('s',$userID);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -50,7 +54,7 @@ if (isset($_GET['userID'])) {
         $jobPostID = $user['jobPostID'];
         $profileData = [
             'name' => $user['role'] == 'jobSeeker' ? $user['jobSeekerName'] : $user['employerName'],
-            'contact' => $user['role'] == 'jobSeeker' ? $user['jobSeekerContactNo'] : $user['jobSeekerContactNo'],
+            'contact' => $user['role'] == 'jobSeeker' ? $user['jobSeekerContactNo'] : $user['employerContactNo'],
             'age' => $user['role'] == 'jobSeeker' ? $user['age'] : 'N/A',
             'gender' => $user['role'] == 'jobSeeker' ? $user['gender'] : 'N/A',
             'race' => $user['role'] == 'jobSeeker' ? $user['race'] : 'N/A',
@@ -62,7 +66,7 @@ if (isset($_GET['userID'])) {
                 ($user['jobSeekerPic'] ? "../uploads/profile_pics/" . $user['jobSeekerPic'] : '../images/jobSeeker.png') : 
                 ($user['employerPic'] ? "../uploads/profile_pics/" . $user['employerPic'] : '../images/employer.png'),
             'role' => ucfirst($user['role']),
-            'email' => $user['email'],
+            'email' => $user['role'] == 'jobSeeker' ? $user['jobSeekerEmail'] : $user['employerEmail'],
             'company' => $user['role'] == 'employer' ? $user['companyName'] : 'N/A',
             'companyAddress' => $user['role'] == 'employer' ? $user['companyAddress'] : 'N/A',
             'reportID' => $reportID, 
