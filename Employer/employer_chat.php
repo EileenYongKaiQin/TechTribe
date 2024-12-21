@@ -700,6 +700,10 @@ button:hover {
 
 }
 
+.highlight-message {
+    background-color: yellow;
+    transition: background-color 0.5s ease;
+}
 
 </style>
 </head>
@@ -857,14 +861,16 @@ document.addEventListener("click", function (event) {
                         </div>
                         <div class="message-body">${message.messageContents}</div>
                     `;
-                    
+
                     // Set a click event listener to scroll to the specific message in the chat section
                     messageDiv.addEventListener("click", () => {
                         const chatMessage = document.getElementById(`message-${message.id}`);
                         if (chatMessage) {
                             chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+                            // Optionally highlight the message for better visibility
+                            chatMessage.classList.add("highlight-message");
+                            setTimeout(() => chatMessage.classList.remove("highlight-message"), 2000);
                         } else {
-                            console.log(`Message with ID: message-${message.id} not found`); // Debugging line
                             alert("Message not found in chat section.");
                         }
                     });
@@ -879,7 +885,8 @@ document.addEventListener("click", function (event) {
 
 
 
-    function searchChat() {
+
+function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
     const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Get jobSeekerID from PHP
 
@@ -914,6 +921,20 @@ document.addEventListener("click", function (event) {
                             </div>
                             <div class="message-body">${highlightedContent}</div>
                         `;
+
+                        // Set a click event listener to scroll to the specific message in the chat section
+                        messageDiv.addEventListener("click", () => {
+                            const chatMessage = document.getElementById(`message-${message.id}`);
+                            if (chatMessage) {
+                                chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+                                // Optionally highlight the message for better visibility
+                                chatMessage.classList.add("highlight-message");
+                                setTimeout(() => chatMessage.classList.remove("highlight-message"), 2000);
+                            } else {
+                                alert("Message not found in chat section.");
+                            }
+                        });
+
                         searchResults.appendChild(messageDiv);
                     });
                 } else {
@@ -929,6 +950,8 @@ document.addEventListener("click", function (event) {
             alert("An error occurred while searching. Please try again.");
         });
 }
+
+
 
 
 
