@@ -8,6 +8,18 @@
     $jobs = [];
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            $ratingSQL = "SELECT r.rating, r.feedback, js.fullName
+                          FROM jobRating r
+                          JOIN jobHistory h ON r.historyID = h.historyID
+                          JOIN jobSeeker js ON r.userID = js.userID
+                          WHERE h.jobPostID = ?";
+            $stmt = $con->prepare($ratingSQL);
+            $stmt->bind_param("s", $row['jobPostID']);
+            $stmt->execute();
+            $ratingResult = $stmt->get_result();
+            $rating = $ratingResult->fetch_all(MYSQLI_ASSOC);
+
+            $row['rating'] = $rating;
             $jobs[] = $row;
         }
     }
@@ -75,7 +87,7 @@
             box-sizing: border-box;  
             display: flex;
             flex-direction: column;     
-            justify-content: space-between;
+            justify-content: flex-start;
         }
         
         .search-bar-container {
@@ -286,6 +298,82 @@
         .apply-filter-btn:hover {
             background: #84C5C2;
         }
+
+        .rating-comment {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+            display: block;
+        }
+
+        .user-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .anonymous-user-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+            align-self: flex-start;
+       
+        }
+
+        .rating-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin: 0;
+            color: #333;
+        }
+
+        .rating-star {
+            margin: 5px 0;
+            font-size: 20px;
+        }
+
+        .feedback {
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .filled-star, .empty-star{
+            width: 20px;
+            height: 20px;
+        }
+
+        .no-rating-container {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #777;
+            text-align: left;
+            margin-left: 20px;
+        }
+        
+        .rating-comment:empty {
+            display: none;
+        }
+        
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .user-rating {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .anonymous-user-icon {
+                margin-bottom: 10px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -414,7 +502,45 @@
                         <button class="view-details-btn" onclick="location.href='manageJob.php?jobPostID=<?php echo $job['jobPostID']; ?>'">View Details</button>
                     </div>
                 </div>
-            </div>
+ 
+                    <div class="rating-comment">
+                        <?php if (!empty($job['rating'])):  ?>
+                            <?php foreach ($job['rating'] as $rating): ?>
+                                <div class="user-rating">
+                                    <img src="../images/anonymous.png" alt="Anonymous User" class="anonymous-user-icon">
+                                    <div class="rating-content">
+                                        <p class="user-name">
+                                            <?php
+                                                $name = htmlspecialchars($rating['fullName']);
+                                                $formattedName = substr($name, 0, 1).str_repeat('*', strlen($name) - 1);
+                                                echo $formattedName;
+                                            ?>
+                                        </p>
+                                        <div class="rating-stars">
+                                            <?php
+                                             for($i = 1; $i <= 5; $i++) {
+                                                if ($i <= $rating['rating']) {
+                                                    echo '<img src="../images/rating-star-after.png" alt="Filled Star" class="filled-star">';
+                                                } else {
+                                                    echo '<img src="../images/rating-star-before.png" alt="Empty Star" class="empty-star">';;
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                        <?php if(!empty($rating['feedback'])): ?>
+                                            <p class="feedback">
+                                                <?php echo htmlspecialchars($rating['feedback']); ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div class="salary-line"></div>
+                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="no-rating-container"><p>No ratings yet.</p></div>
+                                <?php endif; ?>
+                    </div>      
+                </div>
 
             <?php
                 }

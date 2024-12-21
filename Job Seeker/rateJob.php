@@ -3,7 +3,8 @@
     include('jobSeeker1.php');
 
     $historyID = $_GET['historyID']?? null;
-    if(!$historyID) {
+    $userID = $_SESSION['userID']?? null;
+    if(!$historyID || !$userID) {
         $_SESSION['flash_message'] = "Invalid request";
         header('Location: job_history.php');
         exit();
@@ -32,9 +33,9 @@
         if(!$rating) {
             $_SESSION['flash message'] = "Please provide a valid rating between 1 and 5.";
         } else {
-            $sql = "INSERT INTO jobRating (historyID, rating, feedback) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO jobRating (historyID, userID, rating, feedback) VALUES (?, ?, ?, ?)";
             $stmt = $con->prepare($sql);
-            $stmt->bind_param("iis", $historyID, $rating, $feedback);
+            $stmt->bind_param("isis", $historyID, $userID, $rating, $feedback);
 
             if($stmt->execute()) {
                 echo "<script>
