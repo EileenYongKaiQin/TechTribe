@@ -11,6 +11,7 @@
         .required {
             color: red;
         }
+        
     </style>
 </head>
 
@@ -126,9 +127,10 @@
                     <select class="form-control" id="location" name="location" required>
                         <option value="" disabled selected>Select State</option>
                         <option value="Johor">Johor</option>
-                        <option value="Malacca">Malacca</option>
+                        <option value="Malaka">Malaka</option>
                         <option value="Negeri Sembilan">Negeri Sembilan</option>
                         <option value="Selangor">Selangor</option>
+                        <option value="Kuala Lumpur">Kuala Lumpur</option>
                         <option value="Pahang">Pahang</option>
                         <option value="Perak">Perak</option>
                         <option value="Kelantan">Kelantan</option>
@@ -148,7 +150,7 @@
 
                 <div class="form-group">
                 <label for="startDate">Start Date: <span class="required">*</span></label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" min="<?php echo date('Y-m-d', strtotime('+2 day')); ?>" required onchange="updateEndDate()">
+                    <input type="date" class="form-control" id="startDate" name="startDate" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required onchange="updateEndDate()">
                 </div>
 
                 <div class="form-group">
@@ -221,51 +223,81 @@
             window.location.href = 'job_posting_list.php';
         }
 
-        // When the start date changes, dynamically set the minimum selectable date of the end date.
         function updateEndDate() {
-        const startDate = document.getElementById('startDate').value;
-        const endDateInput = document.getElementById('endDate');
+    const startDate = document.getElementById('startDate').value;
+    const endDateInput = document.getElementById('endDate');
 
-        if (startDate) {
-            const start = new Date(startDate);
-            const minEndDate = new Date(start);
-            minEndDate.setDate(minEndDate.getDate());
+    if (startDate) {
+        const start = new Date(startDate);
+        const minEndDate = new Date(start);
+        minEndDate.setDate(minEndDate.getDate());
 
-            // Set end date's minimum value
-            const year = minEndDate.getFullYear();
-            const month = String(minEndDate.getMonth() + 1).padStart(2, '0');
-            const day = String(minEndDate.getDate()).padStart(2, '0');
-            endDateInput.min = `${year}-${month}-${day}`;
+        const year = minEndDate.getFullYear();
+        const month = String(minEndDate.getMonth() + 1).padStart(2, '0');
+        const day = String(minEndDate.getDate()).padStart(2, '0');
+        endDateInput.min = `${year}-${month}-${day}`;
+    }
+}
+
+function updateEndTimeRange() {
+    const startTimeInput = document.getElementById('workingTimeStart');
+    const endTimeInput = document.getElementById('workingTimeEnd');
+    
+    if (!startTimeInput.value) return;
+
+    // Convert start time to minutes since midnight
+    const [startHours, startMinutes] = startTimeInput.value.split(':').map(Number);
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    
+    // Calculate max end time (12 hours = 720 minutes after start)
+    let maxEndTotalMinutes = startTotalMinutes + 720;
+    
+    // If max end time exceeds 24 hours (1440 minutes), adjust it
+    if (maxEndTotalMinutes > 1440) {
+        maxEndTotalMinutes = 1440; // Set to 24:00
+    }
+    
+    // Convert max end time back to HH:mm format
+    const maxEndHours = Math.floor(maxEndTotalMinutes / 60);
+    const maxEndMinutes = maxEndTotalMinutes % 60;
+    const maxEndTimeStr = `${String(maxEndHours).padStart(2, '0')}:${String(maxEndMinutes).padStart(2, '0')}`;
+    
+    endTimeInput.max = maxEndTimeStr;
+
+    // Check if current end time is valid
+    if (endTimeInput.value) {
+        const [endHours, endMinutes] = endTimeInput.value.split(':').map(Number);
+        const endTotalMinutes = endHours * 60 + endMinutes;
+        
+        // If current end time is more than 12 hours after start time or beyond 24:00
+        if (endTotalMinutes > maxEndTotalMinutes || endTotalMinutes <= startTotalMinutes) {
+            endTimeInput.value = maxEndTimeStr;
         }
     }
+}
 
-    // Limit workingTime to a maximum of 12 hours
-    function updateEndTimeRange() {
-        const startTimeStr = document.getElementById('workingTimeStart').value;
-        const endTimeInput = document.getElementById('workingTimeEnd');
+// Add form validation
+document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
+    const startTimeInput = document.getElementById('workingTimeStart');
+    const endTimeInput = document.getElementById('workingTimeEnd');
+    
+    if (!startTimeInput.value || !endTimeInput.value) return;
 
-        if (!startTimeStr) return;
-
-        const [startHours, startMinutes] = startTimeStr.split(':');
-        const startTime = new Date();
-        startTime.setHours(parseInt(startHours), parseInt(startMinutes));
-
-        const maxEndTime = new Date(startTime.getTime());
-        maxEndTime.setHours(startTime.getHours() + 12);
-
-        const maxEndHours = String(maxEndTime.getHours()).padStart(2, '0');
-        const maxEndMinutes = String(maxEndTime.getMinutes()).padStart(2, '0');
-        const maxEndTimeStr = `${maxEndHours}:${maxEndMinutes}`;
-
-        console.log('New max end time:', maxEndTimeStr);
-
-        const endTimeInputField = document.getElementById('workingTimeEnd');
-        endTimeInputField.max = maxEndTimeStr;
-
-        if (endTimeInputField.value > maxEndTimeStr) {
-            endTimeInputField.value = maxEndTimeStr;
-        }
+    const [startHours, startMinutes] = startTimeInput.value.split(':').map(Number);
+    const [endHours, endMinutes] = endTimeInput.value.split(':').map(Number);
+    
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+    
+    // Calculate time difference in minutes
+    const timeDiff = endTotalMinutes - startTotalMinutes;
+    
+    // Check if end time is before start time or if time difference is more than 12 hours
+    if (timeDiff <= 0 || timeDiff > 720) {
+        e.preventDefault();
+        alert('Working hours must be between 1 and 12 hours, and end time must be after start time.');
     }
+});
     </script>
 </body>
 </html>

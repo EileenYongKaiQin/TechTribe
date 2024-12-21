@@ -53,6 +53,17 @@ if ($noti !== false) {
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/job_seeker_layout.css">
     <style>
+        .logo-text {
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFFFFF;
+            margin: 0; 
+            position: absolute;
+            top: 95px;
+            left: 24%;
+        }
+
         /* Notifications */
         .notification-container {
             position: absolute;

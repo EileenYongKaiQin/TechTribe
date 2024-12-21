@@ -116,7 +116,7 @@
                     <select class="form-control" id="location" name="location" required>
                         <option value="" disabled>Select State</option>
                         <?php
-                        $locations = ['Johor', 'Malacca', 'Negeri Sembilan', 'Selangor', 'Pahang', 'Perak', 
+                        $locations = ['Johor', 'Malaka', 'Negeri Sembilan', 'Selangor', 'Kuala Lumpur', 'Pahang', 'Perak', 
                                     'Kelantan', 'Terengganu', 'Penang', 'Kedah', 'Perlis', 'Sabah', 'Sarawak'];
                         foreach ($locations as $location) {
                             $selected = ($job['location'] === $location) ? 'selected' : '';
@@ -135,7 +135,7 @@
                 <div class="form-group">
                     <label for="startDate">Start Date: <span class="required">*</span></label>
                     <input type="date" class="form-control" id="startDate" name="startDate"
-                        min="<?php echo date('Y-m-d', strtotime('+2 days')); ?>" required 
+                        min="<?php echo date('Y-m-d', strtotime('+1 days')); ?>" required 
                         value="<?php echo htmlspecialchars($job['startDate'] ?? ''); ?>" onchange="updateEndDate();">
                 </div>
 

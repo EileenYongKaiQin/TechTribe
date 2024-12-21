@@ -6,6 +6,7 @@
     <title>Create Job Posting</title>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -167,7 +168,7 @@
                 echo '<td>' . htmlspecialchars($row['venue']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['language']) . '</td>';
                 echo '<td>' . htmlspecialchars($row['race']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['workingTimeStart']) . ' - ' . htmlspecialchars($row['workingTimeEnd']) . '</td>';
+                echo '<td>' . date("h:i A", strtotime($row['workingTimeStart'])) . ' - ' . date("h:i A", strtotime($row['workingTimeEnd'])) . '</td>';
                 echo '<td>
                         <div class="action-buttons">
                             <a href="edit_job_posting.php?jobPostID=' . $row['jobPostID'] . '" class="btn btn-edit">
