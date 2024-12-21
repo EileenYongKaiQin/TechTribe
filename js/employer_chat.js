@@ -121,7 +121,8 @@ function addMessageToChat(messageContents, senderRole, messageID = null, timesta
 
     // Set the unique ID for the message
     if (messageID) {
-        messageElement.id = `message-${messageID}`;
+        messageElement.id = `message-${messageID}`;  // Use backticks for template literals
+        console.log(`Adding message with ID: ${messageElement.id}`); // Debugging line
     }
 
     messageElement.innerText = messageContents;

@@ -13,7 +13,7 @@ if (isset($_GET['query']) && isset($_GET['jobSeekerID']) && isset($_SESSION['use
     $userID = $_SESSION['userID']; // Get userID from session
 
     // Prepare and execute the query
-    $sql = "SELECT * FROM message WHERE (messageContents LIKE ?) AND (jobSeekerID = ? AND userID = ?) ORDER BY timestamp DESC"; // Fetching recent messages first
+    $sql = "SELECT id, senderRole, messageContents, timestamp FROM message WHERE (messageContents LIKE ?) AND (jobSeekerID = ? AND userID = ?) ORDER BY timestamp DESC"; // Fetching recent messages first
     if ($stmt = $con->prepare($sql)) {
         $stmt->bind_param("sss", $query, $jobSeekerID, $userID);
         if ($stmt->execute()) {
@@ -21,6 +21,7 @@ if (isset($_GET['query']) && isset($_GET['jobSeekerID']) && isset($_SESSION['use
             $messages = [];
             while ($row = $result->fetch_assoc()) {
                 $messages[] = [
+                    'id' => $row['id'], // Include the message ID
                     'senderRole' => htmlspecialchars($row['senderRole']),
                     'messageContents' => htmlspecialchars($row['messageContents']),
                     'formatted_date' => date('Y-m-d H:i:s', strtotime($row['timestamp'])) // Format the timestamp as needed

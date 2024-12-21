@@ -909,7 +909,7 @@ function searchChat() {
                 if (data.messages && data.messages.length > 0) {
                     data.messages.forEach(message => {
                         const highlightedContent = message.messageContents.replace(
-                            new RegExp(`(${searchQuery})`, 'gi'),
+                            new RegExp(`(${searchQuery})`, 'gi'),  // Correct regex syntax with backticks
                             "<b>$1</b>"
                         );
 
@@ -924,13 +924,15 @@ function searchChat() {
 
                         // Set a click event listener to scroll to the specific message in the chat section
                         messageDiv.addEventListener("click", () => {
-                            const chatMessage = document.getElementById(`message-${message.id}`);
+                            const chatMessage = document.getElementById(`message-${message.id}`);  // Correct the id reference
                             if (chatMessage) {
+                                console.log(`Found chat message with ID: ${chatMessage.id}`); // Debugging line
                                 chatMessage.scrollIntoView({ behavior: "smooth", block: "center" });
                                 // Optionally highlight the message for better visibility
                                 chatMessage.classList.add("highlight-message");
                                 setTimeout(() => chatMessage.classList.remove("highlight-message"), 2000);
                             } else {
+                                console.error("Message not found in chat section:", message.id); // Debugging line
                                 alert("Message not found in chat section.");
                             }
                         });
