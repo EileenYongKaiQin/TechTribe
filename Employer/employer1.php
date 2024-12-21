@@ -70,7 +70,7 @@ if ($noti !== false) {
             width: 362px;
             height: auto;
             top: 60px;
-            right: 380px;
+            right: 300px;
             background: #F4F4F4;
             border-radius: 8px;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -124,7 +124,7 @@ if ($noti !== false) {
         .notification-count {
             position: absolute;
             top: 20px;
-            right: 385px;
+            right: 300px;
             background-color: red;
             border-radius: 50%;
             width: 20px;

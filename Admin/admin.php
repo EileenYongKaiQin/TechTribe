@@ -345,7 +345,7 @@ if ($noti !== false) {
             </div>
             <div class="menu-item">
                 <img src="../images/reported_account.png" alt="Review Report Icon" class="menu-icon">
-                <span onclick="location.href='accountIssueList.php'">Reported Account List</span>
+                <span onclick="location.href='accountIssueList.php'">User Account</span>
             </div>
         </nav>
         <div class="logout" onclick="location.href='../login.html'">

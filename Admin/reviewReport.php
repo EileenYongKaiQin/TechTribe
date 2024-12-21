@@ -58,7 +58,7 @@ $result = $con->query($sql);
     <h1>Report</h1>
     <div class="search-and-actions">
         <div class="search-bar">
-            <input type="text" placeholder="Find Report" id="search-input">
+            <input type="text" placeholder="Find Report" id="search-input" onkeyup="filterReport()">
             <button id="search-btn">Search</button>
         </div>
         <div class="action-buttons">
@@ -67,7 +67,7 @@ $result = $con->query($sql);
         </div>
     </div>
     <div class="container">    
-        <table>
+        <table id="report-table">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select-all"></th>
@@ -88,7 +88,7 @@ $result = $con->query($sql);
                             <td><input type="checkbox" name="select-report" value="<?= htmlspecialchars($row['reportID']) ?>"></td>
                             <td><?= $counter ?></td>
                             <td><?= htmlspecialchars($row['reporterName']) ?></td>
-                            <td><?= htmlspecialchars($row['reason']) ?></td>
+                            <td class="reason"><?= htmlspecialchars($row['reason']) ?></td>
                             <td><?= htmlspecialchars($row['creationDate']) ?></td>
                             <td class="status <?= strtolower(str_replace(' ', '-', $row['reportStatus'])) ?>" data-id="<?= htmlspecialchars($row['reportID']) ?>">
                                 <?= htmlspecialchars($row['reportStatus']) ?>
@@ -161,6 +161,19 @@ $result = $con->query($sql);
     </div>
 
     <script>
+        function filterReport() {
+            const input = document.getElementById('search-input').value.toLowerCase();
+            const table = document.getElementById('report-table');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const reasonCell = rows[i].querySelector('.reason');
+                if(reasonCell) {
+                    const reasonText = reasonCell.textContent || reasonCell.innerText;
+                    rows[i].style.display = reasonText.toLowerCase().includes(input) ? '' : 'none';
+                }
+            }
+        }
         function showUnderReviewModal() {
             const selectedCount = document.querySelectorAll('input[name="select-report"]:checked').length;
             if (selectedCount > 0) {
