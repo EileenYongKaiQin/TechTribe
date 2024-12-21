@@ -32,6 +32,12 @@
     <title>Report</title>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="../css/report.css">
+    <style>
+        .required {
+            color: red;
+            font-style: italic;
+        }
+    </style>
     <script type="text/javascript" src="../js/previewFile.js"></script>  
     
    
@@ -44,7 +50,7 @@
     <!-- Report Form -->
     <form  id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="report_reason">Reason For the Report</label>
+        <label for="report_reason">Reason For the Report<span class="required"> *</span></label>
         <select id="report_reason" name="report_reason" required>
             <option value="">-- Select --</option>
             <option value="Fraud or Scam">Fraud or Scam</option>
@@ -57,7 +63,7 @@
 
     <!-- Description -->
      <div class="form-group">
-        <label for="description">Description of the Issue</label>
+        <label for="description">Description of the Issue<span class="required"> *</span></label>
         <textarea id="description" name="description" rows="5" placeholder="Write description not more than 50 words" required></textarea>
     </div>
 
@@ -68,11 +74,12 @@
             <img src="https://img.icons8.com/?size=100&id=c3Z8IwwzvmWR&format=png&color=000000" alt="Upload Icon">
             <span>Upload File / Image</span>
         </label>
-        <input type="file" id="evidence" name="evidence[]" multiple onchange="previewFiles()">
+        <input type="file" id="evidence" name="evidence[]" multiple onchange="previewFiles()" accept=".jpg, .jpeg, .png, .pdf">
         <div id="file-preview" class="file-preview"></div>
+        <span class="required">* Only jpg, png, or pdf files are allowed.</span>
     </div>
 </div>
-<input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($jobPostID); ?>">
+<input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($jobPostID ?? ''); ?>">
     <!-- Submit Button -->
         <button type="submit" class="show-modal" id="submitBtn" disabled>Submit</button>
 </form>

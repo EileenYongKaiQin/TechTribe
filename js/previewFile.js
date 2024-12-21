@@ -1,6 +1,7 @@
 function previewFiles() {
     const preview = document.getElementById('file-preview');
     const files = document.getElementById('evidence').files;
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
     
     // Clear the preview area before adding new files
     preview.innerHTML = '';
@@ -9,6 +10,11 @@ function previewFiles() {
         const fileItem = document.createElement('div');
         fileItem.classList.add('file-item');
 
+        if(!allowedExtensions.exec(file.name)) {
+            alert('Invalid file type: ${file.name}. Please upload a JPG, JPEG, PNG, or PDF file.');
+            removeFile(index);
+            return;
+        }
         const link = document.createElement('a');
         link.target = "_blank"; // Open in a new tab
         link.href = URL.createObjectURL(file);
@@ -18,6 +24,9 @@ function previewFiles() {
             // Show a thumbnail preview for images
             const img = document.createElement('img');
             img.src = link.href;
+            img.alt = file.name;
+            img.style.maxWidth = '100px';
+            img.style.borderRadius = '5px';
             link.appendChild(img);
         } else {
             // Show file name for non-image files

@@ -690,7 +690,7 @@ button:hover {
     function report() {
         const employerID = "<?php echo $employerID; ?>";
         if(employerID) {
-            window.location.href = "report_form.php?reportedUserID=" + employerID;
+            window.location.href = "report_form_nojobpost.php?reportedUserID=" + employerID;
         } else {
             alert("No employer selected to report.")
         }

@@ -1,6 +1,6 @@
 <?php 
     include('../database/config.php');
-    include('employer1.php');
+    include('jobSeeker1.php');
 
     // Check if the user is logged in
     if (!isset($_SESSION['userID'])) {
@@ -13,7 +13,7 @@ $reportedUserID = isset($_GET['reportedUserID']) ? $_GET['reportedUserID'] : nul
 
 // Fetch reported user details if available
 if ($reportedUserID) {
-    $query = $con->prepare("SELECT fullName, email FROM jobseeker WHERE userID = ?");
+    $query = $con->prepare("SELECT fullName, email FROM employer WHERE userID = ?");
     $query->bind_param("s", $reportedUserID);
     $query->execute();
     $result = $query->get_result();
@@ -48,7 +48,7 @@ if ($reportedUserID) {
 <a href="employer_dashboard.php" id="back-btn">Back</a>
 <div class="report-content">
     <!-- Report Form -->
-    <form id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
+    <form id="reportForm" action="submitForm_nojobpost.php" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="reported_user">Reported User</label>
         <input type="text" id="reported_user" name="reported_user" value="<?php echo htmlspecialchars($userData['fullName']); ?>" readonly>
@@ -57,11 +57,11 @@ if ($reportedUserID) {
         <label for="report_reason">Reason For the Report<span class="required"> *</span></label>
         <select id="report_reason" name="report_reason" required>
             <option value="">-- Select --</option>
-            <option value="No-show by Candidate">No-show by Candidate</option>
-            <option value="Fake Qualifications">Fake Qualifications</option>
-            <option value="False Information on Profile">False Information on Profile</option>
-            <option value="Unprofessional Behavior">Unprofessional Behavior</option>
-            <option value="Other Issues">Others</option>
+            <option value="Fraud or Scam">Fraud or Scam</option>
+            <option value="Share False Information">Sharing False Information</option>
+            <option value="Spam">Spam</option>
+            <option value="Employer Misconduct">Employer Misconduct</option>
+            <option value="Others">Others</option>
         </select>
     </div>
 
