@@ -79,12 +79,12 @@
         }
         
         .search-bar-container {
-                    top: 105px;
+            top: 105px;
         }
 
         .date, .salary, .location, .time {
-                margin: 0;
-            }
+            margin: 0;
+        }
 
         .date, .salary, .location {
             padding-left: 50px;      
