@@ -876,7 +876,7 @@ document.addEventListener("click", function (event) {
     }
 
     // Make an AJAX request to filter chats by the selected date
-    fetch(`../database/filter_chat.php?date=${encodeURIComponent(selectedDate)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
+    fetch(`../database/employer_filter_chat.php?date=${encodeURIComponent(selectedDate)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}&userID=${encodeURIComponent(userID)}`)
         .then(response => response.json())
         .then(data => {
             const searchResults = document.getElementById("searchResults");
@@ -936,7 +936,7 @@ function searchChat() {
     }
 
     // Make an AJAX request to search the chat history
-    fetch(`../database/search_chat.php?query=${encodeURIComponent(searchQuery)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}`)
+    fetch(`../database/employer_search_chat.php?query=${encodeURIComponent(searchQuery)}&jobSeekerID=${encodeURIComponent(jobSeekerID)}`)
         .then(response => response.json())
         .then(data => {
             const searchResults = document.getElementById("searchResults");
