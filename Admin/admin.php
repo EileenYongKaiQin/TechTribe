@@ -341,7 +341,7 @@ if ($noti !== false) {
         <nav class="menu">
             <div class="menu-item">
                 <img src="../images/content_paste_search.png" alt="Review Report Icon" class="menu-icon">
-                <span onclick="location.href='reviewReport.php'">Reported Post</span>
+                <span onclick="location.href='reviewReport.php'">Report</span>
             </div>
             <div class="menu-item">
                 <img src="../images/reported_account.png" alt="Review Report Icon" class="menu-icon">
