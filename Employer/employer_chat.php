@@ -897,7 +897,7 @@ document.addEventListener("click", function (event) {
                     messageDiv.className = "message"; // Apply your message styling
                     messageDiv.innerHTML = `
                         <div class="message-header">
-                            <span>${message.formatted_date}</span>
+                            <span>${message.formatted_date} ${message.formatted_time}</span>
                         </div>
                         <div class="message-body">${message.messageContents}</div>
                     `;

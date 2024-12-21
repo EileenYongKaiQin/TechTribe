@@ -24,7 +24,7 @@ if (isset($_GET['query']) && isset($_GET['jobSeekerID']) && isset($_SESSION['use
                     'id' => $row['id'], // Include the message ID
                     'senderRole' => htmlspecialchars($row['senderRole']),
                     'messageContents' => htmlspecialchars($row['messageContents']),
-                    'formatted_date' => date('Y-m-d H:i:s', strtotime($row['timestamp'])) // Format the timestamp as needed
+                    'formatted_date' => date('d M Y h:i A', strtotime($row['timestamp']))
                 ];
             }
             echo json_encode(['status' => 'success', 'messages' => $messages]);

@@ -19,7 +19,7 @@ if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
 
 // Query to fetch messages for the given date, userID, and jobSeekerID
 $sql = "
-    SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
+    SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, DATE_FORMAT(timestamp, '%h:%i %p') AS formatted_time, timestamp
     FROM message
     WHERE DATE(timestamp) = ? 
       AND (
@@ -42,6 +42,7 @@ if ($result->num_rows > 0) {
             'senderRole' => $row['senderRole'],
             'messageContents' => $row['messageContents'],
             'formatted_date' => $row['formatted_date'],
+            'formatted_time' => $row['formatted_time'], // Include formatted time
             'timestamp' => $row['timestamp']
         ];
     }
@@ -66,15 +67,15 @@ if ($result->num_rows > 0) {
 
         // Fetch messages for the next available date
         $nextMessagesQuery = "
-        SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp
-        FROM message
-        WHERE DATE(timestamp) = ? 
-          AND (
-              (userID = ? AND jobSeekerID = ?) 
-              OR (jobSeekerID = ? AND userID = ?)
-          )
-        ORDER BY timestamp ASC
-    ";
+            SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, DATE_FORMAT(timestamp, '%h:%i %p') AS formatted_time, timestamp
+            FROM message
+            WHERE DATE(timestamp) = ? 
+              AND (
+                  (userID = ? AND jobSeekerID = ?) 
+                  OR (jobSeekerID = ? AND userID = ?)
+              )
+            ORDER BY timestamp ASC
+        ";
         $nextMessagesStmt = $con->prepare($nextMessagesQuery);
         $nextMessagesStmt->bind_param("sssss", $nextDate, $userID, $jobSeekerID, $jobSeekerID, $userID);
         $nextMessagesStmt->execute();
@@ -88,6 +89,7 @@ if ($result->num_rows > 0) {
                 'senderRole' => $nextRow['senderRole'],
                 'messageContents' => $nextRow['messageContents'],
                 'formatted_date' => $nextRow['formatted_date'],
+                'formatted_time' => $nextRow['formatted_time'], // Include formatted time
                 'timestamp' => $nextRow['timestamp']
             ];
         }
@@ -104,5 +106,4 @@ if ($result->num_rows > 0) {
 
 $stmt->close();
 $con->close();
-
 ?>
