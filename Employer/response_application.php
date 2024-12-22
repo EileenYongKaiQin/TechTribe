@@ -1,3 +1,6 @@
+<?php
+ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,173 +9,7 @@
     <title>Employer - Job Applications</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-
-        /* Container */
-        .container {
-            margin: 0 auto;
-            padding: 30px;
-            width: 80%;
-            max-width: 800px;
-        }
-
-        /* Header Styling */
-        .container h1 {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Card Styling */
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 35px;
-        }
-
-        .card-body {
-            padding: 10px;
-        }
-
-        .card-body p{
-            padding: 8px;
-        }
-
-        .card-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        /* Label for status */
-        .status-label {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .Accepted {
-            color: #fff;
-            background-color: #28a745; /* Green */
-        }
-
-        .Rejected {
-            color: #fff;
-            background-color: #dc3545; /* Red */
-        }
-
-        /* Button Styling */
-        button {
-            margin: 10px 0;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        /* Collapse & Textarea */
-        .collapse {
-            margin-top: 15px;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .alert {
-            padding: 10px;
-            margin-top: 15px;
-            border-radius: 6px;
-        }
-
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-            color: #856404;
-        }
-
-        .alert-info {
-            background-color: #d1ecf1;
-            border-color: #bee5eb;
-            color: #0c5460;
-        }
-
-        /* Link Styling */
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        a:hover {
-            color: #0056b3;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .container {
-                width: 95%;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            button {
-                padding: 8px 12px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../css/response_application.css">
 </head>
 <body>
     <?php include('employer1.php');?>
@@ -201,17 +38,51 @@
             $stmt->bind_param("s", $userID);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $currentStatus = "Pending"; 
+            // Define the steps for the status tracker
+            $steps = ['New Application', 'Under Review', 'Accepted/Rejected'];
+
+            // Helper function to determine the step progress
+            function getStepClass($currentStatus, $step) {
+                $statuses = ['Pending', 'Under Review', 'Accepted', 'Rejected'];
+                $currentIndex = array_search($currentStatus, $statuses);
+                $stepIndex = array_search($step, $statuses);
+
+                if ($step === 'Accepted/Rejected') {
+                    return ($currentStatus === 'Accepted') ? 'accepted' : ($currentStatus === 'Rejected' ? 'rejected' : '');
+                }
+                
+                if ($stepIndex < $currentIndex) {
+                    return 'completed'; // Step already passed
+                } elseif ($stepIndex == $currentIndex) {
+                    return 'current'; // Current step
+                } else {
+                    return ''; // Upcoming steps
+                }
+            }
         
             $stmt->close();
+            
         }
 
-        // Check if there are applications to display
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $userID = $row['applicantID'];
+                $status = $row['applyStatus']; 
+
                 echo "
                 <div class='card'>
                     <div class='card-body'>
+                     <div class='status-tracker'>";
+                     foreach ($steps as $step) { 
+                        $stepClass = getStepClass($status, $step);
+                        echo "<div class='status-step {$stepClass}'>
+                                <div class='circle'>" . (array_search($step, $steps) + 1) . "</div>
+                                <div class='label'>" . htmlspecialchars($step) . "</div>
+                              </div>";
+                    }
+                        echo "    </div>
                         <h3 class='card-title'>{$row['jobTitle']}</h3>
                         <p><strong>Applicant Name:</strong><a href='visit_job_seeker.php?userID={$userID}'> {$row['applicantName']}</a></p>
                         <p><strong>Location:</strong> {$row['location']}</p>
@@ -251,7 +122,7 @@
                 echo "</div></div>";
             }
         } else {
-            echo "<p class='alert alert-info'>No job applications found for your job posts.</p>";
+            echo "<p class='alert alert-info'>No job applications found.</p>";
         }
         ?>
     </div>
@@ -264,7 +135,7 @@
                 title: `Are you sure you want to ${actionText} this application?`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: action === 'accept' ? '#3085d6' : '#d33',
+                confirmButtonColor: action === 'accept' ? '#28a745' : '#d33',
                 cancelButtonColor: '#aaa',
                 confirmButtonText: `${actionText}`
             }).then((result) => {
@@ -310,13 +181,19 @@
             })
             .then(response => response.text())
             .then(data => {
-                Swal.fire('Success', 'Request sent successfully!', 'success');
+                Swal.fire('Success', 'Request sent successfully!', 'success').then(() => {
+            // Reload the page to reflect the changes
+            window.location.reload();
+        });
+                
             })
             .catch(error => {
                 console.error('Error:', error);
                 Swal.fire('Error', 'An unexpected error occurred. Please try again.', 'error');
             });
         }
+
+        
     </script>
 </body>
 </html>

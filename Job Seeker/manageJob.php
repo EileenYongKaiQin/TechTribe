@@ -6,132 +6,8 @@
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/manageJob.css">
     
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-        }
-
-        /* Centered container */
-        .content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            margin-left: 240px;
-        }
-
-        .content h1 {
-            margin-top: -20px;
-            margin-bottom: 10px;
-            font-size: 2em;
-            text-align: center;
-            color: #333;
-        }
-
-        /* Job Details Card */
-        .jobDescription {
-            width: 90%;
-            max-width: 700px;
-            background-color: #fff;
-            padding: 5px 30px 30px 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            box-sizing: border-box;
-            line-height: 1.6;
-            color: #333;
-            align-items: left;
-        }
-
-        .jobDescription h2 {
-            font-size: 28px;
-            margin: 20px 0;
-        }
-
-        .jobDescription p {
-            font-size: 18px;
-            margin: 10px 0;
-            text-align:  left;
-        }
-
-        .jobDescription p strong {
-            font-size: 20px;
-            color: #000;
-        }
-
-        /* Buttons */
-        #applyButton, #back-btn {
-            display: inline-block;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: #000;
-            text-decoration: none;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        #applyButton {
-            background-color: #BEC6BF;
-            color: #fff;
-            margin-top: 20px;
-        }
-
-        #applyButton:hover {
-            background-color: #8EFAAB;
-            color: #000;
-        }
-
-        #back-btn {
-            position: absolute;
-            /* top: 10px; */
-            right: 60px;
-            background-color: #AAE1DE;
-        }
-
-        #back-btn:hover {
-            background-color: #8DCBC8;
-        }
-
-        /* Alert Styling */
-        .applied-message {
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: center;
-            color: #4caf50;
-        }
-
-        /* Divider */
-        .divider {
-            height: 1px;
-            background-color: #aaa;
-            margin: 15px 0;
-        }
-
-         /* Styled h2 with icon */
-         .section-title {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            margin: 10px 0;
-            justify-content: center; 
-        }
-
-        .section-title img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-    </style>
 </head>
 <body>
     <?php 
@@ -227,8 +103,8 @@
                 title: "Are you sure you want to apply for this job?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: "Yes, apply",
-                cancelButtonText: "No, cancel"
+                confirmButtonText: "Yes",
+                cancelButtonText: "No"
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Send AJAX request
@@ -241,8 +117,17 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        Swal.fire('Success!', data.message || 'Application submitted successfully!', 'success');
-                    })
+                        Swal.fire({
+                    title: 'Success!',
+                    text: data.message || 'Application submitted successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Reload the page to reflect the changes
+                    window.location.reload();
+                });
+            })
+                    
                     .catch(error => {
                         console.error('Error:', error);
                         Swal.fire('Error', 'Failed to apply for the job. Please try again.', 'error');

@@ -1,0 +1,151 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+/* Centered container */
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: 240px;
+}
+
+.content h1 {
+    margin-top: -20px;
+    margin-bottom: 10px;
+    font-size: 2em;
+    text-align: center;
+    color: #333;
+}
+
+/* Job Details Card */
+.jobDescription {
+    width: 90%;
+    max-width: 700px;
+    background-color: #fff;
+    padding: 5px 30px 30px 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    line-height: 1.6;
+    color: #333;
+    align-items: left;
+}
+
+.jobDescription h2 {
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+.jobDescription p {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align:  left;
+}
+
+.jobDescription p strong {
+    font-size: 20px;
+    color: #000;
+}
+
+/* Buttons */
+#applyButton, #back-btn {
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#applyButton {
+    background-color: #BEC6BF;
+    color: #fff;
+    margin-top: 20px;
+}
+
+#applyButton:hover {
+    background-color: #8EFAAB;
+    color: #000;
+}
+
+#back-btn {
+    position: absolute;
+    /* top: 10px; */
+    right: 60px;
+    background-color: #AAE1DE;
+}
+
+#back-btn:hover {
+    background-color: #8DCBC8;
+}
+
+/* Alert Styling */
+.applied-message {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    color: #4caf50;
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background-color: #aaa;
+    margin: 15px 0;
+}
+
+ /* Styled h2 with icon */
+ .section-title {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    margin: 10px 0;
+    justify-content: center; 
+}
+
+.section-title img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+/* Cancel Button Styling */
+#cancelButton {
+    display: inline-block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#cancelButton:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 10px;
+    }
+    .section-title h2 {
+        font-size: 18px;
+    }
+}

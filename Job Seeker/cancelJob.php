@@ -6,117 +6,8 @@
     <title>FlexMatch</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <style>
-        /* General Styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-
-        /* Container for the content */
-        .content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin: 0 auto;
-            width: 50%;
-            max-width: 600px;
-        }
-
-        /* Title styling */
-        .my-application {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        /* Job Description Container */
-        .jobDescription {
-            margin: 20px auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 700px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .jobDescription p {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .jobDescription p strong {
-            font-size: 20px;
-            color: #000;
-        }
-
-        /* Cancel Button Styling */
-        #cancelButton {
-            display: inline-block;
-            text-align: center;
-            margin: 20px auto;
-            padding: 12px 20px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            background-color: #e74c3c;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        #cancelButton:hover {
-            background-color: #c0392b;
-            transform: scale(1.05);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .jobDescription {
-                padding: 20px;
-                width: 95%;
-            }
-
-            .jobDescription p {
-                font-size: 16px;
-            }
-
-            .my-application {
-                font-size: 28px;
-            }
-
-            #cancelButton {
-                padding: 10px 18px;
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .my-application {
-                font-size: 24px;
-            }
-
-            .jobDescription p strong {
-                font-size: 18px;
-            }
-
-            #cancelButton {
-                width: 100%;
-                padding: 10px;
-                font-size: 16px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../css/manageJob.css">
+   
 </head>
 <body>
     <?php 
@@ -125,7 +16,7 @@
 
         $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : '';
 
-        $sql = "SELECT ja.applicationID, ja.jobPostID, jp.jobTitle, ja.applyDate, ja.applyStatus, jp.location, jp.salary, jp.workingHour
+        $sql = "SELECT *
         FROM jobApplication ja
         JOIN jobPost jp ON ja.jobPostID = jp.jobPostID
         WHERE ja.applicantID = '{$_SESSION['userID']}' AND ja.jobPostID = '$jobPostID'";
@@ -133,27 +24,68 @@
         $result = $con->query($sql);
 
         if ($result->num_rows > 0) {
-            $application = $result->fetch_assoc();
+            $job = $result->fetch_assoc();
+            $jobTitle = $job['jobTitle'];
+            $location = $job['location'];
+            $salary = $job['salary'];
+            $jobDescription = $job['jobDescription'];
+            $jobRequirement = $job['jobRequirement'];
+            $workingHour = $job['workingHour'];
+            $venue = $job['venue'];
+            $startDate = $job['startDate'];
+            $endDate = $job['endDate'];
+            $workingTimeStart = $job['workingTimeStart'];
+            $workingTimeEnd = $job['workingTimeEnd'];
+            $language = $job['language'];
+            $race = $job['race'];
+            $applyStatus = $job['applyStatus'];
         } else {
             echo "No such application found.";
             exit;
         }
     ?>
 
-    <div class="content">
-        <h1 class="my-application">My Application</h1>
+     <!-- Content -->
+     <div class="content">
+        <a href="my_application.php" id="back-btn">Back</a>
+        <h1>Detail Job Posting</h1>
 
-        <!-- Display job details -->
         <div class="jobDescription">
-            <p><strong>Job Title: </strong><?php echo $application['jobTitle']; ?></p><br>
-            <p><strong>Application ID: </strong><?php echo $application['applicationID']; ?></p><br>
-            <p><strong>Applied On: </strong> <?php echo $application['applyDate']; ?></p><br>
-            <p><strong>Status: </strong> <?php echo $application['applyStatus']; ?></p><br>
-            <p><strong>Location: </strong> <?php echo $application['location']; ?></p><br>
-            <p><strong>Salary: </strong> <?php echo $application['salary']; ?></p><br>
-            <p><strong>Working Hour: </strong> <?php echo $application['workingHour']; ?></p><br>
+            <div class="section-title">
+                <img src="../images/description.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Description</h2>
+            </div>
+            <p><strong>Job Title:</strong> <?php echo $jobTitle; ?></p>
+            <p><strong>Job Description:</strong> <?php echo nl2br(htmlspecialchars($jobDescription)); ?></p>
+            <p><strong>Venue:</strong> <?php echo htmlspecialchars($venue); ?></p>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($location); ?></p>
+            <p><strong>Salary:</strong> RM <?php echo number_format($salary, 2); ?> / hour</p>
+
+            <div class="divider"></div>
+
+            <div class="section-title">
+                <img src="../images/duration.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Duration & Time</h2>
+            </div>
+            <p><strong>Job Duration:</strong> <?php echo htmlspecialchars($startDate) . " - " . htmlspecialchars($endDate); ?></p>
+            <p><strong>Working Time:</strong> 
+                <?php 
+                    echo date("h:i A", strtotime($workingTimeStart)) . " - " . date("h:i A", strtotime($workingTimeEnd)); 
+                ?>
+            </p>
+            <p><strong>Working Hours:</strong> <?php echo htmlspecialchars($workingHour); ?></p>
+
+            <div class="divider"></div>
+
+            <div class="section-title">
+                <img src="../images/requirement.png" alt="icon"> <!-- Icon on the left -->
+                <h2>Requirement</h2>
+            </div>
+            <p><strong>Language Requirement:</strong> <?php echo htmlspecialchars($language); ?></p>
+            <p><strong>Race Preference:</strong> <?php echo htmlspecialchars($race); ?></p>
+            <p><strong>Requirements:</strong> <?php echo nl2br(htmlspecialchars($jobRequirement)); ?></p>
         </div>
-    <?php if (!in_array($application['applyStatus'], ['Accepted', 'Rejected'])) { ?>
+    <?php if (!in_array($applyStatus, ['Accepted', 'Rejected'])) { ?>
         <!-- Cancel Button -->
         <button id="cancelButton">Cancel Application</button>
     <?php } ?>
@@ -161,7 +93,7 @@
 
     <script>
         document.getElementById('cancelButton').addEventListener('click', function() {
-            var applicationID = "<?php echo $application['applicationID']; ?>";
+            var applicationID = "<?php echo htmlspecialchars($job['applicationID']); ?>";
 
             // Show confirmation alert
             Swal.fire({
