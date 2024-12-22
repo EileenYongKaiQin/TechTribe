@@ -1,15 +1,17 @@
 <?php
-
-include('../database/config.php');
 include('jobSeeker1.php');
 
+function redirectWithStatus($status) {
+    echo "<script>window.location.href='update_jobseeker_profile.php?status=" . $status . "';</script>";
+    exit();
+}
+
 if (!isset($_SESSION['userID'])) {
-    header('Location: jobseeker_dashboard.php');
+    echo '<script>window.location.href="jobseeker_dashboard.php";</script>';
     exit();
 }
 
 $userID = $_SESSION['userID'];
-
 $sql = mysqli_query($con, "SELECT * FROM jobseeker WHERE userID='$userID'");
 
 if (!$sql) {
@@ -19,13 +21,12 @@ if (!$sql) {
 $data = mysqli_fetch_array($sql);
 
 if (!$data) {
-    echo"<script>alert('No profile found. Please create a profile first.');
+    echo "<script>alert('No profile found. Please create a profile first.');
     window.location.href='create_jobseeker_profile.php';</script>";
-    echo"<script>";
-
+    exit();
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') 
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
 { 
     $fullName = $_POST['fullName'];
     $email = $_POST['email'];
@@ -44,21 +45,91 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     $softSkills = isset($_POST['softSkill']) ? 
     implode(", ", array_filter($_POST['softSkill'])) : '';
 
-    if(mysqli_query($con,"UPDATE jobseeker SET
-        email='$email', contactNo='$contactNo', age='$age', gender='$gender', race='$race', location='$location', state='$state', 
-        position='$position', company='$company', workExperience='$workExperience', language='$languages', hardSkill='$hardSkills', softSkill='$softSkills' WHERE userID='$userID'")) 
-        {
-            echo '<script>
-                    window.onload = function() { 
-                    document.querySelector("#success-popup").classList.add("active"); 
-                    window.location.href="view_jobseeker_profile.php";
-                }</script>';
-        } else {
-            echo '<script>
-            window.onload = function() { 
-            document.querySelector("#fail-popup").classList.add("active"); 
-            }</script>';
+    //Validataion
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        redirectWithStatus('invalid_email');
+    }
+
+    if (!preg_match('/^[0-9]{10,12}$/', $contactNo)) {
+        redirectWithStatus('invalid_phone');
+    }
+
+    if (!preg_match('/^[0-9]{1,2}$/', $age) || $age < 18 || $age > 80) {
+        redirectWithStatus('invalid_age');
+    }
+
+    $profilePicUpdate = "";
+    if(isset($_FILES['profilePic']) && $_FILES['profilePic']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/profile_pictures/';
+        
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
+
+        $originalName = $_FILES['profilePic']['name'];
+        $sanitizedName = preg_replace("/[^a-zA-Z0-9.-]/", "_", $originalName);
+        $targetPath = $uploadDir . $sanitizedName;
+
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = $_FILES['profilePic']['type'];
+        
+        if (!in_array($fileType, $allowedTypes)) {
+            redirectWithStatus('invalid_file');
+        }
+
+        if ($_FILES['profilePic']['size'] > 5 * 1024 * 1024) {
+            redirectWithStatus('file_too_large');
+        }
+
+        $counter = 1;
+        $filenameParts = pathinfo($sanitizedName);
+        while (file_exists($targetPath)) {
+            $newFilename = $filenameParts['filename'] . '_' . $counter . '.' . $filenameParts['extension'];
+            $targetPath = $uploadDir . $newFilename;
+            $sanitizedName = $newFilename;
+            $counter++;
+        }
+
+        if (!move_uploaded_file($_FILES['profilePic']['tmp_name'], $targetPath)) {
+            redirectWithStatus('upload_failed');
+        }
+        $profilePicUpdate = ", profilePic='$sanitizedName'";
+    }
+
+    $fullName = mysqli_real_escape_string($con,$fullName);
+    $email = mysqli_real_escape_string($con,$email);
+    $contactNo = mysqli_real_escape_string($con,$contactNo);
+    $age = mysqli_real_escape_string($con,$age);
+    $gender = mysqli_real_escape_string($con,$gender);
+    $race = mysqli_real_escape_string($con,$race);
+    $location = mysqli_real_escape_string($con,$location);
+    $state = mysqli_real_escape_string($con,$state);
+    $position = mysqli_real_escape_string($con,$position);
+    $company = mysqli_real_escape_string($con,$company);
+    $workExperience = mysqli_real_escape_string($con,$workExperience);
+
+    $updateQuery = "UPDATE jobseeker SET 
+        email='$email', 
+        contactNo='$contactNo', 
+        age='$age', 
+        gender='$gender', 
+        race='$race', 
+        location='$location', 
+        state='$state', 
+        position='$position', 
+        company='$company', 
+        workExperience='$workExperience',
+        language='$languages', 
+        hardSkill='$hardSkills', 
+        softSkill='$softSkills'
+        $profilePicUpdate
+        WHERE userID='$userID'";
+
+    if (mysqli_query($con, $updateQuery)) {
+        redirectWithStatus('success');
+    } else {
+        redirectWithStatus('fail');
+    }
 }
 ?>
 
@@ -107,7 +178,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         form .form-row {
             align-items: center;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
         form .form-row label,
         form .input-row label {
@@ -116,11 +187,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             display: flex;
             font-size: 18px;
         }
-        .form-row input[type="text"], 
+        .form-row input[type="text"],
+        .form-row input[type="email"], 
         .form-row select {
             width: 100%;
             padding: 15px;
-            margin-top: 15px;
+            margin-top: 8px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -129,12 +201,41 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         .input-group input[type="text"],
         .input-group button {
             padding: 15px;
-            margin-top: 15px;
+            margin-top: 8px;
             border-radius: 8px;
             border: 1px solid #ccc;
             box-sizing: border-box;
             display: flex;
             align-items: center;
+        }
+        .form-row input[type="file"] {
+            width: 100%;
+            margin-top: 8px;
+            display: flex;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            align-items: center;
+            padding: 7px 9px;
+        }
+        input[type=file]::-webkit-file-upload-button,
+        input[type=file]::file-selector-button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px 32px;
+            margin-right: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-size: 15px;
+        }
+        input[type=file]::-webkit-file-upload-button:hover,
+        input[type=file]::file-selector-button:hover {
+            cursor: grab;
+            background-color: #AAE1DE;
+            color: black;
+            transform: scale(1.03);
         }
         .back-btn,
         .update-btn {
@@ -275,7 +376,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             left: 50%;
             transform: translate(-50%, -50%) scale(1.15);
             width: 95%;
-            max-width: 350px;
+            max-width: 600px;
             background: #ffffff;
             padding: 25px;
             opacity: 0;
@@ -344,24 +445,23 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
 
 <div class="container">
     <h1 class="profile-h1">Update Profile</h1>
-    <form class="section" action='update_jobseeker_profile.php' method='POST'>
-
+    <form method="POST" enctype="multipart/form-data" id="updateForm" class="section">
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="name">Name</label>
-            <input type="text" name="fullName" placeholder="Enter Full Name" value="<?PHP echo $data['fullName'];?>" readonly>
+            <label for="fullName">Name</label>
+            <input type="text" name="fullName" placeholder="Enter Full Name" value="<?php echo htmlspecialchars($data['fullName']);?>" readonly>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="email">Email</label>
-                    <input type="text" name="email" placeholder="Enter Email" value="<?PHP echo $data['email'];?>" required>
+                    <input type="text" name="email" placeholder="Enter Email" value="<?php echo htmlspecialchars($data['email']);?>" required>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?PHP echo $data['contactNo'];?>" minlength='10' required maxlength='12' required>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($data['contactNo']);?>" minlength="10" maxlength="12" required>
                 </div>
             </div>
         </div>
@@ -369,28 +469,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="age">Age</label>
-                    <input type="text" name="age" placeholder="Enter Age" value="<?PHP echo $data['age'];?>" required>
+                    <input type="text" name="age" placeholder="Enter Age" value="<?php echo htmlspecialchars($data['age']);?>" required>
                 </div>
             </div>
             <div class="col-50-mid">
                 <div class="form-row">
                     <label for="gender">Gender</label>
-                    <select name="gender" id="gender" value="<?PHP echo $data['gender'];?>">
+                    <select name="gender" id="gender" value="<?php echo htmlspecialchars($data['gender']);?>">
                         <option disabled selected hidden>- Select Gender -</option>
-                        <option value="Male" <?php echo $data['gender'] === 'Male' ? 'selected' : ''; ?>>Male</option>
-                        <option value="Female" <?php echo $data['gender'] === 'Female' ? 'selected' : ''; ?>>Female</option>
+                        <option value="Male" <?php echo htmlspecialchars($data['gender']) === 'Male' ? 'selected' : ''; ?>>Male</option>
+                        <option value="Female" <?php echo htmlspecialchars($data['gender']) === 'Female' ? 'selected' : ''; ?>>Female</option>
                     </select> 
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="race">Race</label>
-                    <select name="race" id="race" value="<?PHP echo $data['race'];?>">
+                    <select name="race" id="race" value="<?php echo htmlspecialchars($data['race']);?>">
                         <option disabled selected hidden>- Select Race -</option>
-                        <option value="Malay" <?php echo $data['race'] === 'Malay' ? 'selected' : ''; ?>>Malay</option>
-                        <option value="Chinese" <?php echo $data['race'] === 'Chinese' ? 'selected' : ''; ?>>Chinese</option>
-                        <option value="Indian" <?php echo $data['race'] === 'Indian' ? 'selected' : ''; ?>>Indian</option>
-                        <option value="Others" <?php echo $data['race'] === 'Others' ? 'selected' : ''; ?>>Others</option>
+                        <option value="Malay" <?php echo htmlspecialchars($data['race']) === 'Malay' ? 'selected' : ''; ?>>Malay</option>
+                        <option value="Chinese" <?php echo htmlspecialchars($data['race']) === 'Chinese' ? 'selected' : ''; ?>>Chinese</option>
+                        <option value="Indian" <?php echo htmlspecialchars($data['race']) === 'Indian' ? 'selected' : ''; ?>>Indian</option>
+                        <option value="Others" <?php echo htmlspecialchars($data['race']) === 'Others' ? 'selected' : ''; ?>>Others</option>
                     </select> 
                 </div>
             </div>
@@ -399,32 +499,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="location">Location</label>
-                    <input type="text" name="location" placeholder="Enter Location" value="<?PHP echo $data['location'];?>" required>
+                    <input type="text" name="location" placeholder="Enter Location" value="<?php echo htmlspecialchars($data['location']);?>" required>
                 </div>
             </div> 
             <div class="col-25-ri">
                 <div class="form-row">
                     <label for="state">State</label>
-                    <select name="state" id="state" value="<?PHP echo $data['state'];?>">
+                    <select name="state" id="state" value="<?php echo htmlspecialchars($data['state']);?>">
                         <option disabled selected hidden>- Choose State -</option>
-                        <option value="Johor" <?php echo $data['state'] === 'Johor' ? 'selected' : ''; ?>>Johor</option>
-                        <option value="Kedah" <?php echo $data['state'] === 'Kedah' ? 'selected' : ''; ?>>Kedah</option>
-                        <option value="Kelantan" <?php echo $data['state'] === 'Kelantan' ? 'selected' : ''; ?>>Kelantan</option>
-                        <option value="Malacca" <?php echo $data['state'] === 'Malacca' ? 'selected' : ''; ?>>Malacca</option>
-                        <option value="Negeri Sembilan" <?php echo $data['state'] === 'Negeri Sembilan' ? 'selected' : ''; ?>>Negeri Sembilan</option>
-                        <option value="Pahang" <?php echo $data['state'] === 'Pahang' ? 'selected' : ''; ?>>Pahang</option>
-                        <option value="Penang" <?php echo $data['state'] === 'Penang' ? 'selected' : ''; ?>>Penang</option>
-                        <option value="Perak" <?php echo $data['state'] === 'Perak' ? 'selected' : ''; ?>>Perak</option>
-                        <option value="Perlis" <?php echo $data['state'] === 'Perlis' ? 'selected' : ''; ?>>Perlis</option>
-                        <option value="Sabah" <?php echo $data['state'] === 'Sabah' ? 'selected' : ''; ?>>Sabah</option>
-                        <option value="Sarawak" <?php echo $data['state'] === 'Sarawak' ? 'selected' : ''; ?>>Sarawak</option>
-                        <option value="Selangor" <?php echo $data['state'] === 'Selangor' ? 'selected' : ''; ?>>Selangor</option>
-                        <option value="Terengganu" <?php echo $data['state'] === 'Terengganu' ? 'selected' : ''; ?>>Terengganu</option>
-                        <option value="Kuala Lumpur" <?php echo $data['state'] === 'Kuala Lumpur' ? 'selected' : ''; ?>>Kuala Lumpur</option>
-                        <option value="Labuan" <?php echo $data['state'] === 'Labuan' ? 'selected' : ''; ?>>Labuan</option>
-                        <option value="Putrajaya" <?php echo $data['state'] === 'Putrajaya' ? 'selected' : ''; ?>>Putrajaya</option>
+                        <option value="Johor" <?php echo htmlspecialchars($data['state']) === 'Johor' ? 'selected' : ''; ?>>Johor</option>
+                        <option value="Kedah" <?php echo htmlspecialchars($data['state']) === 'Kedah' ? 'selected' : ''; ?>>Kedah</option>
+                        <option value="Kelantan" <?php echo htmlspecialchars($data['state']) === 'Kelantan' ? 'selected' : ''; ?>>Kelantan</option>
+                        <option value="Malacca" <?php echo htmlspecialchars($data['state']) === 'Malacca' ? 'selected' : ''; ?>>Malacca</option>
+                        <option value="Negeri Sembilan" <?php echo htmlspecialchars($data['state']) === 'Negeri Sembilan' ? 'selected' : ''; ?>>Negeri Sembilan</option>
+                        <option value="Pahang" <?php echo htmlspecialchars($data['state']) === 'Pahang' ? 'selected' : ''; ?>>Pahang</option>
+                        <option value="Penang" <?php echo htmlspecialchars($data['state']) === 'Penang' ? 'selected' : ''; ?>>Penang</option>
+                        <option value="Perak" <?php echo htmlspecialchars($data['state']) === 'Perak' ? 'selected' : ''; ?>>Perak</option>
+                        <option value="Perlis" <?php echo htmlspecialchars($data['state']) === 'Perlis' ? 'selected' : ''; ?>>Perlis</option>
+                        <option value="Sabah" <?php echo htmlspecialchars($data['state']) === 'Sabah' ? 'selected' : ''; ?>>Sabah</option>
+                        <option value="Sarawak" <?php echo htmlspecialchars($data['state']) === 'Sarawak' ? 'selected' : ''; ?>>Sarawak</option>
+                        <option value="Selangor" <?php echo htmlspecialchars($data['state']) === 'Selangor' ? 'selected' : ''; ?>>Selangor</option>
+                        <option value="Terengganu" <?php echo htmlspecialchars($data['state']) === 'Terengganu' ? 'selected' : ''; ?>>Terengganu</option>
+                        <option value="Kuala Lumpur" <?php echo htmlspecialchars($data['state']) === 'Kuala Lumpur' ? 'selected' : ''; ?>>Kuala Lumpur</option>
+                        <option value="Labuan" <?php echo htmlspecialchars($data['state']) === 'Labuan' ? 'selected' : ''; ?>>Labuan</option>
+                        <option value="Putrajaya" <?php echo htmlspecialchars($data['state']) === 'Putrajaya' ? 'selected' : ''; ?>>Putrajaya</option>
                     </select>
                 </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <label for="profilePic">Profile Picture</label>
+            <div class="file-upload-wrapper">
+                <input type="file" name="profilePic" id="profilePic" accept="image/jpeg,image/png,image/gif">
+                <small>Maximum file size: 5MB. Allowed formats: JPG, PNG, GIF</small>
             </div>
         </div>
         <br>
@@ -435,19 +542,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
             <div class="col-50-le">
                 <div class="form-row">
                     <label for="position">Job Role / Position</label>
-                    <input type="text" name="position" placeholder="Enter Job Role" value="<?PHP echo $data['position'];?>">
+                    <input type="text" name="position" placeholder="Enter Job Role" value="<?php echo htmlspecialchars($data['position']);?>">
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="company">Job Place / Company</label>
-                    <input type="text" name="company" placeholder="Enter Job Place" value="<?PHP echo $data['company'];?>">
+                    <input type="text" name="company" placeholder="Enter Job Place" value="<?php echo htmlspecialchars($data['company']);?>">
                 </div>
             </div>
         </div>
         <div class="form-row">
             <label for="workExperience">Working Experience</label>
-            <input type="text" name="workExperience" placeholder="Enter Working Experience" value="<?PHP echo $data['workExperience'];?>">
+            <input type="text" name="workExperience" placeholder="Enter Working Experience" value="<?php echo htmlspecialchars($data['workExperience']);?>">
         </div>
         <br>
         <br>
@@ -456,7 +563,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         <div class="row">
             <div class="form-row">
                 <label for="language">Language</label>
-                <input type="text" name="language" placeholder="Enter languages" value="<?PHP echo $data['language'];?>">
+                <input type="text" name="language" placeholder="Enter languages" value="<?php echo htmlspecialchars($data['language']);?>">
             </div>
         </div>
         <br>
@@ -515,118 +622,196 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         </div>
         <br>
         <br>
-        <input class="update-btn" id="update-btn" type="submit" value="Submit">
-
-        <!-- Success Popup -->
-        <div class="popup" id="success-popup">
-            <div class="overlay"></div>
-            <div class="popup-content">
-                <button class="close-btn">✖</button>
-                <br>
-                <h3>Profile Updated</h3>
-                <p>Congrates! You have successfully updated your profile.</p>
-                <div class="controls">
-                    <button class="okay-btn">OK</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fail Popup -->
-        <div class="popup" id="fail-popup">
-            <div class="overlay"></div>
-            <div class="popup-content">
-                <button class="close-btn">✖</button>
-                <br>
-                <h3>Failed to Update Profile</h3>
-                <p>There was an issue creating your profile. Please try again later.</p>
-                <div class="controls">
-                    <button class="okay-btn">OK</button>
-                </div>
-            </div>
-        </div>
-
+        <input class="update-btn" id="update-btn" type="submit" value="Update">
     </form>
 
+    <div class="popup" id="popup">
+        <div class="overlay"></div>
+        <div class="popup-content">
+            <button class="close-btn">✖</button>
+            <br>
+            <h3></h3>
+            <p></p>
+            <div class="controls">
+                <button class="okay-btn">OK</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <br><br><br><br><br>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-function toggleInput() {
-    const otherCheckbox = document.getElementById('Others');
-    const otherInput = document.getElementById('otherInput');
-    otherInput.disabled = !otherCheckbox.checked;
-}
+$(document).ready(function() {
+    $(document).on("click", "#addHardSkill", function (e) {
+        e.preventDefault();
+        $("#hardSkillsContainer").append(`
+            <div class="input-group">
+                <input type="text" name="hardSkill[]" placeholder="Enter Hard Skill">
+                <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
+            </div>
+        `);
+    });
 
-$(document).on("click", "#addHardSkill", function (e) {
-    e.preventDefault();
-    $("#hardSkillsContainer").append(`
-        <div class="input-group">
-            <input type="text" name="hardSkill[]" placeholder="Enter Hard Skill">
-            <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
-        </div>
-    `);
+    $(document).on("click", "#addSoftSkill", function (e) {
+        e.preventDefault();
+        $("#softSkillsContainer").append(`
+            <div class="input-group">
+                <input type="text" name="softSkill[]" placeholder="Enter Soft Skill">
+                <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
+            </div>
+        `);
+    });
+
+    $(document).on("click", ".remove-btn", function (e) {
+        e.preventDefault();
+        $(this).closest(".input-group").remove();
+    });
+
+
+    $("form").on("submit", function(e) {
+        const inputs = $(this).find("[required]");
+        let allValid = true;
+
+        inputs.each(function() {
+            if (!$(this).val()) {
+                allValid = false;
+                $(this).addClass("error");
+            } else {
+                $(this).removeClass("error");
+            }
+        });
+
+        if (!allValid) {
+            e.preventDefault();
+            alert("Please fill out all required fields.");
+            return false;
+        }
+    });
 });
 
-$(document).on("click", "#addSoftSkill", function (e) {
-    e.preventDefault();
-    $("#softSkillsContainer").append(`
-        <div class="input-group">
-            <input type="text" name="softSkill[]" placeholder="Enter Soft Skill">
-            <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
-        </div>
-    `);
-});
+document.addEventListener('DOMContentLoaded', function() {
+    const statusMessages = {
+        'success': {
+            title: 'Profile Updated Successfully!',
+            message: 'Your jobseeker profile has been successfully updated.'
+        },
+        'fail': {
+            title: 'Profile Update Failed',
+            message: 'Database Error: An error occurred while updating your profile. Please try again.'
+        },
+        'invalid_file': {
+            title: 'Invalid File Format',
+            message: 'Please upload only JPG, PNG, or GIF images.'
+        },
+        'file_too_large': {
+            title: 'File Too Large',
+            message: 'The image file size must be less than 5MB.'
+        },
+        'upload_failed': {
+            title: 'Upload Failed',
+            message: 'Failed to upload profile picture. Please try again.'
+        },
+        'incomplete_form': {
+            title: 'Incomplete Information',
+            message: 'Please fill in all required fields.'
+        },
+        'invalid_email': {
+            title: 'Invalid Email',
+            message: 'Please enter a valid email address.'
+        },
+        'invalid_phone': {
+            title: 'Invalid Phone Number',
+            message: 'Please enter a valid phone number (10-12 digits only).'
+        },
+        'invalid_age': {
+            title: 'Invalid Age',
+            message: 'Please enter a valid age (18-80).'
+        }
+    };
 
-$(document).on("click", ".remove-btn", function (e) {
-    e.preventDefault();
-    $(this).closest(".input-group").remove();
-});
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
 
-$(document).on("click", ".remove-btn", function (e) {
-    e.preventDefault();
-    $(this).closest(".input-group").remove();
-});
+    if (status && statusMessages[status]) {
+        const popup = document.getElementById('popup');
+        const statusInfo = statusMessages[status];
+        
+        const titleElement = popup.querySelector('h3');
+        const messageElement = popup.querySelector('p');
+        
+        titleElement.textContent = statusInfo.title;
+        messageElement.textContent = statusInfo.message;
+        
+        popup.classList.add('active');
 
-function updateProfile(id){
-    let popupNode = document.querySelector(id);
-    let overlay = popupNode.querySelector(".overlay");
-    let okayBtn = popupNode.querySelector(".okay-btn");
-    function openPopup(){
-        popupNode.classList.add("active");
+        const closeElements = popup.querySelectorAll('.close-btn, .okay-btn, .overlay');
+        closeElements.forEach(element => {
+            element.addEventListener('click', function() {
+                popup.classList.remove('active');
+                
+                if (status === 'success') {
+                    window.location.href = 'view_selfprofile_jobseeker.php';
+                } else {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('status');
+                    window.history.replaceState({}, '', url);
+                }
+            });
+        });
     }
-    function closePopup(){
-        popupNode.classList.remove("active");
-    }
-    overlay.addEventListener("click", closePopup);
-    okayBtn.addEventListener("click", closePopup);
-    return openPopup;
-}
-    let successPopup = updateProfile("#success-popup");
-    let failPopup = updateProfile("#fail-popup");
-    document.querySelector("#update-btn").addEventListener("click", popup);
 
-    document.querySelector("#update-btn").addEventListener("click", function (e) {
-    e.preventDefault();
-    const form = document.querySelector("form");
-    const inputs = form.querySelectorAll("[required]");
-    let allValid = true;
+    const form = document.getElementById('updateForm');
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
 
-    inputs.forEach(input => {
-        if (!input.value) {
-            allValid = false;
-            input.classList.add("error");
-        } else {
-            input.classList.remove("error");
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            const popup = document.getElementById('popup');
+            const statusInfo = statusMessages['incomplete_form'];
+            
+            const titleElement = popup.querySelector('h3');
+            const messageElement = popup.querySelector('p');
+            
+            titleElement.textContent = statusInfo.title;
+            messageElement.textContent = statusInfo.message;
+            
+            popup.classList.add('active');
         }
     });
 
-    if (allValid) {
-        form.submit();
-    } else {
-        alert("Please fill out all required fields.");
-    }
+    const profilePicInput = document.getElementById('profilePic');
+    profilePicInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxSize = 5 * 1024 * 1024;
+        
+        if (!allowedTypes.includes(file.type) || file.size > maxSize) {
+            e.preventDefault();
+            const popup = document.getElementById('popup');
+            const statusInfo = !allowedTypes.includes(file.type) ? 
+                statusMessages['invalid_file'] : 
+                statusMessages['file_too_large'];
+            
+            const titleElement = popup.querySelector('h3');
+            const messageElement = popup.querySelector('p');
+            
+            titleElement.textContent = statusInfo.title;
+            messageElement.textContent = statusInfo.message;
+            
+            popup.classList.add('active');
+            e.target.value = '';
+        }
+    });
 });
 </script>
 

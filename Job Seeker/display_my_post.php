@@ -21,11 +21,11 @@
             echo '<div class="user-info-post"">';
                 // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
                 echo '<div class="picture">';
-                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">
+                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '">
                     <img src="../images/JobSeeker.png" alt="Profile Picture" class="profile-pic"></a>';
                 echo '</div>';
                 echo '<div class="name">';
-                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
+                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
                 echo '</div>';
             echo '</div>';
 

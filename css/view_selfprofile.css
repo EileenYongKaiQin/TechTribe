@@ -117,7 +117,7 @@ html {
 
 .timeline_about {
   grid-area: timeline_about;
-  min-height: 45vh;
+  min-height: 50vh;
 }
 
 /* ===== =====>>  Container Cards Css  <<===== =====  */
@@ -397,7 +397,7 @@ html {
   display: inline-flex;
   height: 100%;
   align-items: center;
-  padding: 0 4rem;
+  padding: 0 4.1rem;
   text-align: center;
   margin-bottom: 13px;
   cursor: pointer;
@@ -571,4 +571,3 @@ input[type='radio'] {
     animation: none;
   }
 }
-

@@ -1,14 +1,14 @@
 <?php
 
 include('../database/config.php');
-include('employer1_nosidebar.php');
+include('employerNew.php');
 
 if (!isset($_SESSION['userID'])) {
     header('Location: employer_dashboard.php');
     exit();
 }
 
-$userID = $_SESSION['userID'];
+$userID = mysqli_real_escape_string($con, $_GET['userID'] ?? $_SESSION['userID']);
 
 $sql = mysqli_query($con, "SELECT * FROM employer WHERE userID='$userID'");
 
@@ -40,6 +40,7 @@ if (!$data) {
 </head>
 
 <body>
+    <div class="profile-con">
     <!-- ===== ===== Body Main-Background ===== ===== -->
     <span class="main_bg"></span>
 
@@ -53,13 +54,22 @@ if (!$data) {
             <div class="card-body">
                 <section>
                     <div class="profile">
-                        <figure><img src="../images/employer.png" alt="profile" width="250px" height="250px"></figure>
+                        <figure>
+                            <?php 
+                            if (!empty($data['profilePic'])) {
+                                $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
+                                if (file_exists($profilePicPath)) {
+                                    echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                                } else {
+                                    echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                                }
+                            } else {
+                                echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                            }
+                            ?>
+                        </figure>
                     </div>
                 </section>
-                <div class="profilefc">
-                    <button class="btn edit" onclick="location.href='update_employer_profile.php'">Edit Profile</button>
-                    <button class="btn delete" onclick="location.href='delete_employer_profile.php'">Delete Profile</button>
-                </div>
             </div>
         </section>
 
@@ -75,23 +85,22 @@ if (!$data) {
                 <br>
         </section>
 
-
         <!-- ===== ===== User Details Sections ===== ===== -->
         <section class="userDetails card">
             <div class="userName">
-                <h1 class="name"><?PHP echo $data['fullName'];?></h1>
-                <p>Employer</p>
                 <div class="acc-status">
+                    <h1 class="name"><?PHP echo $data['fullName'];?></h1>
                     <?php $statusColor = '';
                     if ($data['accountStatus'] == 'Active') {
                         $statusColor = '#44bb44';
                     } else if ($data['accountStatus'] == 'Inactive') {
                         $statusColor = 'rgba(0, 0, 0, 0.8)';
-                    } else if ($data['accountStatus'] == 'Suspended') {
+                    } else if ($data['accountStatus'] == 'Suspended-Temporary-6M' || $data['accountStatus'] == 'Suspended-Temporary-2Y' || $data['accountStatus'] == 'Suspended-Temporary-5Y' || $data['accountStatus'] == 'Suspended-Permanently') {
                         $statusColor = 'red';
                     }?>
-                    (<span style="color: <?php echo $statusColor; ?>;"><?PHP echo $data['accountStatus'];?></span>)
-                </div>
+                    <span>(<span style="color: <?php echo $statusColor; ?>;"><?PHP echo $data['accountStatus'];?></span>)</span>
+                </div>  
+                <p>Employer</p>
             </div>
 
             <div class="basic-info">
@@ -112,7 +121,7 @@ if (!$data) {
             <div class="btns">
                 <ul>
                     <li class="reportUser">
-                        <button class="btn report">Report User</button>
+                        <button class="btn report" onClick="window.location.href='suspendAccount.php?userID=<?php echo $user['userID'];?>'">Report User</button>
                     </li>
 
                     <li class="sendmsg">
@@ -131,7 +140,7 @@ if (!$data) {
                 <input type="radio" name="slider" id="application">
                 <nav>
                     <label for="about" class="about">About</label>
-                    <label for="skill" class="skill">Skills</label>
+                    <label for="skill" class="skill">&nbsp;&nbsp;Skills</label>
                     <label for="application" class="application">Application</label>
                     <div class="slider"></div>
                 </nav>
@@ -163,7 +172,7 @@ if (!$data) {
             </div>
         </section>
     </div>
-
+    </div>
 </body>
 
 </html>
