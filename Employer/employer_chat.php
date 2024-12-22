@@ -756,7 +756,7 @@ button:hover {
                         <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..." oninput="toggleClearButton()" onkeydown="checkEnter(event)">
                         <span id="clearSearch" class="clear-icon" onclick="clearSearch()" style="display: none;">&times;</span>
                         <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
-                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
+                        <img src="../images/calendar.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
                         <div id="filterContainer" class="filter-container" style="display: none;">
                             <label for="filterDate">Filter by Date:</label>
                             <input type="date" id="filterDate">
