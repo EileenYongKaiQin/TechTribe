@@ -70,7 +70,7 @@ include('jobSeeker1.php');
             <?php
         }
     } else {
-        echo "<p>You have not applied for any jobs yet.</p>";
+        echo "<div class='no-jobs-container'><p>You have not applied for any jobs yet.</p></div>";
     }
     $stmt->close();
     $con->close();
