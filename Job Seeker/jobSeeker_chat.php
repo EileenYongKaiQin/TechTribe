@@ -614,8 +614,8 @@ button:hover {
     padding: 10px;
     position: absolute;
     z-index: 10;
-    left: 75%;
-    top: 45px;
+    left: 634px;
+    top: -16px;
     box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
 }
@@ -661,14 +661,14 @@ button:hover {
     background: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: calc(60% - 40px); /* Adjust based on your layout */
-    max-height: 300px; /* Scrollable area */
+    width: 260px; /* Adjust based on your layout */
+    max-height: 400px; /* Scrollable area */
     overflow-y: auto;
     z-index: 1000; 
     display: none;
     border-radius: 15px;
-    top: 43px;
-    right: 0px;
+    top: 50px;
+    right: -275px;
     box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease, transform 0.3s ease; 
 }
@@ -757,7 +757,7 @@ button:hover {
                         <input type="text" id="searchBar" class="search-bar" placeholder="Search chat..." oninput="toggleClearButton()" onkeydown="checkEnter(event)">
                         <span id="clearSearch" class="clear-icon" onclick="clearSearch()" style="display: none;">&times;</span>
                         <div id="searchResults" class="search-results" style="display: none;"></div> <!-- Search Results Window -->
-                        <img src="../images/filter.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
+                        <img src="../images/calendar.png" alt="Filter" class="filter-icon" onclick="toggleDateFilter()">
                         <div id="filterContainer" class="filter-container" style="display: none;">
                             <label for="filterDate">Filter by Date:</label>
                             <input type="date" id="filterDate">
