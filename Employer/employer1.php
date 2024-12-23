@@ -219,8 +219,8 @@ if ($noti !== false) {
                     </div>
                     <?php endforeach; ?>
             </div>
-            <a href="view_employer_profile.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
-                <a href="view_employer_profile.php">    
+            <a href="view_selfprofile_employer.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
+                <a href="view_selfprofile_employer.php">    
                     <div class="user-info">
                         <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                         <span class="user-role">Employer</span>
