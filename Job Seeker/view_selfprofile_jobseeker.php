@@ -1,7 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('jobSeeker_nosidebar.php');
+include('jobSeeker1.php');
 
 if (!isset($_SESSION['userID'])) {
     header('Location: jobseeker_dashboard.php');
@@ -131,23 +131,25 @@ if (!$data) {
                 </div>
 
                 <div class="basic-info">
-                    <h1 class="heading">Basic Information</h1>
-                    <p>Age: <?PHP echo $data['age'];?></p>
-                    <p>Gender: <?PHP echo $data['gender'];?></p>
-                    <p>Race: <?PHP echo $data['race'];?></p>
-                </div>
-                
-                <div class="btns">
-                    <ul>
-                        <li class="createPost">
-                            <button class="btn report">Create Post</button>
-                        </li>
+                <h1 class="heading">Basic Information</h1>
+                <ul class="jobseeker-info">
+                    <li class="age">
+                        <h1 class="title-proInfo">Age: </h1>
+                        <span class="info"> <?PHP echo $data['age'];?></span>
+                    </li>
 
-                        <li class="sendmsg">
-                            <button class="btn message">Send Message</button>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="gender">
+                        <h1 class="title-proInfo">Gender: </h1>
+                        <span class="info"> <?PHP echo $data['gender'];?></span>
+                    </li>
+                    <li class="race">
+                        <h1 class="title-proInfo">Race: </h1>
+                        <span class="info"> <?PHP echo $data['race'];?></span>
+                    </li>
+                </ul>
+            </div>
+                
+                
             </section>
 
 
@@ -164,27 +166,27 @@ if (!$data) {
                         <div class="slider"></div>
                     </nav>
                     <section class="sec-con">
-                        <div class="content content-1">
+                        <div class="contentInfo contentInfo-1">
                             <h1 class="heading">Contact Information</h1>
                             <ul>
                                 <li class="email">
-                                    <h1 class="title">Email: </h1>
+                                    <h1 class="title-proInfo">Email: </h1>
                                     <span class="info"> <?PHP echo $data['email'];?></span>
                                 </li>
 
                                 <li class="phone">
-                                    <h1 class="title">Contact No.: </h1>
+                                    <h1 class="title-proInfo">Contact No.: </h1>
                                     <span class="info"> <?PHP echo $data['contactNo'];?></span>
                                 </li>
 
                                 <li class="location">
-                                    <h1 class="title">Location: </h1>
+                                    <h1 class="title-proInfo">Location: </h1>
                                     <span class="info"> <?PHP echo $data['location'];?>, <?PHP echo $data['state'];?></span>
                                 </li>
                             </ul>
                         </div>
 
-                        <div class="content content-2">
+                        <div class="contentInfo contentInfo-2">
                             <h1 class="heading">Hard Skills</h1>
                             <?php $hardSkills = explode(", ", $data['hardSkill']); ?>
                             <ul>
@@ -209,11 +211,11 @@ if (!$data) {
                             </ul>
                         </div>
 
-                        <div class="content content-3">
+                        <div class="contentInfo contentInfo-3">
                         <h1 class="heading">Application</h1>
                             <ul>
                                 <li class="position">
-                                    <h1 class="title">example</h1>
+                                    <h1 class="title-proInfo">example</h1>
                                     <span class="info">example</span>
                                 </li>
 
