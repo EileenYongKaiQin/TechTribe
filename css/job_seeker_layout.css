@@ -38,7 +38,7 @@
             margin-bottom: 10px;
         }
 
-        .project-title{
+        .title{
             display: flex; /* Enable flexbox */
             align-items: center; /* Vertically center content */
             justify-content: center; /* Horizontally center content if needed */
@@ -181,7 +181,7 @@
             color: #AAE1DE;
         }
 
-        .main-content {
+        .content {
             padding: 20px;
             text-align: center;
             display: flex;
@@ -227,5 +227,3 @@
             transform: none; /* Ensure no scaling effect */
             color: #FFFFFF;
         }
-
-

@@ -142,7 +142,7 @@ if ($noti !== false) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <div class="project-title">
+            <div class="title">
                 <h1 class="logo-text">FlexMatch</h1>        
             </div>
         </div>
@@ -171,10 +171,6 @@ if ($noti !== false) {
             <div class="submenu" style="display: <?php echo $submenuVisible; ?>;">
                 <div class="submenu-item <?php echo $currentPage == 'job_seeker_wall.php' ? 'active' : ''; ?>" onclick="location.href='job_seeker_wall.php'">View Posts</div>
                 <div class="submenu-item <?php echo $currentPage == 'my_posts.php' ? 'active' : ''; ?>" onclick="location.href='my_posts.php'">My Posts</div>
-            </div>
-            <div class="menu-item <?php echo $currentPage == 'job_history.php'? 'active' : ''; ?>">
-                <img src="../images/history.png" alt="Job History Icon" class="menu-icon">
-                <span onclick="location.href='job_history.php'">Job History</span>
             </div>
         </nav>
         <div class="logout" onclick="location.href='../login.html'">
@@ -222,8 +218,8 @@ if ($noti !== false) {
                     <?php endforeach; ?>
             </div>
             
-            <a href="view_selfprofile_jobseeker.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
-            <a href="view_selfprofile_jobseeker.php">
+            <a href="view_jobseeker_profile.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
+            <a href="view_jobseeker_profile.php">
             <div class="user-info">
                 <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Job Seeker</span>
@@ -232,7 +228,7 @@ if ($noti !== false) {
         </div>
         <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
-    <section class="main-content">
+    <section class="content">
     </section>
 
     </div>    
