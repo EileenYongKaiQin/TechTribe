@@ -811,6 +811,13 @@ button:hover {
         </div>
     </div>
 
+    <div id="showMessageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="deleteModalCloseBtn">&times;</span>
+        <h2></h2> <!-- Dynamic message will be inserted here -->
+    </div>
+</div>
+
     <script src="../js/employer_chat.js"></script>
     <script>
     function toggleDropdown() {
@@ -871,7 +878,7 @@ document.addEventListener("click", function (event) {
     const userID = "<?php echo htmlspecialchars($userID); ?>"; // Get userID from PHP
 
     if (!selectedDate) {
-        alert("Please select a date to filter.");
+        showMessageModal("Please select a date to filter.");
         return;
     }
 
@@ -924,7 +931,26 @@ document.addEventListener("click", function (event) {
 }
 
 
+function showMessageModal(message) {
+    const modal = document.getElementById("showMessageModal");
+    const closeButton = document.getElementById("deleteModalCloseBtn");
 
+    // Update modal content dynamically
+    modal.querySelector("h2").textContent = message;
+    modal.style.display = "block"; // Show the modal
+
+    // Close modal on clicking the close button
+    closeButton.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    // Close modal on clicking outside the modal content
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+}
 
 function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
