@@ -73,6 +73,7 @@ html {
   align-items: center;
   min-height: 100vh;
   margin-left: 180px;
+  padding-bottom: 50px;
 }
 
 /* ===== =====>>  Body Main-Background Css  <<===== =====  */
@@ -301,10 +302,11 @@ html {
 .userDetails .basic-info .jobseeker-info h1{
   min-width: 6.5rem;
   font-size: var(--s-fs);
-  color: var(--f4-color);
+  color: black;
   font-weight: 600;
 }
 
+.userDetails .basic-info p,
 .userDetails .basic-info ul li span {
   font-size: var(--s-fs);
   color: var(--f4-color);
@@ -462,58 +464,57 @@ input[type='radio'] {
   display: flex;
   align-items: left;
   justify-content: flex-start;
-  margin: 0px;
+  margin: 20px;
 }
 
-.timeline_about .sec-con .content{
+.timeline_about .sec-con .contentInfo{
   display: none;
   margin-bottom: 18px;
 }
 
-.timeline_about .sec-con .content .heading {
+.timeline_about .sec-con .contentInfo .heading {
   font-size: 15px;
   text-align: left;
   text-transform: uppercase;
   margin-bottom: 12px;
-  margin-top: 5px;
 }
 
-#about:checked ~ .sec-con .content-1 {
+#about:checked ~ .sec-con .contentInfo-1 {
   display: block;
 }
 
-#skill:checked ~ .sec-con .content-2 {
+#skill:checked ~ .sec-con .contentInfo-2 {
   display: block;
 }
 
-#application:checked ~ .sec-con .content-3 {
+#application:checked ~ .sec-con .contentInfo-3 {
   display: block;
 }
 
-.timeline_about .sec-con .content ul {
+.timeline_about .sec-con .contentInfo ul {
   margin-bottom: var(--m-1-5);
 }
 
-.timeline_about .sec-con .content ul li {
+.timeline_about .sec-con .contentInfo ul li {
   text-align: left;
   margin: var(--m-0-8) 0;
   list-style: none;
   margin-left: 5px;
 }
 
-.timeline_about .sec-con .content-2 ul li {
+.timeline_about .sec-con .contentInfo-2 ul li {
   list-style: square;
   margin-left: 10px;
 }
 
-.timeline_about .sec-con .content ul li h1 {
+.timeline_about .sec-con .contentInfo ul li h1 {
   font-weight: bold;
   min-width: 12rem;
   margin-bottom: 5px;
 }
 
-.timeline_about .sec-con .content ul .email span,
-.timeline_about .sec-con .content ul .phone span{
+.timeline_about .sec-con .contentInfo ul .email span,
+.timeline_about .sec-con .contentInfo ul .phone span{
   color: var(--f5-color);
 }
 

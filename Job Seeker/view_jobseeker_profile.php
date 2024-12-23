@@ -52,23 +52,23 @@ if (!$data) {
         <section class="userProfile card">
             <div class="card-body">
             <section>
-                    <div class="profile">
-                        <figure>
-                            <?php 
-                            if (!empty($data['profilePic'])) {
-                                $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
-                                if (file_exists($profilePicPath)) {
-                                    echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
-                                } else {
-                                    echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
-                                }
+                <div class="profile">
+                    <figure>
+                        <?php 
+                        if (!empty($data['profilePic'])) {
+                            $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
+                            if (file_exists($profilePicPath)) {
+                                echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
                             } else {
                                 echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
                             }
-                            ?>
-                        </figure>
-                    </div>
-                </section>
+                        } else {
+                            echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                        }
+                        ?>
+                    </figure>
+                </div>
+            </section>
             </div>
         </section>
 
@@ -119,7 +119,7 @@ if (!$data) {
                     if ($data['accountStatus'] == 'Active') {
                         $statusColor = '#44bb44';
                     } else if ($data['accountStatus'] == 'Inactive') {
-                        $statusColor = 'rgba(0, 0, 0, 0.8)';
+                        $statusColor = '#757575';
                     } else if ($data['accountStatus'] == 'Suspended-Temporary-6M' || $data['accountStatus'] == 'Suspended-Temporary-2Y' || $data['accountStatus'] == 'Suspended-Temporary-5Y' || $data['accountStatus'] == 'Suspended-Permanently') {
                         $statusColor = 'red';
                     }?>
@@ -130,15 +130,27 @@ if (!$data) {
 
             <div class="basic-info">
                 <h1 class="heading">Basic Information</h1>
-                <p>Age: <?PHP echo $data['age'];?></p>
-                <p>Gender: <?PHP echo $data['gender'];?></p>
-                <p>Race: <?PHP echo $data['race'];?></p>
+                <ul class="jobseeker-info">
+                    <li class="age">
+                        <h1 class="title-proInfo">Age: </h1>
+                        <span class="info"> <?PHP echo $data['age'];?></span>
+                    </li>
+
+                    <li class="gender">
+                        <h1 class="title-proInfo">Gender: </h1>
+                        <span class="info"> <?PHP echo $data['gender'];?></span>
+                    </li>
+                    <li class="race">
+                        <h1 class="title-proInfo">Race: </h1>
+                        <span class="info"> <?PHP echo $data['race'];?></span>
+                    </li>
+                </ul>
             </div>
              
             <div class="btns">
                 <ul>
                     <li class="reportUser">
-                        <button class="btn report" onClick="window.location.href='suspendAccount.php'">Report User</button>
+                        <button style="margin-left: 3px;"class="btn report" onClick="window.location.href='suspendAccount.php?userID=<?php echo $targetUserID;?>'">Report User</button>
                     </li>
 
                     <li class="sendmsg">
@@ -162,27 +174,27 @@ if (!$data) {
                     <div class="slider"></div>
                 </nav>
                 <section class="sec-con">
-                    <div class="content content-1">
+                    <div class="contentInfo contentInfo-1">
                         <h1 class="heading">Contact Information</h1>
                         <ul>
                             <li class="email">
-                                <h1 class="title">Email: </h1>
+                                <h1 class="title-proInfo">Email: </h1>
                                 <span class="info"> <?PHP echo $data['email'];?></span>
                             </li>
 
                             <li class="phone">
-                                <h1 class="title">Contact No.: </h1>
+                                <h1 class="title-proInfo">Contact No.: </h1>
                                 <span class="info"> <?PHP echo $data['contactNo'];?></span>
                             </li>
 
                             <li class="location">
-                                <h1 class="title">Location: </h1>
+                                <h1 class="title-proInfo">Location: </h1>
                                 <span class="info"> <?PHP echo $data['location'];?>, <?PHP echo $data['state'];?></span>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="content content-2">
+                    <div class="contentInfo contentInfo-2">
                         <h1 class="heading">Hard Skills</h1>
                         <?php $hardSkills = explode(", ", $data['hardSkill']); ?>
                         <ul>
@@ -207,11 +219,11 @@ if (!$data) {
                         </ul>
                     </div>
 
-                    <div class="content content-3">
+                    <div class="contentInfo contentInfo-3">
                     <h1 class="heading">Application</h1>
                         <ul>
                             <li class="position">
-                                <h1 class="title">example</h1>
+                                <h1 class="title-proInfo">example</h1>
                                 <span class="info">example</span>
                             </li>
 
