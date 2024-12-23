@@ -277,26 +277,40 @@ function updateEndTimeRange() {
 }
 
 // Add form validation
-document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
+document.getElementById('jobPostingForm').addEventListener('submit', function (e) {
     const startTimeInput = document.getElementById('workingTimeStart');
     const endTimeInput = document.getElementById('workingTimeEnd');
-    
+
     if (!startTimeInput.value || !endTimeInput.value) return;
 
-    const [startHours, startMinutes] = startTimeInput.value.split(':').map(Number);
-    const [endHours, endMinutes] = endTimeInput.value.split(':').map(Number);
-    
-    const startTotalMinutes = startHours * 60 + startMinutes;
-    const endTotalMinutes = endHours * 60 + endMinutes;
-    
-    // Calculate time difference in minutes
-    const timeDiff = endTotalMinutes - startTotalMinutes;
-    
-    // Check if end time is before start time or if time difference is more than 12 hours
+    function convertTo24Hour(timeStr) {
+        const [time, modifier] = timeStr.split(' '); 
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (modifier === 'PM' && hours !== 12) {
+            hours += 12; 
+        } else if (modifier === 'AM' && hours === 12) {
+            hours = 0; 
+        }
+
+        return hours * 60 + minutes; 
+    }
+
+    const startTotalMinutes = convertTo24Hour(startTimeInput.value);
+    const endTotalMinutes = convertTo24Hour(endTimeInput.value);
+
+    let adjustedEndTotalMinutes = endTotalMinutes;
+    if (endTotalMinutes < startTotalMinutes) {
+        adjustedEndTotalMinutes += 24 * 60; 
+    }
+
+    const timeDiff = adjustedEndTotalMinutes - startTotalMinutes;
+
     if (timeDiff <= 0 || timeDiff > 720) {
         e.preventDefault();
         alert('Working time cannot exceed 12 hours.');
     }
+
 });
     </script>
 </body>

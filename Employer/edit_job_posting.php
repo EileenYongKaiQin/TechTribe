@@ -233,37 +233,37 @@
 
     // Limit workingTime to a maximum of 12 hours
     function validateWorkingHours() {
-        const startTimeStr = document.getElementById('workingTimeStart').value;
-        const endTimeStr = document.getElementById('workingTimeEnd').value;
+    const startTimeStr = document.getElementById('workingTimeStart').value;
+    const endTimeStr = document.getElementById('workingTimeEnd').value;
 
-        if (!startTimeStr || !endTimeStr) {
-            return true;
-        }
-
-        const [startHours, startMinutes] = startTimeStr.split(':').map(num => parseInt(num));
-        const [endHours, endMinutes] = endTimeStr.split(':').map(num => parseInt(num));
-
-        const startTime = new Date();
-        startTime.setHours(startHours, startMinutes, 0, 0);
-
-        const endTime = new Date();
-        endTime.setHours(endHours, endMinutes, 0, 0);
-
-        if (endTime <= startTime) {
-            alert('Working time cannot exceed 12 hours.');
-            return false;
-        }
-
-        const diffMilliseconds = endTime - startTime;
-        const diffHours = diffMilliseconds / (1000 * 60 * 60);
-
-        if (diffHours > 12) {
-            alert('Working time cannot exceed 12 hours.');
-            return false;
-        }
-
-        return true;
+    if (!startTimeStr || !endTimeStr) {
+        return true; 
     }
+
+    const [startHours, startMinutes] = startTimeStr.split(':').map(num => parseInt(num));
+    const [endHours, endMinutes] = endTimeStr.split(':').map(num => parseInt(num));
+
+    const startTime = new Date();
+    startTime.setHours(startHours, startMinutes, 0, 0);
+
+    const endTime = new Date();
+    endTime.setHours(endHours, endMinutes, 0, 0);
+
+    if (endTime <= startTime) {
+        endTime.setDate(endTime.getDate() + 1); 
+    }
+
+    const diffMilliseconds = endTime - startTime;
+    const diffHours = diffMilliseconds / (1000 * 60 * 60);
+
+    if (diffHours > 12) {
+        alert('Working time cannot exceed 12 hours.');
+        return false;
+    }
+
+    return true;
+}
+
 
     // Attach the validate function to the form's submit event
     document.querySelector('form').onsubmit = function(event) {
