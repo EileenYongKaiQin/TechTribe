@@ -113,17 +113,17 @@
             <!-- Job Posting Form -->
             <form id="jobPostingForm" action="job_posting_form.php" method="post">
                 <div class="form-group">
-                <label for="jobTitle">Job Title: <span class="required">*</span></label>
+                <label for="jobTitle">Job Title<span class="required">*</span></label>
                     <input type="text" class="form-control" id="jobTitle" name="jobTitle" required>
                 </div>
 
                 <div class="form-group">
-                <label for="venue">Venue: <span class="required">*</span></label>
+                <label for="venue">Venue<span class="required">*</span></label>
                     <input type="text" class="form-control" id="venue" name="venue" required>
                 </div>
 
                 <div class="form-group">
-                <label for="location">Location: <span class="required">*</span></label>
+                <label for="location">Location<span class="required">*</span></label>
                     <select class="form-control" id="location" name="location" required>
                         <option value="" disabled selected>Select State</option>
                         <option value="Johor">Johor</option>
@@ -144,22 +144,22 @@
                 </div>
 
                 <div class="form-group">
-                <label for="salary">Salary per hour (RM): <span class="required">*</span></label>
+                <label for="salary">Salary per hour (RM)<span class="required">*</span></label>
                     <input type="number" class="form-control" id="salary" name="salary" required>
                 </div>
 
                 <div class="form-group">
-                <label for="startDate">Start Date: <span class="required">*</span></label>
+                <label for="startDate">Start Date<span class="required">*</span></label>
                     <input type="date" class="form-control" id="startDate" name="startDate" min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" required onchange="updateEndDate()">
                 </div>
 
                 <div class="form-group">
-                <label for="endDate">End Date: <span class="required">*</span></label>
+                <label for="endDate">End Date<span class="required">*</span></label>
                     <input type="date" class="form-control" id="endDate" name="endDate" min="" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="working_hour">Working Hour: <span class="required">*</span></label>
+                    <label for="working_hour">Working Hour<span class="required">*</span></label>
                     <select class="form-control" id="working_hour" name="working_hour" required>
                         <option value="Day Shift">Day Shift</option>
                         <option value="Night Shift">Night Shift</option>
@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="workingTimeStart">Working Time: <span class="required">*</span></label>
+                    <label for="workingTimeStart">Working Time<span class="required">*</span></label>
                     <div class="d-flex align-items-center">
                         <input type="time" class="form-control" id="workingTimeStart" name="workingTimeStart" required onchange="updateEndTimeRange()">
                         <span class="mx-2">to</span>
@@ -176,7 +176,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="race">Race: <span class="required">*</span></label>
+                    <label for="race">Race<span class="required">*</span></label>
                     <select class="form-control" id="race" name="race">
                         <option value="" disabled selected>-- Select Race --</option>
                         <option value="Any">Any</option>
@@ -187,17 +187,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="language">Language:</label>
+                    <label for="language">Language</label>
                     <input type="text" class="form-control" id="language" name="language" placeholder="e.g. Malay, English" >
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Job Description: <span class="required">*</span></label>
+                    <label for="description">Job Description<span class="required">*</span></label>
                     <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="requirements">Requirements:</label>
+                    <label for="requirements">Requirements</label>
                     <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
                 </div>
 

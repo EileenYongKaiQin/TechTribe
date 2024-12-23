@@ -100,19 +100,19 @@
                 <input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($job['jobPostID'] ?? ''); ?>">
 
                 <div class="form-group">
-                    <label for="jobTitle">Job Title: <span class="required">*</span></label>
+                    <label for="jobTitle">Job Title<span class="required">*</span></label>
                     <input type="text" class="form-control" id="jobTitle" name="jobTitle"
                         required value="<?php echo htmlspecialchars($job['jobTitle'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="venue">Venue: <span class="required">*</span></label>
+                    <label for="venue">Venue<span class="required">*</span></label>
                     <input type="text" class="form-control" id="venue" name="venue"
                         required value="<?php echo htmlspecialchars($job['venue'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="location">Location: <span class="required">*</span></label>
+                    <label for="location">Location<span class="required">*</span></label>
                     <select class="form-control" id="location" name="location" required>
                         <option value="" disabled>Select State</option>
                         <?php
@@ -127,27 +127,27 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="salary">Salary per hour (RM): <span class="required">*</span></label>
+                    <label for="salary">Salary per hour (RM)<span class="required">*</span></label>
                     <input type="number" class="form-control" id="salary" name="salary" step="0.01"
                         required value="<?php echo htmlspecialchars($job['salary'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="startDate">Start Date: <span class="required">*</span></label>
+                    <label for="startDate">Start Date<span class="required">*</span></label>
                     <input type="date" class="form-control" id="startDate" name="startDate"
                         min="<?php echo date('Y-m-d', strtotime('+1 days')); ?>" required 
                         value="<?php echo htmlspecialchars($job['startDate'] ?? ''); ?>" onchange="updateEndDate();">
                 </div>
 
                 <div class="form-group">
-                    <label for="endDate">End Date: <span class="required">*</span></label>
+                    <label for="endDate">End Date<span class="required">*</span></label>
                     <input type="date" class="form-control" id="endDate" name="endDate" required 
                         min="<?php echo htmlspecialchars($job['startDate'] ?? date('Y-m-d', strtotime('+3 days'))); ?>"
                         value="<?php echo htmlspecialchars($job['endDate'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="workingHour">Working Hour: <span class="required">*</span></label>
+                    <label for="workingHour">Working Hour<span class="required">*</span></label>
                     <select class="form-control" id="workingHour" name="workingHour" required>
                         <option value="Day Shift" <?php echo ($job['workingHour'] === 'Day Shift') ? 'selected' : ''; ?>>Day Shift</option>
                         <option value="Night Shift" <?php echo ($job['workingHour'] === 'Night Shift') ? 'selected' : ''; ?>>Night Shift</option>
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="workingTimeStart">Working Time: <span class="required">*</span></label>
+                    <label for="workingTimeStart">Working Time<span class="required">*</span></label>
                     <div class="d-flex align-items-center">
                         <input type="time" class="form-control" id="workingTimeStart" name="workingTimeStart"
                             required value="<?php echo htmlspecialchars($job['workingTimeStart'] ?? ''); ?>"
@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="race">Race: <span class="required">*</span></label>
+                    <label for="race">Race<span class="required">*</span></label>
                     <select class="form-control" id="race" name="race" required>
                         <option value="Any" <?php echo ($job['race'] === 'Any') ? 'selected' : ''; ?>>Any</option>
                         <option value="Malay" <?php echo ($job['race'] === 'Malay') ? 'selected' : ''; ?>>Malay</option>
@@ -177,18 +177,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="language">Language:</label>
+                    <label for="language">Language</label>
                     <input type="text" class="form-control" id="language" name="language" placeholder="e.g. Malay, English"
                         value="<?php echo htmlspecialchars($job['language'] ?? ''); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="jobDescription">Job Description: <span class="required">*</span></label>
+                    <label for="jobDescription">Job Description<span class="required">*</span></label>
                     <textarea class="form-control" id="jobDescription" name="jobDescription" rows="4" required><?php echo htmlspecialchars($job['jobDescription'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="jobRequirement">Requirements:</label>
+                    <label for="jobRequirement">Requirements</label>
                     <textarea class="form-control" id="jobRequirement" name="jobRequirement" rows="3"><?php echo htmlspecialchars($job['jobRequirements'] ?? ''); ?></textarea>
                 </div>
 
