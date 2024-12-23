@@ -295,7 +295,7 @@ document.getElementById('jobPostingForm').addEventListener('submit', function(e)
     // Check if end time is before start time or if time difference is more than 12 hours
     if (timeDiff <= 0 || timeDiff > 720) {
         e.preventDefault();
-        alert('Working hours must be between 1 and 12 hours, and end time must be after start time.');
+        alert('Working time cannot exceed 12 hours.');
     }
 });
     </script>
