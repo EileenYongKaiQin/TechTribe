@@ -1,7 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('employer1_nosidebar.php');
+include('employer1.php');
 
 if (!isset($_SESSION['userID'])) {
     header('Location: employer_dashboard.php');
@@ -99,27 +99,15 @@ if (!$data) {
                     <h1 class="heading">Contact Information</h1>
                     <ul class="employer-info">
                         <li class="email">
-                            <h1 class="title">Email: </h1>
+                            <h1 class="title-proInfo">Email: </h1>
                             <span class="info"> <?PHP echo $data['email'];?></span>
                         </li>
 
                         <li class="phone">
-                            <h1 class="title">Contact No.: </h1>
+                            <h1 class="title-proInfo">Contact No.: </h1>
                             <span class="info"> <?PHP echo $data['contactNo'];?></span>
                         </li>
                     </ul> 
-                </div>
-                
-                <div class="btns">
-                    <ul>
-                        <li class="reportUser">
-                            <button class="btn report">Report User</button>
-                        </li>
-
-                        <li class="sendmsg">
-                            <button class="btn message">Send Message</button>
-                        </li>
-                    </ul>
                 </div>
             </section>
 
@@ -132,31 +120,31 @@ if (!$data) {
                     <input type="radio" name="slider" id="application">
                     <nav>
                         <label for="about" class="about">About</label>
-                        <label for="skill" class="skill">Skills</label>
+                        <label for="skill" class="skill">&nbsp;&nbsp;Skills</label>
                         <label for="application" class="application">Application</label>
                         <div class="slider"></div>
                     </nav>
                     <section class="sec-con">
-                        <div class="content content-1">
+                        <div class="contentInfo contentInfo-1">
                             <h1 class="heading">Contact Information</h1>
                             <ul>
                                 <li class="email">
-                                    <h1 class="title">Email: </h1>
+                                    <h1 class="title-proInfo">Email: </h1>
                                     <span class="info"> <?PHP echo $data['email'];?></span>
                                 </li>
 
                                 <li class="phone">
-                                    <h1 class="title">Contact No.: </h1>
+                                    <h1 class="title-proInfo">Contact No.: </h1>
                                     <span class="info"> <?PHP echo $data['contactNo'];?></span>
                                 </li>
                             </ul>
                         </div>
 
-                        <div class="content content-2">
+                        <div class="contentInfo contentInfo-2">
                             
                         </div>
 
-                        <div class="content content-3">
+                        <div class="contentInfo contentInfo-3">
 
                         </div>
 

@@ -175,11 +175,11 @@ html {
 }
 
 .work_skills .work .heading::before {
-  width: 69%;
+  width: 64%;
 }
 
 .work_skills .languages .heading::before {
-  width: 79%;
+  width: 75%;
 }
 
 .work_skills .work .primary {
@@ -583,4 +583,3 @@ input[type='radio'] {
     animation: none;
   }
 }
-
