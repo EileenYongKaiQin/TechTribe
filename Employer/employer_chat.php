@@ -72,7 +72,7 @@ body {
 .chat-container {
     display: flex;
     flex-direction: column; /* Stack job seeker info and chat section vertically */
-    width:100%; /* Ensure consistent width */
+    width:60%; /* Ensure consistent width */
 }
 
 /* Chat Window Title */
@@ -218,7 +218,7 @@ button:hover {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 9999; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
