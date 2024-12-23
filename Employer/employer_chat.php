@@ -72,7 +72,7 @@ body {
 .chat-container {
     display: flex;
     flex-direction: column; /* Stack job seeker info and chat section vertically */
-    width: 60%; /* Ensure consistent width */
+    width:100%; /* Ensure consistent width */
 }
 
 /* Chat Window Title */
