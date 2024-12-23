@@ -142,7 +142,7 @@ if ($noti !== false) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <div class="title">
+            <div class="project-title">
                 <h1 class="logo-text">FlexMatch</h1>        
             </div>
         </div>
@@ -232,7 +232,7 @@ if ($noti !== false) {
         </div>
         <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
-    <section class="content">
+    <section class="main-content">
     </section>
 
     </div>    
