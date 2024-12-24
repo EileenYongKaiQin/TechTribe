@@ -72,7 +72,7 @@ body {
 .chat-container {
     display: flex;
     flex-direction: column; /* Stack job seeker info and chat section vertically */
-    width: 100%; /* Ensure consistent width */
+    width: 60%; /* Ensure consistent width */
 }
 
 /* Chat Window Title */
@@ -218,7 +218,7 @@ button:hover {
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 9999; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -310,6 +310,23 @@ button:hover {
 }
 
 .modal-content-cancel:hover {
+    background-color: rgb(0, 0, 159); /* Darker gray on hover */
+    transform: scale(1.05);
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-okay {
+    margin-top: 8%;
+    margin-right: 2%;
+    margin-left: 2%;
+    border-radius: 20px;
+    background-color: blue;
+    font-size: 15px;
+    box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.modal-content-okay:hover {
     background-color: rgb(0, 0, 159); /* Darker gray on hover */
     transform: scale(1.05);
     box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
@@ -614,7 +631,7 @@ button:hover {
     padding: 10px;
     position: absolute;
     z-index: 10;
-    left: 634px;
+    left: 614px;
     top: -16px;
     box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
@@ -733,6 +750,14 @@ button:hover {
     
 }
 
+.message-body-no-date {
+    font-size: 14px; /* Adjust as needed */
+    color: #888; /* Light gray for subtle text */
+    text-align: center; /* Align date to the right */
+    padding: 5px 10px; /* Add some spacing around the header */
+    font-weight: bold; /* Make the text bold */
+}
+
 .highlight-message {
     transform: scale(1.02);
     background-color: #efefef;
@@ -812,6 +837,15 @@ button:hover {
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="modal" class="modal" style="display: none;"> <!-- Initially hidden -->
+    <div class="modal-content">
+        <span id="modalClose" class="close">&times;</span> <!-- Close icon -->
+        <p id="modalMessage"></p> <!-- Message placeholder -->
+        <button id="modalOkButton" class="modal-content-okay">Okay</button> <!-- OK button -->
+    </div>
+</div>
+
     <script src="../js/job_seeker_chat.js"></script>
     <script>
     function toggleDropdown() {
@@ -856,11 +890,12 @@ document.addEventListener("click", function (event) {
 
     function applyDateFilter() {
     const selectedDate = document.getElementById("filterDate").value;
+    const formattedSelectedDate = formatDate(selectedDate); // Format the selected date
     const employerID = "<?php echo $employerID; ?>"; // Get jobSeekerID from PHP
     const userID = "<?php echo htmlspecialchars($userID); ?>"; // Get userID from PHP
 
     if (!selectedDate) {
-        alert("Please select a date to filter.");
+        showModal("Please select a date to filter.");
         return;
     }
 
@@ -873,10 +908,21 @@ document.addEventListener("click", function (event) {
             searchResults.style.display = "none"; // Hide search results by default
 
             if (data.status === "error") {
-                alert(data.message); // Show error message
+                showModal(data.message); // Show error message in modal
                 return; // Exit early on error
             } else if (data.status === "nextAvailableDate") {
-                alert(`No chat history found for ${selectedDate}. Showing history for ${data.nextDate}.`);
+                // Format the next available date
+                const formattedNextDate = formatDate(data.nextDate);
+                
+                // Display no history message in search results
+                const noHistoryMessage = document.createElement("div");
+                noHistoryMessage.className = "message"; // Apply your message styling
+                noHistoryMessage.innerHTML = `
+                    <div class="message-body-no-date">
+                        No chat history found for ${formattedSelectedDate}. Showing history for ${formattedNextDate}.
+                    </div>
+                `;
+                searchResults.appendChild(noHistoryMessage); // Add no history message to results
             }
 
             // Populate the search results with filtered messages
@@ -907,20 +953,75 @@ document.addEventListener("click", function (event) {
                     searchResults.appendChild(messageDiv);
                 });
                 searchResults.style.display = "block"; // Show search results if there are messages
+            }else if (data.status === "nextAvailableDate") {
+                // Show search results if there are no messages, only showing the no history message
+                searchResults.style.display = "block"; // Show the no history message as part of search results
             }
+
+            // Close the date filter container
+            toggleDateFilter(); 
         })
         .catch(error => console.error("Error filtering chat history:", error));
 }
 
 
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
 
+    // Get the individual parts of the date
+    const day = date.getDate(); // Get the day of the month
+    const month = date.toLocaleString('en-US', { month: 'long' }); // Get the full month name
+    const year = date.getFullYear(); // Get the full year
+
+    // Return the formatted date as "23 December 2024"
+    return `${day} ${month} ${year}`;
+}
+
+function showModal(message) {
+    const modal = document.getElementById("modal");
+    const modalMessage = document.getElementById("modalMessage");
+    const modalHeading = document.getElementById("modalHeading");
+    const closeModal = document.getElementById("modalClose");
+    const modalOkButton = document.getElementById("modalOkButton");
+    const filterContainer = document.getElementById("filterContainer"); // Reference to filter container
+    const searchResults = document.getElementById("searchResults"); // Reference to search results
+
+    // Hide the filter container if it's open
+    if (filterContainer.style.display === "block") {
+        filterContainer.style.display = "none";
+    }
+
+    // Hide search results when showing the modal
+    if (searchResults.style.display === "block") {
+        searchResults.style.display = "none";
+    }
+
+    modalMessage.innerHTML = `<h2>${message}</h2>`; // Display the message inside an h2
+    modal.style.display = "block"; // Show the modal
+
+    // Close the modal when the close button or "Okay" button is clicked
+    closeModal.onclick = closeModalHandler;
+    modalOkButton.onclick = closeModalHandler;
+
+    // Close the modal when clicking outside the modal content
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            closeModalHandler();
+        }
+    };
+
+    function closeModalHandler() {
+        modal.style.display = "none";
+    }
+}
 
 function searchChat() {
     const searchQuery = document.getElementById("searchBar").value.trim();
     const employerID = "<?php echo $employerID; ?>"; // Get jobSeekerID from PHP
 
     if (!searchQuery) {
-        alert("Please enter a search term.");
+        showModal("Please enter a search term.");
         return;
     }
 
@@ -969,7 +1070,7 @@ function searchChat() {
                         searchResults.appendChild(messageDiv);
                     });
                 } else {
-                    searchResults.innerHTML = "<div>No messages found for the search term.</div>";
+                    showModal("No messages found for the search term."); // Use showModal to inform the user
                 }
             }
 
@@ -1036,7 +1137,61 @@ function jumpToMessage(messageId) {
 }
 
 
+function sendMessage(event, senderRole, userID) {
+    event.preventDefault();
+    const chatInput = document.getElementById("chatInput");
+    const messageContents = chatInput.value.trim();
+    
+    if (!messageContents) {
+        showModal("Please enter a message before sending."); // Notify user
+        return; // Exit the function
+    }
 
+    // Get current timestamp
+    const timestamp = new Date().toISOString();
+
+    // Add message to the chat section with timestamp
+    addMessageToChat(messageContents, senderRole, null, timestamp);
+    chatInput.value = "";
+
+    address = window.location.search 
+  
+    // Returns a URLSearchParams object instance 
+    parameterList = new URLSearchParams(address) 
+    const employerID = parameterList.get("employerID"); 
+
+    // Send message to the server
+    fetch("../database/jobSeekerChat.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&employerID=${employerID}&timestamp=${timestamp}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            setTimeout(() => {
+                const autoResponse = senderRole === 'employer' ? 
+                    "Thank you for your message. I will get back to you soon!" : 
+                    "Thank you for your message. We will get back to you soon!";
+
+                const autoResponseTimestamp = new Date().toISOString();
+                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
+                location.reload()
+                fetch("../database/jobSeekerChat.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status !== "success") {
+                        console.error(data.error);
+                    }
+                });
+            }, 1000);
+        }
+    });
+}
 
     function report() {
         const employerID = "<?php echo $employerID; ?>";

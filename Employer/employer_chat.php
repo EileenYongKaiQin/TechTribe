@@ -756,7 +756,7 @@ button:hover {
 .message-body-no-date {
     font-size: 14px; /* Adjust as needed */
     color: #888; /* Light gray for subtle text */
-    text-align: left; /* Align date to the right */
+    text-align: center; /* Align date to the right */
     padding: 5px 10px; /* Add some spacing around the header */
     font-weight: bold; /* Make the text bold */
 }
