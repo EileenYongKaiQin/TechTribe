@@ -631,7 +631,7 @@ button:hover {
     padding: 10px;
     position: absolute;
     z-index: 10;
-    left: 614px;
+    left: 634px;
     top: -16px;
     box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scaling */
