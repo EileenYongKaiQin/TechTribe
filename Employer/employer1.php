@@ -53,24 +53,13 @@ if ($noti !== false) {
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/job_seeker_layout.css">
     <style>
-        .logo-text {
-            line-height: 24px;
-            font-weight: bold;
-            font-size: 20px;
-            color: #FFFFFF;
-            margin: 0; 
-            position: absolute;
-            top: 95px;
-            left: 24%;
-        }
-
         /* Notifications */
         .notification-container {
             position: absolute;
             width: 362px;
             height: auto;
             top: 60px;
-            right: 300px;
+            right: 380px;
             background: #F4F4F4;
             border-radius: 8px;
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -124,7 +113,7 @@ if ($noti !== false) {
         .notification-count {
             position: absolute;
             top: 20px;
-            right: 300px;
+            right: 385px;
             background-color: red;
             border-radius: 50%;
             width: 20px;
@@ -149,7 +138,7 @@ if ($noti !== false) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <div class="project-title">
+            <div class="title">
                 <h1 class="logo-text">FlexMatch</h1>        
             </div>
         </div>
@@ -219,8 +208,8 @@ if ($noti !== false) {
                     </div>
                     <?php endforeach; ?>
             </div>
-            <a href="view_selfprofile_employer.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
-                <a href="view_selfprofile_employer.php">    
+            <a href="view_employer_profile.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
+                <a href="view_employer_profile.php">    
                     <div class="user-info">
                         <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                         <span class="user-role">Employer</span>
@@ -229,7 +218,7 @@ if ($noti !== false) {
         </div>
         <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
-    <section class="main-content">
+    <section class="content">
     </section>
 
     </div>    

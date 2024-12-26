@@ -24,57 +24,57 @@ document.addEventListener("DOMContentLoaded", () => {
     loadChatHistory(employerID);
 });
 
-function sendMessage(event, senderRole, userID) {
-    event.preventDefault();
-    const chatInput = document.getElementById("chatInput");
-    const messageContents = chatInput.value.trim();
-    if (!messageContents) return;
+// function sendMessage(event, senderRole, userID) {
+//     event.preventDefault();
+//     const chatInput = document.getElementById("chatInput");
+//     const messageContents = chatInput.value.trim();
+//     if (!messageContents) return;
 
-    // Get current timestamp
-    const timestamp = new Date().toISOString();
+//     // Get current timestamp
+//     const timestamp = new Date().toISOString();
 
-    // Add message to the chat section with timestamp
-    addMessageToChat(messageContents, senderRole, null, timestamp);
-    chatInput.value = "";
+//     // Add message to the chat section with timestamp
+//     addMessageToChat(messageContents, senderRole, null, timestamp);
+//     chatInput.value = "";
 
-    address = window.location.search 
+//     address = window.location.search 
   
-    // Returns a URLSearchParams object instance 
-    parameterList = new URLSearchParams(address) 
-    const employerID = parameterList.get("employerID"); 
+//     // Returns a URLSearchParams object instance 
+//     parameterList = new URLSearchParams(address) 
+//     const employerID = parameterList.get("employerID"); 
 
-    // Send message to the server
-    fetch("../database/jobSeekerChat.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&employerID=${employerID}&timestamp=${timestamp}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            setTimeout(() => {
-                const autoResponse = senderRole === 'employer' ? 
-                    "Thank you for your message. I will get back to you soon!" : 
-                    "Thank you for your message. We will get back to you soon!";
+//     // Send message to the server
+//     fetch("../database/jobSeekerChat.php", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//         body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(messageContents)}&employerID=${employerID}&timestamp=${timestamp}`
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.status === "success") {
+//             setTimeout(() => {
+//                 const autoResponse = senderRole === 'employer' ? 
+//                     "Thank you for your message. I will get back to you soon!" : 
+//                     "Thank you for your message. We will get back to you soon!";
 
-                const autoResponseTimestamp = new Date().toISOString();
-                addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
-                location.reload()
-                fetch("../database/jobSeekerChat.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status !== "success") {
-                        console.error(data.error);
-                    }
-                });
-            }, 1000);
-        }
-    });
-}
+//                 const autoResponseTimestamp = new Date().toISOString();
+//                 addMessageToChat(autoResponse, senderRole === "employer" ? "job_seeker" : "employer", null, autoResponseTimestamp);
+//                 location.reload()
+//                 fetch("../database/jobSeekerChat.php", {
+//                     method: "POST",
+//                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//                     body: `senderRole=${senderRole === "employer" ? "job_seeker" : "employer"}&messageContents=${encodeURIComponent(autoResponse)}&employerID=${employerID}&timestamp=${autoResponseTimestamp}`
+//                 })
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     if (data.status !== "success") {
+//                         console.error(data.error);
+//                     }
+//                 });
+//             }, 1000);
+//         }
+//     });
+// }
 
 
 // Show notification
