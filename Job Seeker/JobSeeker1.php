@@ -237,11 +237,6 @@ if ($noti !== false) {
 
     </div>    
     <script>
-        // Function to toggle the submenu visibility
-        function toggleSubmenu() {
-            const submenu = document.querySelector('.submenu');
-            submenu.style.display = submenu.style.display === 'flex' ? 'none' : 'flex';
-        }
 
 
         document.querySelector('.notification-icon').addEventListener('click', function() {
@@ -285,20 +280,20 @@ if ($noti !== false) {
             const years = Math.round(seconds / 31553280);
 
             if (seconds <= 60) {
-                return "Just Now";
-            } else if (minutes <= 60) {
-                return minutes === 1 ? "one minute ago" : ${minutes} minutes ago;
-            } else if (hours <= 24) {
-                return hours === 1 ? "an hour ago" : ${hours} hours ago;
-            } else if (days <= 7) {
-                return days === 1 ? "yesterday" : ${days} days ago;
-            } else if (weeks <= 4.3) {
-                return weeks === 1 ? "one week ago" : ${weeks} weeks ago;
-            } else if (months <= 12) {
-                return months === 1 ? "one month ago" : ${months} months ago;
-            } else {
-                return years === 1 ? "one year ago" : ${years} years ago;
-            }
+        return "Just Now";
+    } else if (minutes <= 60) {
+        return minutes === 1 ? "one minute ago" : `${minutes} minutes ago`;
+    } else if (hours <= 24) {
+        return hours === 1 ? "an hour ago" : `${hours} hours ago`;
+    } else if (days <= 7) {
+        return days === 1 ? "yesterday" : `${days} days ago`;
+    } else if (weeks <= 4.3) {
+        return weeks === 1 ? "one week ago" : `${weeks} weeks ago`;
+    } else if (months <= 12) {
+        return months === 1 ? "one month ago" : `${months} months ago`;
+    } else {
+        return years === 1 ? "one year ago" : `${years} years ago`;
+    }
         }
 
         // Function to update the notification time dynamically
@@ -310,6 +305,11 @@ if ($noti !== false) {
                 const timeAgo = time_ago(timestamp);
                 notiTime.textContent = timeAgo;
             });
+        }
+        // Function to toggle the submenu visibility
+        function toggleSubmenu() {
+            const submenu = document.querySelector('.submenu');
+            submenu.style.display = submenu.style.display === 'flex' ? 'none' : 'flex';
         }
 
         // Update times every minute

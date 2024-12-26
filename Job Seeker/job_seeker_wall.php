@@ -31,10 +31,7 @@
                         </button>
                     <?php endif; ?>
                 </form>
-                    <button class="filter-btn" onclick="toggleFilterForm()">Filter <span class="dropdown-icon">▼</span></button>
-                    
-
-
+                    <button class="filter-btn" onclick="toggleFilterForm()">Filter <span class="dropdown-icon">▼</span></button>             
         </div>
         <div class="filter-section">
         <form id="filter-form" method="GET" action="job_seeker_wall.php" class="filter-dropdown">

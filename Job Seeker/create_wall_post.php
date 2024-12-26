@@ -20,7 +20,7 @@
         </div>
 
         <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
-            <label for="skills"><b>Skill:</b><span class="required">*</span></label>
+            <label for="skills"><b>Skill</b><span class="required">*</span></label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
                 <option value="Customer Service">Customer Service</option>
@@ -48,52 +48,53 @@
             </select><br>
             
 
-            <label for="skillDetails"><b>Skill Details:</b><span class="required">*</span></label>
+            <label for="skillDetails"><b>Skill Details</b><span class="required">*</span></label>
             <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="100" placeholder="Describe your skills in this category (max 100 words)" required></textarea><br>
 
-            <label><b>Available Time:</b><span class="required">*</span></label>
+            <label><b>Available Time</b> <span class="remark" style="font-size:10px;">(Time Interval: 10 minutes)</span><span class="required">*</span></label>
             <div class="availability-slots">
                 <div class="availability-slot">
                     <label>Monday</label>
-                    <input type="time" name="mondayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="mondayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="mondayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="mondayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Tuesday</label>
-                    <input type="time" name="tuesdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="tuesdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="tuesdayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="tuesdayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Wednesday</label>
-                    <input type="time" name="wednesdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="wednesdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="wednesdayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="wednesdayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Thursday</label>
-                    <input type="time" name="thursdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="thursdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="thursdayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="thursdayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Friday</label>
-                    <input type="time" name="fridayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="fridayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="fridayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="fridayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Saturday</label>
-                    <input type="time" name="saturdayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="saturdayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="saturdayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="saturdayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
                 <div class="availability-slot">
                     <label>Sunday</label>
-                    <input type="time" name="sundayStart" placeholder="Start Time" step="600" onchange="validateTime(this)">
-                    <input type="time" name="sundayEnd" placeholder="End Time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="sundayStart" placeholder="Start Time" class="available-time" step="600" onchange="validateTime(this)">
+                    <input type="time" name="sundayEnd" placeholder="End Time" class="available-time" step="600" onchange="validateTime(this)">
                 </div>
             </div>
 
 
+
         <!-- Location section -->
         <div class="location-section">
-            <label for="state"><b>Location:</b><span class="required">*</span></label><br>
+            <label for="state"><b>Location</b><span class="required">*</span></label><br>
             <div class="location-selects">
                 <select id="state" name="state" required onchange="updateDistricts()">
                     <option value="">Select a State</option>
@@ -122,7 +123,7 @@
         </div>
 
 
-            <label for="jobPreferences"><b>Job Preferences (Optional):</b></label>
+            <label for="jobPreferences"><b>Job Preferences <span class="remark" style="font-size:10px;">(Optional)</span></b></label>
             <textarea id="jobPreferences" name="jobPreferences" rows="4" maxlength="100" placeholder="Describe your preference (max 100 words)"></textarea><br>
 
             <button type="submit">Publish</button>
@@ -168,18 +169,54 @@
             }
         }
 
-         // Confirm form submission
-        function confirmSubmit() {
+        // Confirm form submission
+        function confirmSubmit(event) {
             event.preventDefault(); // Prevent form from submitting immediately
 
+
+            // Get all the availability inputs for start and end times
+            const availabilitySlots = document.querySelectorAll('.availability-slot');
+            let notAllEmpty = false;
+            let isValid = true;
+
+            // Loop through each availability slot to check if both start and end times are selected
+            availabilitySlots.forEach(slot => {
+                const startTime = slot.querySelector('input[name$="Start"]').value;
+                const endTime = slot.querySelector('input[name$="End"]').value;
+
+                // Check if both start and end time are filled
+                if (startTime && endTime) {
+                    notAllEmpty = true;
+                }
+                if ((startTime && !endTime) || (!startTime && endTime)){
+                    isValid = false;
+                }
+            });
+
+
+            // If no valid pair of times is found, show the alert
+            if (!notAllEmpty) {
+                alert("Please ensure at least one day has valid start and end times.");
+                return; // Stop further processing
+            }
+            if (!isValid) {
+                alert("Please ensure no empty start/end time");
+                return; // Stop further processing
+            }
+            // If valid time is selected, show the SweetAlert confirmation
             Swal.fire({
-                title: 'Are you sure you want to submit this post?',
-                icon: 'warning',
+                title: 'Are you sure you want to publish this post?',
+                icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'custom-swal',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Submit the form if user confirmed
@@ -187,6 +224,9 @@
                 }
             });
         }
+
+        document.querySelector('.swal-confirm-btn').style.backgroundColor = '#f00';
+        document.querySelector('.swal-cancel-btn').style.backgroundColor = '#ccc';
 
         function validateTime(input) {
             const slot = input.closest('.availability-slot');

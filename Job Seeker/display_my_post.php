@@ -21,11 +21,11 @@
             echo '<div class="user-info-post"">';
                 // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
                 echo '<div class="picture">';
-                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '">
+                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">
                     <img src="../images/JobSeeker.png" alt="Profile Picture" class="profile-pic"></a>';
                 echo '</div>';
                 echo '<div class="name">';
-                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
+                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
                 echo '</div>';
             echo '</div>';
 
@@ -117,13 +117,22 @@ function confirmDelete(postID) {
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel'
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'custom-swal',
+            confirmButton: 'swal-confirm-btn',
+            cancelButton: 'swal-cancel-btn'
+        }
     }).then((result) => {
         if (result.isConfirmed) {
             // Redirect to the delete script with the postID
             window.location.href = 'delete_wall_post.php?postID=' + postID;
         }
     });
+    document.querySelector('.swal-confirm-btn').style.backgroundColor = '#f00';
+    document.querySelector('.swal-cancel-btn').style.backgroundColor = '#ccc';
+
+
 }
 </script>
 

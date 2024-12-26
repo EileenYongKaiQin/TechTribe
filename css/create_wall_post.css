@@ -123,6 +123,11 @@ select {
     color: red;
 }
 
+.remark{
+    font-size: 10px;
+    font-style: italic;
+}
+
 /* Style for the location section */
 .location-section {
     margin-bottom: 10px;

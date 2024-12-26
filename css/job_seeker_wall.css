@@ -64,6 +64,7 @@ h1{
     padding: 20px; /* Padding around the wall */
     background-color: #ffffff;
     width: 90%;
+    min-width: 1000px;
     margin: 10px auto 80px;
     padding: 30px;
 }
@@ -130,7 +131,7 @@ h3{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 480px; 
+    height: 520px; 
     overflow: hidden;
     text-align: left; 
 }
@@ -163,6 +164,9 @@ h3{
     color: #666;
 }
 
+.chat{
+    width: 100%;
+}
 
 /* Chat Button */
 .chat-btn {
@@ -402,6 +406,11 @@ h3{
     max-height: none;
 }
 
+@media(max-width: 1135px) {
+    .post{
+        height: 550px;
+    } 
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -416,4 +425,19 @@ h3{
     .chat-btn {
         width: 100%;
     }
+    /* Adjust the post layout */
+    .job-seeker-wall {
+        grid-template-columns: 1fr; 
+        min-width: 600px;
+    }
+
+    .post-container {
+        width: 100%; 
+        margin-bottom: 20px; 
+    }
+
+    .post{
+        height: 550px;
+    }
+
 }
