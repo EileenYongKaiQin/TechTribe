@@ -274,12 +274,9 @@ button.show-modal {
     font-size: 25px;
     font-weight: 700;
     color: #000000;
-    border: none;
-    cursor: not-allowed;
-    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
     display: block;
-    margin-left: auto;
-    margin-right: 600px;
+    border: none;
+    margin-left: 715px;
 }
 
 button.show-modal:hover {
@@ -287,18 +284,12 @@ button.show-modal:hover {
 }
 
 /* Active state (when all fields are filled) */
-button.show-modal.active {
+button.show-modal{
     background: #8EFAAB; /* Green color */
     cursor: pointer;
     color: #FFFFFF; /* Make text white */
 }
 
-/* Disabled state */
-button.show-modal:disabled {
-    cursor: not-allowed;
-    background: #BEC6BF;
-    color: #000000;
-}
 
 /* Modal Styling */
 .modal {
@@ -319,9 +310,8 @@ button.show-modal:disabled {
 /* Modal Content */
 .modal-content {
     position: absolute;
-    top: 50%; /* Center content vertically */
-    left: 50%; /* Center content horizontally */
-    transform: translate(-50%, -50%); /* Center adjustments */
+    top: 30%;
+    left: 30%; /* Center content horizontally */
     width: 731px;
     padding: 30px 40px;
     background: #FFFFFF;
@@ -517,5 +507,11 @@ textarea {
     font-size: 20px;
     color: black;
     font-weight: bold;
+}
+
+.form-group .error-message {
+    color: #E63946;
+    font-size: 14px;
+    margin-top: 5px;
 }
 

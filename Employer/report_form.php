@@ -48,7 +48,7 @@ if ($reportedUserID) {
 <a href="employer_dashboard.php" id="back-btn">Back</a>
 <div class="report-content">
     <!-- Report Form -->
-    <form id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
+    <form id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data" novalidate>
     <div class="form-group">
         <label for="reported_user">Reported User</label>
         <input type="text" id="reported_user" name="reported_user" value="<?php echo htmlspecialchars($userData['fullName']); ?>" readonly>
@@ -85,7 +85,7 @@ if ($reportedUserID) {
 </div>
     <input type="hidden" name="reportedUserID" value="<?php echo htmlspecialchars($reportedUserID); ?>">
     <!-- Submit Button -->
-        <button type="submit" class="show-modal" id="submitBtn" disabled>Submit</button>
+        <button type="submit" class="show-modal" id="submitBtn">Submit</button>
 </form>
 
 <!-- First Confirmation Modal -->
@@ -130,8 +130,6 @@ if ($reportedUserID) {
     </div>
 </div>
 
-
-    <script type="text/javascript" src="../js/ModalControl.js"></script>  
     <script>
     function blockUser(username) {
         alert("You have blocked " + username);
@@ -143,38 +141,41 @@ if ($reportedUserID) {
         // Add your logic to restrict the user
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-    // Select the button and form fields
-    const submitBtn = document.getElementById('submitBtn');
-    const formFields = document.querySelectorAll('#reportForm [required], #description');
+    document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("reportForm");
+    const firstModal = document.getElementById("firstModal");
+    const secondModal = document.getElementById("secondModal");
+    let formValid = false;
 
-    function validateForm() {
-        let isValid = true;
-
-        // Check if all required fields are filled
-        formFields.forEach(field => {
-            if (field.value.trim() === '') {
-                isValid = false;
-            }
-        });
-
-        // Enable the button if all fields are valid
-        if (isValid) {
-            submitBtn.classList.add('active');
-            submitBtn.disabled = false;
+    form.addEventListener("submit", function (event) {
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            event.preventDefault();
         } else {
-            submitBtn.classList.remove('active');
-            submitBtn.disabled = true;
-        }
-    }
+            const reportReason = document.getElementById("report_reason").value;
+            document.getElementById("reportReasonText").textContent = reportReason || "No reason selected";
 
-    // Add event listeners for all fields
-    formFields.forEach(field => {
-        field.addEventListener('input', validateForm);
+            event.preventDefault();
+            firstModal.style.display = "flex";
+            formValid = true;
+        }
     });
-    validateForm();
-    
+
+    document.getElementById("submit-modal-btn").addEventListener("click", function () {
+        firstModal.style.display = "none";
+        secondModal.style.display = "flex";
+    });
+
+    document.getElementById("finalSubmitBtn").addEventListener("click", function () {
+        if (formValid) {
+            form.submit();
+        }
+    });
 });
+
+function closeFirstModal() {
+    document.getElementById("firstModal").style.display = "none";
+}
     </script>
 </body>
 </html>

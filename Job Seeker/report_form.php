@@ -2,12 +2,9 @@
     include('../database/config.php');
     include('jobSeeker1.php');
 
-    // Assuming the jobPostID is passed as a GET parameter
     $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;
     
-    // Check if jobPostID exists
     if ($jobPostID) {
-        // Fetch the employer's username who created the job post
         $query = $con->prepare("
             SELECT l.username AS employerUsername
             FROM jobPost jp
@@ -18,7 +15,6 @@
         $query->execute();
         $result = $query->get_result();
         $employerData = $result->fetch_assoc();
-
         $employerUsername = $employerData['employerUsername'] ?? 'Unknown Employer';
     } else {
         $employerUsername = 'Unknown Employer';
@@ -37,52 +33,53 @@
             color: red;
             font-style: italic;
         }
+
+        button.show-modal {
+            background: #8EFAAB;
+            cursor: pointer;
+            color: #FFFFFF;
+        }
     </style>
     <script type="text/javascript" src="../js/previewFile.js"></script>  
-    
-   
 </head>
 <body>
 
 <h2>Report</h2>
 <a href="jobseeker_dashboard.php" id="back-btn">Back</a>
 <div class="report-content">
-    <!-- Report Form -->
-    <form  id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="report_reason">Reason For the Report<span class="required"> *</span></label>
-        <select id="report_reason" name="report_reason" required>
-            <option value="">-- Select --</option>
-            <option value="Fraud or Scam">Fraud or Scam</option>
-            <option value="Share False Information">Sharing False Information</option>
-            <option value="Spam">Spam</option>
-            <option value="Employer Misconduct">Employer Misconduct</option>
-            <option value="Others">Others</option>
-        </select>
-    </div>
+    <form id="reportForm" action="submitForm.php" method="POST" enctype="multipart/form-data" novalidate>
+        <div class="form-group">
+            <label for="report_reason">Reason For the Report<span class="required"> *</span></label>
+            <select id="report_reason" name="report_reason" required>
+                <option value="">-- Select --</option>
+                <option value="Fraud or Scam">Fraud or Scam</option>
+                <option value="Share False Information">Sharing False Information</option>
+                <option value="Spam">Spam</option>
+                <option value="Employer Misconduct">Employer Misconduct</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
 
-    <!-- Description -->
-     <div class="form-group">
-        <label for="description">Description of the Issue<span class="required"> *</span></label>
-        <textarea id="description" name="description" rows="5" placeholder="Write description not more than 50 words" required></textarea>
-    </div>
+        <div class="form-group">
+            <label for="description">Description of the Issue<span class="required"> *</span></label>
+            <textarea id="description" name="description" rows="5" placeholder="Write description not more than 50 words" required></textarea>
+        </div>
 
-    <!-- Evidence -->
-    <div class="form-group">
-        <label for="evidence">Evidence</label>
-        <label class="custom-file-upload-icon" onclick="document.getElementById('evidence').click()">
-            <img src="https://img.icons8.com/?size=100&id=c3Z8IwwzvmWR&format=png&color=000000" alt="Upload Icon">
-            <span>Upload File / Image</span>
-        </label>
-        <input type="file" id="evidence" name="evidence[]" multiple onchange="previewFiles()" accept=".jpg, .jpeg, .png, .pdf">
-        <div id="file-preview" class="file-preview"></div>
-        <span class="required">* Only jpg, png, or pdf files are allowed.</span>
-    </div>
+        <div class="form-group">
+            <label for="evidence">Evidence</label>
+            <label class="custom-file-upload-icon" onclick="document.getElementById('evidence').click()">
+                <img src="https://img.icons8.com/?size=100&id=c3Z8IwwzvmWR&format=png&color=000000" alt="Upload Icon">
+                <span>Upload File / Image</span>
+            </label>
+            <input type="file" id="evidence" name="evidence[]" multiple onchange="previewFiles()" accept=".jpg, .jpeg, .png, .pdf">
+            <div id="file-preview" class="file-preview"></div>
+            <span class="required">* Only jpg, png, or pdf files are allowed.</span>
+        </div>
 </div>
-<input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($jobPostID ?? ''); ?>">
-    <!-- Submit Button -->
-        <button type="submit" class="show-modal" id="submitBtn" disabled>Submit</button>
-</form>
+        <input type="hidden" name="jobPostID" value="<?php echo htmlspecialchars($jobPostID ?? ''); ?>">
+        <button type="submit" class="show-modal" id="submitBtn">Submit</button>
+    </form>
+
 
 <!-- First Confirmation Modal -->
 <div id="firstModal" class="modal">
@@ -103,21 +100,21 @@
     </div>
 </div>
 
- <!-- Second Modal (Take Action/Close) -->
+<!-- Second Modal (Action Confirmation) -->
 <div id="secondModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h3>Thanks for reporting this post</h3>
-            <p>While you wait for our decision, we'd like you to know that <br>there are other steps you can take now.</p>
+            <p>While you wait for our decision, here are additional actions you can take.</p>
         </div>
         <div class="modal-body">
             <div class="modal-actions" onclick="blockUser('<?php echo $employerUsername; ?>')">
                 Block <?php echo $employerUsername; ?>
-                <span>&#8250;</span> <!-- Right arrow icon -->
+                <span>&#8250;</span>
             </div>
             <div class="modal-actions" onclick="restrictUser('<?php echo $employerUsername; ?>')">
                 Restrict <?php echo $employerUsername; ?>
-                <span>&#8250;</span> <!-- Right arrow icon -->
+                <span>&#8250;</span>
             </div>
         </div>
         <div class="modal-footer">
@@ -126,51 +123,51 @@
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("reportForm");
+    const firstModal = document.getElementById("firstModal");
+    const secondModal = document.getElementById("secondModal");
+    let formValid = false;
 
-    <script type="text/javascript" src="../js/ModalControl.js"></script>  
-    <script>
-    function blockUser(username) {
-        alert("You have blocked " + username);
-        // Add your logic to block the user
-    }
-
-    function restrictUser(username) {
-        alert("You have restricted " + username);
-        // Add your logic to restrict the user
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-    // Select the button and form fields
-    const submitBtn = document.getElementById('submitBtn');
-    const formFields = document.querySelectorAll('#reportForm [required], #description');
-
-    function validateForm() {
-        let isValid = true;
-
-        // Check if all required fields are filled
-        formFields.forEach(field => {
-            if (field.value.trim() === '') {
-                isValid = false;
-            }
-        });
-
-        // Enable the button if all fields are valid
-        if (isValid) {
-            submitBtn.classList.add('active');
-            submitBtn.disabled = false;
+    form.addEventListener("submit", function (event) {
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            event.preventDefault();
         } else {
-            submitBtn.classList.remove('active');
-            submitBtn.disabled = true;
-        }
-    }
+            const reportReason = document.getElementById("report_reason").value;
+            document.getElementById("reportReasonText").textContent = reportReason || "No reason selected";
 
-    // Add event listeners for all fields
-    formFields.forEach(field => {
-        field.addEventListener('input', validateForm);
+            event.preventDefault();
+            firstModal.style.display = "flex";
+            formValid = true;
+        }
     });
-    validateForm();
-    
+
+    document.getElementById("submit-modal-btn").addEventListener("click", function () {
+        firstModal.style.display = "none";
+        secondModal.style.display = "flex";
+    });
+
+    document.getElementById("finalSubmitBtn").addEventListener("click", function () {
+        if (formValid) {
+            form.submit();
+        }
+    });
 });
-    </script>
+
+function closeFirstModal() {
+    document.getElementById("firstModal").style.display = "none";
+}
+
+function blockUser(username) {
+    alert("You have blocked " + username);
+}
+
+function restrictUser(username) {
+    alert("You have restricted " + username);
+}
+</script>
+
 </body>
 </html>

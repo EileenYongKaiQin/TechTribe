@@ -1,13 +1,14 @@
 let isFormValid = false;
 
 // Open the first modal and display selected report reason
-function openFirstModal(event) {
-    event.preventDefault();
-
-    if (validateForm()) {
+function openFirstModal() {
+    const form = document.getElementById("reportForm");
+    
+    // Force native HTML5 validation popup if fields are empty
+    if (!form.checkValidity()) {
+        form.reportValidity();  // Trigger HTML5 validation
+    } else {
         const reportReason = document.getElementById("report_reason").value;
-
-        // Update the modal fields
         document.getElementById("reportReasonText").textContent = reportReason;
         document.getElementById("firstModal").style.display = "block";
     }
@@ -39,33 +40,7 @@ function closeSecondModal() {
     document.getElementById("secondModal").style.display = "none";
 }
 
-// Validation function
-function validateForm() {
-    const requiredFields = document.querySelectorAll("#reportForm [required]");
-    let isValid = true;
-
-    requiredFields.forEach(field => {
-        if (field.value.trim() === "") {
-            isValid = false;
-        }
-    });
-
-    return isValid;
-}
-
 // Attach event listener to the submit button
 document.getElementById("submitBtn").addEventListener("click", openFirstModal);
 
-// Enable the submit button when form fields are filled
-document.querySelectorAll("#reportForm [required]").forEach(field => {
-    field.addEventListener("input", function () {
-        const submitBtn = document.getElementById("submitBtn");
-        if (validateForm()) {
-            submitBtn.classList.add("active");
-            submitBtn.disabled = false;
-        } else {
-            submitBtn.classList.remove("active");
-            submitBtn.disabled = true;
-        }
-    });
-});
+
