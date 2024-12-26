@@ -38,11 +38,11 @@ body {
     margin-bottom: 10px;
 }
 
-        .project-title{
-            display: flex; /* Enable flexbox */
-            align-items: center; /* Vertically center content */
-            justify-content: center; /* Horizontally center content if needed */
-        }
+.logo-section .title{
+    display: flex; /* Enable flexbox */
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content if needed */
+}
 
 .logo-section .title .logo-text {
     line-height: 24px;
@@ -181,15 +181,15 @@ body {
     color: #AAE1DE;
 }
 
-        .main-content {
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center; 
-            justify-content: flex-start; 
-        }
+.content {
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center; 
+    justify-content: flex-start; 
+}
 
 /* Hidden submenu styles */
 .submenu {
@@ -219,13 +219,11 @@ a {
     text-decoration: none;
 }
 
-        /* Active menu item style */
-        .menu-item.active, 
-        .submenu-item.active {
-            line-height: 1;
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: none; /* Ensure no scaling effect */
-            color: #FFFFFF;
-        }
-
-
+/* Active menu item style */
+.menu-item.active, 
+.submenu-item.active {
+    line-height: 1;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: none; /* Ensure no scaling effect */
+    color: #FFFFFF;
+}
