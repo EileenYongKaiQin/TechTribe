@@ -142,7 +142,7 @@ if ($noti !== false) {
     <div class="sidebar">
         <div class="logo-section">
             <img src="../images/FlexMatchLogo.png" alt="FlexMatch Logo" class="logo-image">
-            <div class="project-title">
+            <div class="title">
                 <h1 class="logo-text">FlexMatch</h1>        
             </div>
         </div>
@@ -222,8 +222,8 @@ if ($noti !== false) {
                     <?php endforeach; ?>
             </div>
             
-            <a href="view_selfprofile_jobseeker.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
-            <a href="view_selfprofile_jobseeker.php">
+            <a href="view_jobseeker_profile.php"><img src="../images/JobSeeker.png" alt="User Image" class="profile-image"></a>
+            <a href="view_jobseeker_profile.php">
             <div class="user-info">
                 <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
                 <span class="user-role">Job Seeker</span>
@@ -232,7 +232,7 @@ if ($noti !== false) {
         </div>
         <span class="logout-button" onclick="location.href='../login.html'">Log Out</span>
     </header>
-    <section class="main-content">
+    <section class="content">
     </section>
 
     </div>    
@@ -287,17 +287,17 @@ if ($noti !== false) {
             if (seconds <= 60) {
                 return "Just Now";
             } else if (minutes <= 60) {
-                return minutes === 1 ? "one minute ago" : `${minutes} minutes ago`;
+                return minutes === 1 ? "one minute ago" : ${minutes} minutes ago;
             } else if (hours <= 24) {
-                return hours === 1 ? "an hour ago" : `${hours} hours ago`;
+                return hours === 1 ? "an hour ago" : ${hours} hours ago;
             } else if (days <= 7) {
-                return days === 1 ? "yesterday" : `${days} days ago`;
+                return days === 1 ? "yesterday" : ${days} days ago;
             } else if (weeks <= 4.3) {
-                return weeks === 1 ? "one week ago" : `${weeks} weeks ago`;
+                return weeks === 1 ? "one week ago" : ${weeks} weeks ago;
             } else if (months <= 12) {
-                return months === 1 ? "one month ago" : `${months} months ago`;
+                return months === 1 ? "one month ago" : ${months} months ago;
             } else {
-                return years === 1 ? "one year ago" : `${years} years ago`;
+                return years === 1 ? "one year ago" : ${years} years ago;
             }
         }
 
