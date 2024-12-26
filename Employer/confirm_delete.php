@@ -104,7 +104,7 @@ ob_end_flush();
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 40px;
+            margin-top: -40px;
         }
 
         .cancel-button,
@@ -118,6 +118,7 @@ ob_end_flush();
             border-radius: 50px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
             cursor: pointer;
+            margin-top: 40px;
         }
 
         .cancel-button {
@@ -127,6 +128,7 @@ ob_end_flush();
         .cancel-button:hover,
         .delete-button:hover {
             opacity: 0.9;
+            text-decoration: none;
         }
 
         .modal-success {
@@ -140,7 +142,7 @@ ob_end_flush();
         <div class="modal-overlay" style="display: block;"></div>
 
         <!-- Success Modal -->
-        <div class="modal" style="display: block;">
+        <div class="modal-container" style="display: block;">
             <img src="../images/check-one.png" alt="Success" class="modal-icon" style="width: 50px; margin-top: 20px;">
             <h2 class="modal-title">SUCCESS</h2>
             <p class="modal-message">Job posting has been successfully deleted.</p>
