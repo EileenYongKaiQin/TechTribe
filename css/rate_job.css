@@ -89,9 +89,7 @@ button {
     font-weight: 700;
     color: #000000;
     border: none;
-    cursor: not-allowed;
     transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
-    display: block;
 
 }
 
@@ -99,16 +97,10 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Active state (when all fields are filled) */
-button.active {
+
+button {
     background: #8EFAAB; /* Green color */
     cursor: pointer;
     color: #FFFFFF; /* Make text white */
 }
 
-/* Disabled state */
-button:disabled {
-    cursor: not-allowed;
-    background: #BEC6BF;
-    color: #000000;
-}

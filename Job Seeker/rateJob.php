@@ -57,6 +57,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rate Job Experience</title>
     <link rel="stylesheet" href="../css/rate_job.css">
+    <style>
+        button {
+            background: #8EFAAB; /* Green color */
+            cursor: pointer;
+            color: #FFFFFF; /* Make text white */
+        }
+
+        .required {
+            color: red;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
     <div class="main-content">
@@ -65,9 +77,9 @@
                     <p class="job-ask">What do you think of this job?</p>
                     <h3><?= htmlspecialchars($job['jobTitle']) ?> (<?= htmlspecialchars($job['venue']) ?>)</h3>
                 </div>
-                <form action="" id="ratingForm" method="post">
+                <form action="" id="ratingForm" method="post" novalidate>
                     <div class="rating-section">
-                        <h3>Your Rating</h3>
+                        <h3>Your Rating<span class="required"> *</span></h3>
                         <div class="rating-stars">
                             <img src="../images/rating-star-before.png" alt="Star 1" data-value = "1">
                             <img src="../images/rating-star-before.png" alt="Star 2" data-value = "2">
@@ -83,7 +95,7 @@
                         <textarea name="feedback" placeholder="To make reviews more useful, you can talk about the company's features and other details."></textarea>
                     </div>
             </div>
-                    <button type="submit" id="submit-btn" class="submit-btn" disabled>Submit</button>
+                    <button type="submit" id="submit-btn" class="submit-btn">Submit</button>
                 </form>
             
         </div>
@@ -93,6 +105,7 @@
     const stars = document.querySelectorAll(".rating-stars img");
     const ratingInput = document.getElementById("ratingInput");
     const submitBtn = document.getElementById("submit-btn");
+    const form = document.getElementById("ratingForm");
 
     // Add click event listener to each star
     stars.forEach((star, index) => {
@@ -100,7 +113,6 @@
             const rating = index + 1; // Determine the selected rating
             updateStars(rating); // Update the stars' appearance
             ratingInput.value = rating; // Update the hidden input value
-            validateForm(); // Enable the submit button
         });
     });
 
@@ -115,23 +127,13 @@
         });
     }
 
-    // Validate the form
-    function validateForm() {
-        const isRatingSelected = ratingInput.value.trim() !== "";
-
-        if (isRatingSelected) {
-            submitBtn.disabled = false;
-            submitBtn.classList.add('active');
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('active');
+    form.addEventListener("submit", (event) => {
+        const rating = ratingInput.value;
+        if (!rating) {
+            alert("Please provide a rating.");
+            event.preventDefault(); // Prevent form submission
         }
-    }
-
-    
-
-    // Add input listener to feedback field for validation
-    feedbackField.addEventListener("input", validateForm);
+    });
 });
     </script>
 </body>
