@@ -789,10 +789,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let isValid = true;
 
         if (field.tagName.toLowerCase() === 'select') {
-            // For select elements, check if a non-default option is selected
             isValid = field.selectedIndex !== 0;
         } else {
-            // For input elements, check if the value is not empty
             isValid = field.value.trim() !== '';
         }
 

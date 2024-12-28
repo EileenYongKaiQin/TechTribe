@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         form .form-row {
             align-items: center;
             width: 100%;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
         }
         form .form-row label,
         form .input-row label {
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         .form-row select {
             width: 100%;
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -201,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         .input-group input[type="text"],
         .input-group button {
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             border-radius: 8px;
             border: 1px solid #ccc;
             box-sizing: border-box;
@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
         .form-row input[type="file"] {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -438,6 +438,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             margin-bottom: 10px;
             float: right;
         }
+        .required::after{
+            content:" *";
+            color:red;
+            font-size: 20px;
+            margin-left: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 5px;
+            text-align: left;
+            display: none;
+            position: absolute;
+        }
+        .error input,
+        .error select {
+            border: 2px solid red !important;
+        }
+
+        .error .error-message {
+            display: block;
+        }
     </style>
     
 </head>
@@ -454,58 +477,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="email">Email</label>
-                    <input type="text" name="email" placeholder="Enter Email" value="<?php echo htmlspecialchars($data['email']);?>" required>
+                    <label for="email" class="required">Email</label>
+                    <input type="text" name="email" placeholder="Enter Email" value="<?php echo htmlspecialchars($data['email']);?>" data-required="true">
+            <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($data['contactNo']);?>" minlength="10" maxlength="12" required>
+                    <label for="contactNo" class="required">Contact No.</label>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($data['contactNo']);?>" minlength="10" maxlength="12" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="age">Age</label>
-                    <input type="text" name="age" placeholder="Enter Age" value="<?php echo htmlspecialchars($data['age']);?>" required>
+                    <label for="age" class="required">Age</label>
+                    <input type="text" name="age" placeholder="Enter Age" value="<?php echo htmlspecialchars($data['age']);?>" data-required="true">
+                <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-mid">
                 <div class="form-row">
-                    <label for="gender">Gender</label>
-                    <select name="gender" id="gender" value="<?php echo htmlspecialchars($data['gender']);?>">
+                    <label for="gender" class="required">Gender</label>
+                    <select name="gender" id="gender" value="<?php echo htmlspecialchars($data['gender']);?>" data-required="true">
                         <option disabled selected hidden>- Select Gender -</option>
                         <option value="Male" <?php echo htmlspecialchars($data['gender']) === 'Male' ? 'selected' : ''; ?>>Male</option>
                         <option value="Female" <?php echo htmlspecialchars($data['gender']) === 'Female' ? 'selected' : ''; ?>>Female</option>
-                    </select> 
+                    </select>
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="race">Race</label>
-                    <select name="race" id="race" value="<?php echo htmlspecialchars($data['race']);?>">
+                    <label for="race" class="required">Race</label>
+                    <select name="race" id="race" value="<?php echo htmlspecialchars($data['race']);?>" data-required="true">
                         <option disabled selected hidden>- Select Race -</option>
                         <option value="Malay" <?php echo htmlspecialchars($data['race']) === 'Malay' ? 'selected' : ''; ?>>Malay</option>
                         <option value="Chinese" <?php echo htmlspecialchars($data['race']) === 'Chinese' ? 'selected' : ''; ?>>Chinese</option>
                         <option value="Indian" <?php echo htmlspecialchars($data['race']) === 'Indian' ? 'selected' : ''; ?>>Indian</option>
                         <option value="Others" <?php echo htmlspecialchars($data['race']) === 'Others' ? 'selected' : ''; ?>>Others</option>
-                    </select> 
+                    </select>
+                    <div class="error-message">This field is required</div> 
                 </div>
             </div>
         </div>
         <div class="row">  
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="location">Location</label>
-                    <input type="text" name="location" placeholder="Enter Location" value="<?php echo htmlspecialchars($data['location']);?>" required>
+                    <label for="location" class="required">Location</label>
+                    <input type="text" name="location" placeholder="Enter Location" value="<?php echo htmlspecialchars($data['location']);?>" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div> 
             <div class="col-25-ri">
                 <div class="form-row">
-                    <label for="state">State</label>
-                    <select name="state" id="state" value="<?php echo htmlspecialchars($data['state']);?>">
+                    <label for="state" class="required">State</label>
+                    <select name="state" id="state" value="<?php echo htmlspecialchars($data['state']);?>" data-required="true">
                         <option disabled selected hidden>- Choose State -</option>
                         <option value="Johor" <?php echo htmlspecialchars($data['state']) === 'Johor' ? 'selected' : ''; ?>>Johor</option>
                         <option value="Kedah" <?php echo htmlspecialchars($data['state']) === 'Kedah' ? 'selected' : ''; ?>>Kedah</option>
@@ -524,6 +553,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         <option value="Labuan" <?php echo htmlspecialchars($data['state']) === 'Labuan' ? 'selected' : ''; ?>>Labuan</option>
                         <option value="Putrajaya" <?php echo htmlspecialchars($data['state']) === 'Putrajaya' ? 'selected' : ''; ?>>Putrajaya</option>
                     </select>
+                    <div class="error-message">This field is required</div> 
                 </div>
             </div>
         </div>
@@ -712,10 +742,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Upload Failed',
             message: 'Failed to upload profile picture. Please try again.'
         },
-        'incomplete_form': {
-            title: 'Incomplete Information',
-            message: 'Please fill in all required fields.'
-        },
         'invalid_email': {
             title: 'Invalid Email',
             message: 'Please enter a valid email address.'
@@ -762,28 +788,58 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const form = document.getElementById('updateForm');
-    form.addEventListener('submit', function(e) {
-        const requiredFields = form.querySelectorAll('[required]');
+    function validateField(field) {
+        const formRow = field.closest('.form-row');
         let isValid = true;
 
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
+        if (field.tagName.toLowerCase() === 'select') {
+            isValid = field.selectedIndex !== 0;
+        } else {
+            isValid = field.value.trim() !== '';
+        }
+
+        if (!isValid) {
+            formRow.classList.add('error');
+            return false;
+        } else {
+            formRow.classList.remove('error');
+            return true;
+        }
+    }
+
+    form.querySelectorAll('input[data-required="true"], select[data-required="true"]').forEach(element => {
+        if (element.tagName.toLowerCase() === 'input') {
+            element.removeAttribute('required');
+        }
+        
+        const eventType = element.tagName.toLowerCase() === 'select' ? 'change' : 'input';
+        
+        element.addEventListener(eventType, function() {
+            validateField(this);
+        });
+
+        element.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        form.querySelectorAll('input[data-required="true"], select[data-required="true"]').forEach(field => {
+            if (!validateField(field)) {
                 isValid = false;
             }
         });
 
         if (!isValid) {
-            e.preventDefault();
-            const popup = document.getElementById('popup');
-            const statusInfo = statusMessages['incomplete_form'];
-            
-            const titleElement = popup.querySelector('h3');
-            const messageElement = popup.querySelector('p');
-            
-            titleElement.textContent = statusInfo.title;
-            messageElement.textContent = statusInfo.message;
-            
-            popup.classList.add('active');
+            const firstError = form.querySelector('.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            form.submit();
         }
     });
 
