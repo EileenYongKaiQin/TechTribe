@@ -39,7 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     $position = $_POST['position'];
     $company = $_POST['company'];
     $workExperience = $_POST['workExperience'];
-    $languages = $_POST['language'];
+    if (isset($_POST['language']) && isset($_POST['proficiency'])) {
+        $languages = array();
+        for ($i = 0; $i < count($_POST['language']); $i++) {
+            if (!empty($_POST['language'][$i]) && !empty($_POST['proficiency'][$i])) {
+                $languages[] = $_POST['language'][$i] . '|' . $_POST['proficiency'][$i];
+            }
+        }
+        $languagesString = implode(", ", $languages);
+    }
     $hardSkills = isset($_POST['hardSkill']) ? 
     implode(", ", array_filter($_POST['hardSkill'])) : '';
     $softSkills = isset($_POST['softSkill']) ? 
@@ -119,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         position='$position', 
         company='$company', 
         workExperience='$workExperience',
-        language='$languages', 
+        language='$languagesString', 
         hardSkill='$hardSkills', 
         softSkill='$softSkills'
         $profilePicUpdate
@@ -318,6 +326,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             background-color: #0066ff;
             color: #ffffff;
             font-weight: bold;
+            font-size: 16px;
         }
         .remove-btn {
             background-color: #ff1a1a;
@@ -330,7 +339,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             gap: 10px;
             flex-wrap: wrap;
         }
-        .lang-container input[type="checkbox"],
         .lang-container label {
             display: inline-block;
             margin-top: 10px;
@@ -349,8 +357,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             background-color: #f0f0f0;
             color: #63666A;
         }
-        .lang-container .others-wrapper input[type="text"] {
-            margin-top: 10px;
+        .proficiency-select {
+            width: 80px;
+            padding: 15px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
         .popup {
             position: fixed;
@@ -593,7 +606,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         <div class="row">
             <div class="form-row">
                 <label for="language">Language</label>
-                <input type="text" name="language" placeholder="Enter languages" value="<?php echo htmlspecialchars($data['language']);?>">
+                <div id="languagesContainer">
+    <?php 
+    $languages = explode(", ", $data['language']); 
+    $firstLang = !empty($languages[0]) ? explode('|', $languages[0]) : ['', ''];
+    ?>
+    <div class="input-group">
+        <input type="text" name="language[]" value="<?php echo htmlspecialchars($firstLang[0]); ?>" placeholder="Enter Language">
+        <select name="proficiency[]" class="proficiency-select">
+            <?php 
+            for($i = 1; $i <= 10; $i++) {
+                $selected = (isset($firstLang[1]) && $firstLang[1] == $i) ? 'selected' : '';
+                echo "<option value='$i' $selected>$i</option>";
+            }
+            ?>
+        </select>
+        <button type="button" class="add-btn" id="addLanguage">+</button>
+    </div>
+    <?php 
+    if (!empty($languages[1])):
+        foreach (array_slice($languages, 1) as $lang): 
+            $langParts = explode('|', $lang);
+            $languageName = isset($langParts[0]) ? trim($langParts[0]) : '';
+            $proficiencyLevel = isset($langParts[1]) ? trim($langParts[1]) : '';
+    ?>
+        <div class="input-group">
+            <input type="text" name="language[]" value="<?php echo htmlspecialchars($languageName); ?>" placeholder="Enter Language">
+            <select name="proficiency[]" class="proficiency-select">
+                <?php 
+                for($i = 1; $i <= 10; $i++) {
+                    $selected = ($proficiencyLevel == $i) ? 'selected' : '';
+                    echo "<option value='$i' $selected>$i</option>";
+                }
+                ?>
+            </select>
+            <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
+        </div>
+    <?php 
+        endforeach;
+    endif; 
+    ?>
+</div>
             </div>
         </div>
         <br>
@@ -673,6 +726,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
+    $(document).on("click", "#addLanguage", function (e) {
+        e.preventDefault();
+        $("#languagesContainer").append(`
+            <div class="input-group">
+                <input type="text" name="language[]" placeholder="Enter Language" class="language-input">
+                <select name="proficiency[]" class="proficiency-select">
+                    <option value="" disabled selected>Level</option>
+                    ${[...Array(10)].map((_, i) => 
+                        `<option value="${i + 1}">${i + 1}</option>`
+                    ).join('')}
+                </select>
+                <button type="button" class="remove-btn"><i class="fa fa-trash"></i></button>
+            </div>
+        `);
+    });
+
     $(document).on("click", "#addHardSkill", function (e) {
         e.preventDefault();
         $("#hardSkillsContainer").append(`
