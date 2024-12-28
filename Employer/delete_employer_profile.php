@@ -47,7 +47,8 @@ if (isset($_POST['confirm_delete_profile'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Profile</title>
+    <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
+    <title>FlexMatch</title>
     <style>
         body {
             font-family: sans-serif;
