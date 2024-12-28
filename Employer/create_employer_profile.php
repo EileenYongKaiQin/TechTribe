@@ -338,7 +338,6 @@ if(!empty($_POST))
             display: none;
             position: absolute;
         }
-
         .error input {
             border: 2px solid red !important;
         }
@@ -356,7 +355,7 @@ if(!empty($_POST))
 
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="fullName" class="required">Full Name</label>
+            <label for="fullName" class="required">Name</label>
             <input type="text" name="fullName" placeholder="Enter Full Name" data-required="true">
             <div class="error-message">This field is required</div>
         </div>

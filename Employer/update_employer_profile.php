@@ -363,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <form method="POST" enctype="multipart/form-data" id="updateForm" class="section" id="updateForm">
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="fullName">Full Name</label>
+            <label for="fullName">Name</label>
             <input type="text" name="fullName" placeholder="Enter Full Name" value="<?php echo htmlspecialchars($data['fullName']);?>" readonly>
         </div>
         <div class="row">    

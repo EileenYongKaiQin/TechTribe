@@ -198,6 +198,7 @@ if (!$data) {
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </ul>
+                            <br>
                             <h1 class="heading">Soft Skills</h1>
                             <?php $softSkills = explode(", ", $data['softSkill']); ?>
                             <ul>

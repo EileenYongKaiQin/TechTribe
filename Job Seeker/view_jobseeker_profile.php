@@ -51,24 +51,24 @@ if (!$data) {
         <!-- ===== ===== User Main-Profile ===== ===== -->
         <section class="userProfile card">
             <div class="card-body">
-            <section>
-                <div class="profile">
-                    <figure>
-                        <?php 
-                        if (!empty($data['profilePic'])) {
-                            $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
-                            if (file_exists($profilePicPath)) {
-                                echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                <section>
+                    <div class="profile">
+                        <figure>
+                            <?php 
+                            if (!empty($data['profilePic'])) {
+                                $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
+                                if (file_exists($profilePicPath)) {
+                                    echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                                } else {
+                                    echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                                }
                             } else {
                                 echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
                             }
-                        } else {
-                            echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
-                        }
-                        ?>
-                    </figure>
-                </div>
-            </section>
+                            ?>
+                        </figure>
+                    </div>
+                </section>
             </div>
         </section>
 
@@ -90,7 +90,6 @@ if (!$data) {
                     </p>
                 </div>
                 <br>
-            
 
             <!-- ===== ===== Language Container ===== ===== -->
             <div class="languages">
@@ -206,6 +205,7 @@ if (!$data) {
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </ul>
+                        <br>
                         <h1 class="heading">Soft Skills</h1>
                         <?php $softSkills = explode(", ", $data['softSkill']); ?>
                         <ul>
