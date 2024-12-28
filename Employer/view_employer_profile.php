@@ -1,7 +1,7 @@
 <?php
 
 include('../database/config.php');
-include('employerNew.php');
+include('employer1.php');
 
 if (!isset($_SESSION['userID'])) {
     header('Location: employer_dashboard.php');
@@ -79,10 +79,14 @@ if (!$data) {
                 <div class="work">
                     <h1 class="heading">Company Details</h1>
                     <div class="primary">
-                        <h1><?PHP echo $data['companyName'];?></h1>
-                        <p><?PHP echo $data['companyAddress'];?></p>
+                    <div class="tag">
+                        <h1><?PHP echo $data['companyName'];?>
+                            <span><?PHP echo $data['jobRole'];?></span>
+                        </h1>
                     </div>
-                    <br>
+                    <p><?PHP echo $data['companyAddress'];?></p>
+                </div>
+                <br>
             </section>
 
             <!-- ===== ===== User Details Sections ===== ===== -->
@@ -140,8 +144,8 @@ if (!$data) {
                     <input type="radio" name="slider" id="application">
                     <nav>
                         <label for="about" class="about">About</label>
-                        <label for="skill" class="skill">&nbsp;&nbsp;Skills</label>
-                        <label for="application" class="application">Application</label>
+                        <label for="skill" class="skill">Applicants</label>
+                        <label for="application" class="application"></label>
                         <div class="slider"></div>
                     </nav>
                     <section class="sec-con">

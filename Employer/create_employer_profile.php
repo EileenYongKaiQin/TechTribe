@@ -24,6 +24,7 @@ if(!empty($_POST))
     $email = $_POST['email'];
     $contactNo = $_POST['contactNo'];
     $companyName = $_POST['companyName'];
+    $jobRole = $_POST['jobRole'];
     $companyAddress = $_POST['companyAddress'];
 
     //Validataion
@@ -81,12 +82,13 @@ if(!empty($_POST))
     $email = mysqli_real_escape_string($con, $email);
     $contactNo = mysqli_real_escape_string($con, $contactNo);
     $companyName = mysqli_real_escape_string($con, $companyName);
+    $jobRole = mysqli_real_escape_string($con, $jobRole);
     $companyAddress = mysqli_real_escape_string($con, $companyAddress);
 
 
     if(mysqli_query($con,"INSERT INTO employer
-    (userID, fullName, email, contactNo, companyName, companyAddress, profilePic)
-    VALUES ('$userID','$fullName','$email','$contactNo','$companyName', '$companyAddress', '$profilePic')")) 
+    (userID, fullName, email, contactNo, companyName, jobRole, companyAddress, profilePic)
+    VALUES ('$userID','$fullName','$email','$contactNo','$companyName', '$jobRole', '$companyAddress', '$profilePic')")) 
     {
         redirectWithStatus('success');
     } else {
@@ -144,7 +146,7 @@ if(!empty($_POST))
         form .form-row {
             align-items: center;
             width: 100%;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
         }
         form .form-row label {
             padding: 0px 5px;
@@ -156,7 +158,7 @@ if(!empty($_POST))
         .form-row input[type="email"] {
             width: 100%;
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -164,7 +166,7 @@ if(!empty($_POST))
         }
         .form-row input[type="file"] {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -321,30 +323,56 @@ if(!empty($_POST))
             margin-bottom: 10px;
             float: right;
         }
+        .required::after{
+            content:" *";
+            color:red;
+            font-size: 20px;
+            margin-left: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 5px;
+            text-align: left;
+            display: none;
+            position: absolute;
+        }
+
+        .error input {
+            border: 2px solid red !important;
+        }
+
+        .error .error-message {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1 class="profile-h1">Create Profile</h1>
-    <form class="section" action='create_employer_profile.php?userID=<?PHP echo $userID; ?>' method='POST'  enctype="multipart/form-data">
+    <form class="section" action='create_employer_profile.php?userID=<?PHP echo $userID; ?>' method='POST'  enctype="multipart/form-data" id="createForm">
 
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="fullName">Name</label>
-            <input type="text" name="fullName" placeholder="Enter Full Name"required>
+            <label for="fullName" class="required">Full Name</label>
+            <input type="text" name="fullName" placeholder="Enter Full Name" data-required="true">
+            <div class="error-message">This field is required</div>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" placeholder="Enter Email" required>
+                    <label for="email" class="required">Email</label>
+                    <input type="email" name="email" placeholder="Enter Email" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' required>
+                    <label for="contactNo" class="required">Contact No.</label>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
         </div>
@@ -357,10 +385,14 @@ if(!empty($_POST))
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="companyAddress">Company Address</label>
-                    <input type="text" name="companyAddress" placeholder="Enter Company Address">
+                    <label for="jobRole">Job Role/ Position</label>
+                    <input type="text" name="jobRole" placeholder="Enter Job Role/ Position">
                 </div>
             </div>
+        </div>
+        <div class="form-row">
+            <label for="companyAddress">Company Address</label>
+            <input type="text" name="companyAddress" placeholder="Enter Company Address">
         </div>
         <div class="form-row">
             <label for="profilePic">Profile Picture</label>
@@ -419,10 +451,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Upload Failed',
             message: 'Failed to upload profile picture. Please try again.'
         },
-        'incomplete_form': {
-            title: 'Incomplete Information',
-            message: 'Please fill in all required fields.',
-        },
         'invalid_email': {
             title: 'Invalid Email',
             message: 'Please enter a valid email address.',
@@ -477,33 +505,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     setupPopupControls();
 
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
+    const form = document.getElementById('createForm');
+    
+    function validateField(field) {
+        const formRow = field.closest('.form-row');
+        if (!field.value.trim()) {
+            formRow.classList.add('error');
+            return false;
+        } else {
+            formRow.classList.remove('error');
+            return true;
+        }
+    }
 
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                }
-            });
+    form.querySelectorAll('input[required]').forEach(input => {
+        input.removeAttribute('required');
+        
+        input.addEventListener('input', function() {
+            validateField(this);
+        });
 
-            if (!isValid) {
-                e.preventDefault();
-                const popup = document.getElementById('popup');
-                const statusInfo = statusMessages['incomplete_form'];
-                
-                const titleElement = popup.querySelector('h3');
-                const messageElement = popup.querySelector('p');
-                
-                if (titleElement) titleElement.textContent = statusInfo.title;
-                if (messageElement) messageElement.textContent = statusInfo.message;
-                
-                popup.classList.add('active');
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        form.querySelectorAll('input[data-required="true"]').forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
             }
         });
-    }
+
+        if (!isValid) {
+            const firstError = form.querySelector('.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            form.submit();
+        }
+    });
 
     const profilePicInput = document.getElementById('profilePic');
     const popup = document.getElementById('popup');
