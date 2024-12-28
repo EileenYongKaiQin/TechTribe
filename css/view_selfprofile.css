@@ -213,15 +213,77 @@ html {
 
 /* =====>>  Languages Bars Css  <<===== */
 
-.work_skills .languages ul li {
-  position: relative;
-  font-size: var(--m-fs);
-  line-height: 1.8rem;
-  margin: var(--m-0-5);
-  color: var(--f2-color);
+@keyframes fillBar {
+  from {
+      width: 0%;
+  }
+  to {
+      width: var(--percentage);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.lang-container {
+  margin: 15px 0;
+}
+
+.lang-item {
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+.lang-item:nth-child(1) { animation-delay: 0.1s; }
+.lang-item:nth-child(2) { animation-delay: 0.2s; }
+.lang-item:nth-child(3) { animation-delay: 0.3s; }
+.lang-item:nth-child(4) { animation-delay: 0.4s; }
+.lang-item:nth-child(5) { animation-delay: 0.5s; }
+
+.lang-name {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
   font-weight: 500;
-  margin-left: 25px;
-  list-style-type: square;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  width: 0;
+  animation: fillBar 1s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.progress-level {
+  position: absolute;
+  right: 0;
+  top: -20px;
+  font-size: 12px;
+  color: #666;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+  animation-delay: 1s;
 }
 
 @keyframes skills {

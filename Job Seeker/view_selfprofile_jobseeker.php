@@ -36,7 +36,6 @@ if (!$data) {
     <title>My Profile</title>
 
     <link rel="stylesheet" href="../css/view_selfprofile.css">
-
 </head>
 
 <body>
@@ -97,17 +96,31 @@ if (!$data) {
                 <!-- ===== ===== Language Container ===== ===== -->
                 <div class="languages">
                     <h1 class="heading">Proficiency</h1>
-                    <?php $languages = explode(",", $data['language']); ?>
-                    <h1>Proficiency Languages</h1>
-                    <ul>
-                    <?php if (!empty($languages)): ?>
-                        <?php foreach ($languages as $index => $langs): ?>
-                            <?php if ($index >= 0): ?>
-                                <li><?php echo htmlspecialchars($langs); ?></li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    </ul>
+                    <h2 style="font-size:18px;">Proficiency Languages</h2>
+                    <div class="lang-container">
+                        <?php 
+                        $languages = explode(",", $data['language']); 
+                        if (!empty($languages[0])): 
+                            foreach ($languages as $lang): 
+                                $langParts = explode('|', trim($lang));
+                                if (count($langParts) == 2):
+                                    $languageName = trim($langParts[0]);
+                                    $proficiency = trim($langParts[1]);
+                                    $percentage = ($proficiency / 10) * 100;
+                        ?>
+                            <div class="lang-item">
+                                <span class="lang-name"><?php echo htmlspecialchars($languageName); ?></span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="--percentage: <?php echo $percentage; ?>%"></div>
+                                    <span class="progress-level"><?php echo $proficiency; ?>/10</span>
+                                </div>
+                            </div>
+                        <?php 
+                                endif;
+                            endforeach; 
+                        endif; 
+                        ?>
+                    </div>
                 </div>
             </section>
 
