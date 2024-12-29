@@ -61,10 +61,10 @@ if (!$data) {
                                     if (file_exists($profilePicPath)) {
                                         echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
                                     } else {
-                                        echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                                        echo '<img src="../images/employer.png" alt="profile" width="250px" height="250px">';
                                     }
                                 } else {
-                                    echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                                    echo '<img src="../images/employer.png" alt="profile" width="250px" height="250px">';
                                 }
                                 ?>
                             </figure>
