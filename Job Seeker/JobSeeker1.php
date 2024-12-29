@@ -47,7 +47,7 @@ if ($noti !== false) {
     $notiCount = 0;
 }
 
-$profilePicPath = "../images/employer.png";
+$profilePicPath = "../images/JobSeeker.png";
 if (!empty($profilePic)) {
     $customProfilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($profilePic);
     if (file_exists($customProfilePicPath)) {
