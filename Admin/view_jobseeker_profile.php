@@ -94,34 +94,39 @@ if (!$data) {
 
             <!-- ===== ===== Language Container ===== ===== -->
             <div class="languages">
-                <h1 class="heading">Proficiency</h1>
-                <h2 style="font-size:18px;">Proficiency Languages</h2>
-                <div class="lang-container">
-                    <?php 
-                    $languages = explode(",", $data['language']); 
-                    if (!empty($languages[0])): 
-                        foreach ($languages as $lang): 
-                            $langParts = explode('|', trim($lang));
-                            if (count($langParts) == 2):
+                    <h1 class="heading">Proficiency</h1>
+                    <h2 style="font-size:18px;">Proficiency Languages</h2>
+                    <div class="lang-container">
+                        <?php 
+                        $languages = explode(",", $data['language']); 
+                        if (!empty($languages[0])): 
+                            foreach ($languages as $lang): 
+                                $langParts = explode('|', trim($lang));
                                 $languageName = trim($langParts[0]);
-                                $proficiency = trim($langParts[1]);
-                                $percentage = ($proficiency / 10) * 100;
-                    ?>
-                        <div class="lang-item">
-                            <span class="lang-name"><?php echo htmlspecialchars($languageName); ?></span>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" style="--percentage: <?php echo $percentage; ?>%"></div>
-                                <span class="progress-level"><?php echo $proficiency; ?>/10</span>
+                                $proficiency = isset($langParts[1]) ? trim($langParts[1]) : null;
+                                $percentage = $proficiency ? ($proficiency / 10) * 100 : 0;
+                        ?>
+                            <div class="lang-item">
+                                <span class="lang-name"><?php echo htmlspecialchars($languageName); ?></span>
+                                <?php if ($proficiency !== null): ?>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="--percentage: <?php echo $percentage; ?>%"></div>
+                                        <span class="progress-level"><?php echo $proficiency; ?>/10</span>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="progress-bar-container" style="opacity: 0.5;">
+                                        <div class="progress-bar" style="--percentage: 0%"></div>
+                                        <span class="progress-level">No proficiency level set</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                        </div>
-                    <?php 
-                            endif;
-                        endforeach; 
-                    endif; 
-                    ?>
+                        <?php 
+                            endforeach; 
+                        endif; 
+                        ?>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
 
         <!-- ===== ===== User Details Sections ===== ===== -->

@@ -17,7 +17,7 @@ if (!isset($_SESSION['userID'])) {
 // Fetch the logged-in user's full name from the jobSeeker table
 $userID = $_SESSION['userID'];
 $query = $con->prepare("
-    SELECT employer.fullName 
+    SELECT employer.fullName, employer.profilePic 
     FROM employer 
     INNER JOIN login ON employer.userID = login.userID 
     WHERE employer.userID = ?
@@ -29,8 +29,10 @@ $result = $query->get_result();
 if ($result && $result->num_rows > 0) {
     $employer = $result->fetch_assoc();
     $fullName = $employer['fullName']; // Get the full name
+    $profilePic = $employer['profilePic'];
 } else {
     $fullName = "Employer"; // Default fallback if user not found
+    $profilePic = null;
 }
 
 $noti = fetchNotificationsWithReport($userID);
@@ -42,6 +44,14 @@ if ($noti !== false) {
     // Handle the case when fetching notifications fails
     $notiArray = [];
     $notiCount = 0;
+}
+
+$profilePicPath = "../images/employer.png";
+if (!empty($profilePic)) {
+    $customProfilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($profilePic);
+    if (file_exists($customProfilePicPath)) {
+        $profilePicPath = $customProfilePicPath;
+    }
 }
 ?>
 
@@ -208,7 +218,7 @@ if ($noti !== false) {
                     </div>
                     <?php endforeach; ?>
             </div>
-            <a href="view_selfprofile_employer.php"><img src="../images/employer.png" alt="User Image" class="profile-image"></a>
+            <a href="view_selfprofile_employer.php"><img src="<?php echo $profilePicPath; ?>" alt="User Image" class="profile-image"></a>
                 <a href="view_selfprofile_employer.php">    
                     <div class="user-info">
                         <span class="user-name"><?php echo htmlspecialchars($fullName); ?></span>
