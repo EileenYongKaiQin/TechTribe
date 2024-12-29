@@ -62,10 +62,10 @@ $post = $result->fetch_assoc();
                 ?>
             </select><br>
 
-            <label for="skillDetails"><b>Skill Details</b><span class="required">*</span></label>
+            <label for="skillDetails"><b>Skill Details<span class="required">*</span></b></span></label>
             <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="100" required><?php echo htmlspecialchars($post['skillDetails']); ?></textarea><br>
 
-            <label><b>Available Time</b> <span class="remark" style="font-size:10px;">(Time Interval: 10 minutes)</span><span class="required">*</span></label>
+            <label><b>Available Time <span class="remark" style="font-size:10px;">(Time Interval: 10 minutes)</span></b> <span class="required">*</span></label>
             <div class="availability-slots">
                 <?php
                 $availableTime = json_decode($post['availableTime'], true) ?? [];
@@ -108,8 +108,7 @@ $post = $result->fetch_assoc();
                     </select>
                 </div>
             </div>
-
-            <label for="jobPreferences"><b>Job Preferences (Optional):</b></label>
+            <label for="jobPreferences"><b>Job Preferences <span class="remark" style="font-size:10px;">(Optional)</span></b></label>
             <textarea id="jobPreferences" name="jobPreferences" rows="4" maxlength="100"><?php echo htmlspecialchars($post['jobPreferences']); ?></textarea><br>
 
             <button type="submit">Save</button>

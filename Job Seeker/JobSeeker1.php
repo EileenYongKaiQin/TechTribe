@@ -280,20 +280,20 @@ if ($noti !== false) {
             const years = Math.round(seconds / 31553280);
 
             if (seconds <= 60) {
-        return "Just Now";
-    } else if (minutes <= 60) {
-        return minutes === 1 ? "one minute ago" : `${minutes} minutes ago`;
-    } else if (hours <= 24) {
-        return hours === 1 ? "an hour ago" : `${hours} hours ago`;
-    } else if (days <= 7) {
-        return days === 1 ? "yesterday" : `${days} days ago`;
-    } else if (weeks <= 4.3) {
-        return weeks === 1 ? "one week ago" : `${weeks} weeks ago`;
-    } else if (months <= 12) {
-        return months === 1 ? "one month ago" : `${months} months ago`;
-    } else {
-        return years === 1 ? "one year ago" : `${years} years ago`;
-    }
+                return "Just Now";
+            } else if (minutes <= 60) {
+                return minutes === 1 ? "one minute ago" : `${minutes} minutes ago`;
+            } else if (hours <= 24) {
+                return hours === 1 ? "an hour ago" : `${hours} hours ago`;
+            } else if (days <= 7) {
+                return days === 1 ? "yesterday" : `${days} days ago`;
+            } else if (weeks <= 4.3) {
+                return weeks === 1 ? "one week ago" : `${weeks} weeks ago`;
+            } else if (months <= 12) {
+                return months === 1 ? "one month ago" : `${months} months ago`;
+            } else {
+                return years === 1 ? "one year ago" : `${years} years ago`;
+            }
         }
 
         // Function to update the notification time dynamically

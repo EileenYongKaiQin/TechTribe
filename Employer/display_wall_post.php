@@ -100,7 +100,10 @@ if ($result->num_rows > 0) {
         echo '</div>';
         echo '<p class="published-time" style="text-align: center; font-size: 0.9em; color: #555;">Published on: ' . htmlspecialchars(date("F j, Y, g:i a", strtotime($row['createdAt']))) . '</p>';
         echo '</div>';
+        echo '<form method="GET" action="employer_chat.php" class="chat">';
+        echo '<input type="hidden" name="jobSeekerID" value="' . htmlspecialchars($row['userID']) . '">';
         echo '<button class="chat-btn">Chat</button>';
+        echo '</form>';
         echo '</div>';
     }
 

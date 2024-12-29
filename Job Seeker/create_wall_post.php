@@ -51,7 +51,7 @@
             <label for="skillDetails"><b>Skill Details</b><span class="required">*</span></label>
             <textarea id="skillDetails" name="skillDetails" rows="4" maxlength="100" placeholder="Describe your skills in this category (max 100 words)" required></textarea><br>
 
-            <label><b>Available Time</b> <span class="remark" style="font-size:10px;">(Time Interval: 10 minutes)</span><span class="required">*</span></label>
+            <label><b>Available Time <span class="remark" style="font-size:10px;">(Time Interval: 10 minutes)</span></b><span class="required">*</span></label>
             <div class="availability-slots">
                 <div class="availability-slot">
                     <label>Monday</label>
