@@ -9,7 +9,312 @@ ob_start();
     <title>Employer - Job Applications</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/response_application.css">
+    <style>
+          /* General Reset */
+  * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        background-color: #f4f4f9;
+        color: #333;
+    }
+
+    /* Container */
+    .container {
+        margin: 0 auto;
+        padding: 10px;
+        width: 100%;
+        max-width: 800px;
+        margin-right: 300px;
+        margin-top: -20px;
+    }
+
+    /* Header Styling */
+    .container h1 {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* Card Styling */
+    .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 35px;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-body p{
+        padding: 8px;
+    }
+
+    .card-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    /* Label for status */
+    .status-label {
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .Accepted {
+        color: #fff;
+        background-color: #28a745; /* #28a745 */
+    }
+
+    .Rejected {
+        color: #fff;
+        background-color: #dc3545; /* Red */
+    }
+
+    /* Button Styling */
+    button {
+        margin: 10px 0;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    /* Collapse & Textarea */
+    .collapse {
+        margin-top: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .alert {
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 6px;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    /* Link Styling */
+    a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    a:hover {
+        color: #0056b3;
+    }
+
+    /* status tracker */
+    .status-tracker {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+        padding: 0;
+        position: relative;
+    }
+
+    .status-step {
+        text-align: center;
+        flex: 1;
+        position: relative;
+    }
+
+    .status-step .circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        line-height: 40px;
+        background-color: #ccc;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .status-step .label {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .status-step.completed .circle {
+        background-color: #28a745;
+    }
+
+    .status-step.completed .label {
+        color: #28a745;
+    }
+
+    .status-step.current .circle {
+        background-color: #ffc107;
+    }
+
+    .status-step.current .label {
+        color: #333;
+    }
+
+    .status-step.accepted .circle {
+        background-color: #28a745;
+    }
+
+    .status-step.accepted .label {
+        color: #28a745;
+    }
+
+    .status-step.rejected .circle {
+        background-color: red;
+    }
+
+    .status-step.rejected .label {
+        color: red;
+    }
+
+    /* Connecting line between steps */
+    .status-tracker::before {
+        content: '';
+        position: absolute;
+        top: 20px; /* Centered behind the circles */
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: #ccc;
+        z-index: 1;
+    }
+
+    .status-step.completed ~ .status-tracker::before {
+        background-color: #28a745;
+    }
+
+    /* Dynamic Progress Line for completed steps */
+    .status-step.accepted::after {
+        content: '';
+        position: absolute;
+        top: 20px; 
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: #28a745; /* Progress line color when accepted */
+        z-index: 1;
+    }
+
+    /* Dynamic Progress Line for rejected steps */
+    .status-step.rejected::after {
+        content: '';
+        position: absolute;
+        top: 20px; 
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: red; /* Progress line color when rejected */
+        z-index: 1;
+    }
+
+    /* Dynamic Progress Line */
+    .status-step.completed::after {
+        content: '';
+        position: absolute;
+        top: 20px; /* Matches the circle's vertical position */
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: #28a745;
+        z-index: 1;
+    }
+
+    .no-jobs-container {
+        display: flex; 
+        justify-content: center;
+        align-items: center; 
+        width: 100%; 
+    }
+
+    .no-jobs-container p {
+        font-size: 18px; 
+        font-weight: bold; 
+        color: #767F8C;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+        .container {
+            width: 95%;
+        }
+
+        .card-body {
+            padding: 15px;
+            width:100%;
+        }
+
+        button {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+    }
+
+        </style>
 </head>
 <body>
     <?php include('employer1.php');?>
@@ -122,7 +427,7 @@ ob_start();
                 echo "</div></div>";
             }
         } else {
-            echo "<p class='alert alert-info'>No job applications found.</p>";
+            echo "<div class='no-jobs-container'><p>No application found.</p></div>";
         }
         ?>
     </div>
