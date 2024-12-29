@@ -176,7 +176,7 @@ if(!empty($_POST))
         form .form-row {
             align-items: center;
             width: 100%;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
         }
         form .form-row label,
         form .input-row label {
@@ -190,7 +190,7 @@ if(!empty($_POST))
         .form-row select {
             width: 100%;
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -199,7 +199,7 @@ if(!empty($_POST))
         .input-group input[type="text"],
         .input-group button {
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             border-radius: 8px;
             border: 1px solid #ccc;
             box-sizing: border-box;
@@ -208,7 +208,7 @@ if(!empty($_POST))
         }
         .form-row input[type="file"] {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -431,6 +431,29 @@ if(!empty($_POST))
             margin-bottom: 10px;
             float: right;
         }
+        .required::after{
+            content:" *";
+            color:red;
+            font-size: 20px;
+            margin-left: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 5px;
+            text-align: left;
+            display: none;
+            position: absolute;
+        }
+        .error input,
+        .error select {
+            border: 2px solid red !important;
+        }
+
+        .error .error-message {
+            display: block;
+        }
     </style>
     
 </head>
@@ -438,68 +461,75 @@ if(!empty($_POST))
 
 <div class="container">
     <h1 class="profile-h1">Create Profile</h1>
-    <form class="section" action='create_jobseeker_profile.php?userID=<?PHP echo $userID; ?>' method='POST' enctype="multipart/form-data">
+    <form class="section" action='create_jobseeker_profile.php?userID=<?PHP echo $userID; ?>' method='POST' enctype="multipart/form-data" id="createForm">
 
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
-            <label for="name">Name</label>
-            <input type="text" name="fullName" placeholder="Enter Full Name"required>
+            <label for="fullName" class="required">Name</label>
+            <input type="text" name="fullName" placeholder="Enter Full Name" data-required="true">
+            <div class="error-message">This field is required</div>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" placeholder="Enter Email" required>
+                    <label for="email" class="required">Email</label>
+                    <input type="email" name="email" placeholder="Enter Email" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' required>
+                    <label for="contactNo" class="required">Contact No.</label>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
         </div>
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="age">Age</label>
-                    <input type="text" name="age" placeholder="Enter Age" required>
+                    <label for="age" class="required">Age</label>
+                    <input type="text" name="age" placeholder="Enter Age" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-mid">
                 <div class="form-row">
-                    <label for="gender">Gender</label>
-                    <select name="gender" id="gender">
+                    <label for="gender" class="required">Gender</label>
+                    <select name="gender" id="gender" data-required="true">
                         <option disabled selected hidden>- Select Gender -</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-                    </select> 
+                    </select>
+                    <div class="error-message">This field is required</div> 
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="race">Race</label>
-                    <select name="race" id="race">
+                    <label for="race" class="required">Race</label>
+                    <select name="race" id="race" data-required="true">>
                         <option disabled selected hidden>- Select Race -</option>
                         <option value="Malay">Malay</option>
                         <option value="Chinese">Chinese</option>
                         <option value="Indian">Indian</option>
                         <option value="Others">Others</option>
-                    </select> 
+                    </select>
+                    <div class="error-message">This field is required</div> 
                 </div>
             </div>
         </div>
         <div class="row">  
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="location">Location</label>
-                    <input type="text" name="location" placeholder="Enter Location" required>
+                    <label for="location" class="required">Location</label>
+                    <input type="text" name="location" placeholder="Enter Location" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div> 
             <div class="col-25-ri">
                 <div class="form-row">
-                    <label for="state">State</label>
-                    <select name="state" id="state">
+                    <label for="state" class="required">State</label>
+                    <select name="state" id="state" data-required="true">
                         <option disabled selected hidden>- Choose State -</option>
                         <option value="Johor">Johor</option>
                         <option value="Kedah">Kedah</option>
@@ -518,6 +548,7 @@ if(!empty($_POST))
                         <option value="Labuan">Labuan</option>
                         <option value="Putrajaya">Putrajaya</option>
                     </select>
+                    <div class="error-message">This field is required</div> 
                 </div>
             </div>
         </div>
@@ -693,10 +724,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Upload Failed',
             message: 'Failed to upload profile picture. Please try again.'
         },
-        'incomplete_form': {
-            title: 'Incomplete Information',
-            message: 'Please fill in all required fields.',
-        },
         'invalid_email': {
             title: 'Invalid Email',
             message: 'Please enter a valid email address.',
@@ -755,33 +782,62 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     setupPopupControls();
 
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
+    const form = document.getElementById('createForm');
+    
+    function validateField(field) {
+        const formRow = field.closest('.form-row');
+        let isValid = true;
 
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                }
-            });
+        if (field.tagName.toLowerCase() === 'select') {
+            isValid = field.selectedIndex !== 0;
+        } else {
+            isValid = field.value.trim() !== '';
+        }
 
-            if (!isValid) {
-                e.preventDefault();
-                const popup = document.getElementById('popup');
-                const statusInfo = statusMessages['incomplete_form'];
-                
-                const titleElement = popup.querySelector('h3');
-                const messageElement = popup.querySelector('p');
-                
-                if (titleElement) titleElement.textContent = statusInfo.title;
-                if (messageElement) messageElement.textContent = statusInfo.message;
-                
-                popup.classList.add('active');
+        if (!isValid) {
+            formRow.classList.add('error');
+            return false;
+        } else {
+            formRow.classList.remove('error');
+            return true;
+        }
+    }
+
+    form.querySelectorAll('input[data-required="true"], select[data-required="true"]').forEach(element => {
+        if (element.tagName.toLowerCase() === 'input') {
+            element.removeAttribute('required');
+        }
+        
+        const eventType = element.tagName.toLowerCase() === 'select' ? 'change' : 'input';
+        
+        element.addEventListener(eventType, function() {
+            validateField(this);
+        });
+
+        element.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        form.querySelectorAll('input[data-required="true"], select[data-required="true"]').forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
             }
         });
-    }
+
+        if (!isValid) {
+            const firstError = form.querySelector('.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            form.submit();
+        }
+    });
 
     const profilePicInput = document.getElementById('profilePic');
     const popup = document.getElementById('popup');

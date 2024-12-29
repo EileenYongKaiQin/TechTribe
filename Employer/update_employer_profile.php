@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     $email = $_POST['email'];
     $contactNo = $_POST['contactNo'];
     $companyName = $_POST['companyName'];
+    $jobRole = $_POST['jobRole'];
     $companyAddress = $_POST['companyAddress'];
 
     // Validation
@@ -85,12 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     $email = mysqli_real_escape_string($con, $email);
     $contactNo = mysqli_real_escape_string($con, $contactNo);
     $companyName = mysqli_real_escape_string($con, $companyName);
+    $jobRole = mysqli_real_escape_string($con, $jobRole);
     $companyAddress = mysqli_real_escape_string($con, $companyAddress);
 
     $updateQuery = "UPDATE employer SET 
     email='$email', 
     contactNo='$contactNo',
-    companyName='$companyName', 
+    companyName='$companyName',
+    jobRole='$jobRole',
     companyAddress='$companyAddress'
     $profilePicUpdate
     WHERE userID='$userID'";
@@ -146,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         form .form-row {
             align-items: center;
             width: 100%;
-            margin-bottom: 22px;
+            margin-bottom: 30px;
         }
         form .form-row label {
             padding: 0px 5px;
@@ -158,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         .form-row input[type="email"] {
             width: 100%;
             padding: 15px;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -166,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
         .form-row input[type="file"] {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 5px;
             display: flex;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -328,13 +331,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             margin-bottom: 10px;
             float: right;
         }
+        .required::after{
+            content:" *";
+            color:red;
+            font-size: 20px;
+            margin-left: 5px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 5px;
+            text-align: left;
+            display: none;
+            position: absolute;
+        }
+
+        .error input {
+            border: 2px solid red !important;
+        }
+
+        .error .error-message {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1 class="profile-h1">Update Profile</h1>
-    <form method="POST" enctype="multipart/form-data" id="updateForm" class="section">
+    <form method="POST" enctype="multipart/form-data" id="updateForm" class="section" id="updateForm">
         <h3 class="profile-h3">Personal Information</h3>
         <div class="form-row">
             <label for="fullName">Name</label>
@@ -343,14 +369,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         <div class="row">    
             <div class="col-50-le">
                 <div class="form-row">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" placeholder="Enter Email" value="<?php echo htmlspecialchars($data['email']);?>" required>
+                    <label for="email" class="required">Email</label>
+                    <input type="email" name="email" placeholder="Enter Email" value="<?php echo htmlspecialchars($data['email']);?>" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="contactNo">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($data['contactNo']);?>" minlength="10" maxlength="12" required>
+                <label for="contactNo" class="required">Contact No.</label>
+                    <input type="text" name="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($data['contactNo']);?>" minlength="10" maxlength="12" data-required="true">
+                    <div class="error-message">This field is required</div>
                 </div>
             </div>
         </div>
@@ -363,10 +391,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="companyAddress">Company Address</label>
-                    <input type="text" name="companyAddress" value="<?php echo htmlspecialchars($data['companyAddress']);?>" placeholder="Enter Company Address" required>
+                    <label for="jobRole">Job Role/ Position</label>
+                    <input type="text" name="jobRole" value="<?php echo htmlspecialchars($data['jobRole']);?>" placeholder="Enter Job Role/ Position" required>
                 </div>
             </div>
+        </div>
+        <div class="form-row">
+            <label for="companyAddress">Company Address</label>
+            <input type="text" name="companyAddress" value="<?php echo htmlspecialchars($data['companyAddress']);?>" placeholder="Enter Company Address" required>
         </div>
         <div class="form-row">
             <label for="profilePic">Profile Picture</label>
@@ -400,12 +432,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 document.addEventListener('DOMContentLoaded', function() {
     const statusMessages = {
         'success': {
-            title: 'Profile Updated Successfully!',
-            message: 'Your employer profile has been successfully updated.'
+            title: 'Profile Created Successfully!',
+            message: 'Your employer profile has been successfully created.'
         },
         'fail': {
-            title: 'Profile Update Failed',
-            message: 'Database Error: An error occurred while updating your profile. Please try again.'
+            title: 'Profile Creation Failed',
+            message: 'Database Error: An error occur while creating your profile. Please try again.'
+        },
+        'invalid_name': {
+            title: 'Invalid Name',
+            message: 'Please enter a valid name (letters and spaces only).'
         },
         'invalid_file': {
             title: 'Invalid File Format',
@@ -419,10 +455,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title: 'Upload Failed',
             message: 'Failed to upload profile picture. Please try again.'
         },
-        'incomplete_form': {
-            title: 'Incomplete Information',
-            message: 'Please fill in all required fields.',
-        },
         'invalid_email': {
             title: 'Invalid Email',
             message: 'Please enter a valid email address.',
@@ -430,6 +462,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'invalid_phone': {
             title: 'Invalid Phone Number',
             message: 'Please enter a valid phone number (10-12 digits only).'
+        },
+        'invalid_user': {
+            title: 'Invalid User',
+            message: 'User ID is missing or invalid.'
         }
     };
 
@@ -438,23 +474,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (status && statusMessages[status]) {
         const popup = document.getElementById('popup');
-        const statusInfo = statusMessages[status];
-        
-        const titleElement = popup.querySelector('h3');
-        const messageElement = popup.querySelector('p');
-        
-        titleElement.textContent = statusInfo.title;
-        messageElement.textContent = statusInfo.message;
-        
-        popup.classList.add('active');
+        if (popup) {
+            const statusInfo = statusMessages[status];
+            
+            const titleElement = popup.querySelector('h3');
+            const messageElement = popup.querySelector('p');
+            
+            if (titleElement) titleElement.textContent = statusInfo.title;
+            if (messageElement) messageElement.textContent = statusInfo.message;
+            
+            popup.classList.add('active');
+        }
+    }
+
+    function setupPopupControls() {
+        const popup = document.getElementById('popup');
+        if (!popup) return;
 
         const closeElements = popup.querySelectorAll('.close-btn, .okay-btn, .overlay');
+        
         closeElements.forEach(element => {
             element.addEventListener('click', function() {
                 popup.classList.remove('active');
                 
                 if (status === 'success') {
-                    window.location.href = 'view_selfprofile_employer.php';
+                    window.location.href = 'employer_dashboard.php';
                 } else {
                     const url = new URL(window.location.href);
                     url.searchParams.delete('status');
@@ -463,55 +507,79 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+    setupPopupControls();
 
     const form = document.getElementById('updateForm');
-    form.addEventListener('submit', function(e) {
-        const requiredFields = form.querySelectorAll('[required]');
-        let isValid = true;
+    
+    function validateField(field) {
+        const formRow = field.closest('.form-row');
+        if (!field.value.trim()) {
+            formRow.classList.add('error');
+            return false;
+        } else {
+            formRow.classList.remove('error');
+            return true;
+        }
+    }
 
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
+    form.querySelectorAll('input[required]').forEach(input => {
+        input.removeAttribute('required');
+        
+        input.addEventListener('input', function() {
+            validateField(this);
+        });
+
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        form.querySelectorAll('input[data-required="true"]').forEach(field => {
+            if (!validateField(field)) {
                 isValid = false;
             }
         });
 
         if (!isValid) {
-            e.preventDefault();
-            const popup = document.getElementById('popup');
-            const statusInfo = statusMessages['incomplete_form'];
-            
-            const titleElement = popup.querySelector('h3');
-            const messageElement = popup.querySelector('p');
-            
-            titleElement.textContent = statusInfo.title;
-            messageElement.textContent = statusInfo.message;
-            
-            popup.classList.add('active');
+            const firstError = form.querySelector('.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            form.submit();
         }
     });
 
     const profilePicInput = document.getElementById('profilePic');
+    const popup = document.getElementById('popup');
+    
     profilePicInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
+        
+        const titleElement = popup.querySelector('h3');
+        const messageElement = popup.querySelector('p');
+        
         if (!file) return;
         
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const maxSize = 5 * 1024 * 1024;
-        
-        if (!allowedTypes.includes(file.type) || file.size > maxSize) {
-            e.preventDefault();
-            const popup = document.getElementById('popup');
-            const statusInfo = !allowedTypes.includes(file.type) ? 
-                statusMessages['invalid_file'] : 
-                statusMessages['file_too_large'];
-            
-            const titleElement = popup.querySelector('h3');
-            const messageElement = popup.querySelector('p');
-            
-            titleElement.textContent = statusInfo.title;
-            messageElement.textContent = statusInfo.message;
-            
+        if (!allowedTypes.includes(file.type)) {
+            titleElement.textContent = 'Invalid File Format';
+            messageElement.textContent = 'Please upload only JPG, PNG, or GIF images.';
             popup.classList.add('active');
+            
+            e.target.value = '';
+        }
+        
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            titleElement.textContent = 'File Too Large';
+            messageElement.textContent = 'The image file size must be less than 5MB.';
+            popup.classList.add('active');
+            
             e.target.value = '';
         }
     });

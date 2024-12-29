@@ -6,8 +6,143 @@
     <title>My Applications</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="../images/FlexMatchLogo.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/my_application.css">
-    
+    <style>
+         /* General Page Styles */
+ body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+h1 {
+    text-align: center;
+    margin: 20px 0;
+}
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-right: 300px;
+    margin-top: -20px;
+}
+
+/* Card Styling */
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-size: 18px;
+}
+
+.card h3 {
+    margin: 0 0 10px;
+    color: #444;
+}
+
+.card strong{
+    font-weight: bold;
+}
+
+.card p {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* Buttons and Links */
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Status Labels */
+.status-label {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+.Accepted {
+    color: #fff;
+    background-color: #28a745; /* Green */
+}
+.Rejected {
+    color: #fff;
+    background-color: #dc3545; /* Red */
+}
+.UnderReview {
+    color: #fff;
+    background-color: #ffc107; /* Yellow */
+}
+
+/* Additional Details and Forms */
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-info{
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    padding: 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}
+
+.submit-btn {
+    background-color: #28a745;
+    margin: 10px 0;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+.no-jobs-container {
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    width: 100%; 
+}
+
+.no-jobs-container p {
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #767F8C;
+}
+    </style>
 </head>
 <body>
 <?php 
@@ -108,8 +243,11 @@ include('jobSeeker1.php');
                     icon: 'success',
                     title: 'Success',
                     text: data.message
-                });
+                }).then(() => {
+                    window.location.reload(); // Reload after showing the success alert
+                 });
                 responseField.value = '';
+                
             } else {
                 Swal.fire({
                     icon: 'error',

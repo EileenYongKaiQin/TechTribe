@@ -54,7 +54,20 @@ if (!$data) {
                 <div class="card-body">
                     <section>
                         <div class="profile">
-                            <figure><img src="../images/employer.png" alt="profile" width="250px" height="250px"></figure>
+                            <figure>
+                                <?php 
+                                if (!empty($data['profilePic'])) {
+                                    $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
+                                    if (file_exists($profilePicPath)) {
+                                        echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                                    } else {
+                                        echo '<img src="../images/employer.png" alt="profile" width="250px" height="250px">';
+                                    }
+                                } else {
+                                    echo '<img src="../images/employer.png" alt="profile" width="250px" height="250px">';
+                                }
+                                ?>
+                            </figure>
                         </div>
                     </section>
                     <div class="profilefc">
@@ -70,10 +83,14 @@ if (!$data) {
                 <div class="work">
                     <h1 class="heading">Company Details</h1>
                     <div class="primary">
-                        <h1><?PHP echo $data['companyName'];?></h1>
-                        <p><?PHP echo $data['companyAddress'];?></p>
+                    <div class="tag">
+                        <h1><?PHP echo $data['companyName'];?>
+                            <span><?PHP echo $data['jobRole'];?></span>
+                        </h1>
                     </div>
-                    <br>
+                    <p><?PHP echo $data['companyAddress'];?></p>
+                </div>
+                <br>
             </section>
 
 
@@ -120,8 +137,8 @@ if (!$data) {
                     <input type="radio" name="slider" id="application">
                     <nav>
                         <label for="about" class="about">About</label>
-                        <label for="skill" class="skill">&nbsp;&nbsp;Skills</label>
-                        <label for="application" class="application">Application</label>
+                        <label for="skill" class="skill">Applicants</label>
+                        <label for="application" class="application"></label>
                         <div class="slider"></div>
                     </nav>
                     <section class="sec-con">

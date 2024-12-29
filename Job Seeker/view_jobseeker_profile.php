@@ -51,24 +51,24 @@ if (!$data) {
         <!-- ===== ===== User Main-Profile ===== ===== -->
         <section class="userProfile card">
             <div class="card-body">
-            <section>
-                <div class="profile">
-                    <figure>
-                        <?php 
-                        if (!empty($data['profilePic'])) {
-                            $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
-                            if (file_exists($profilePicPath)) {
-                                echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                <section>
+                    <div class="profile">
+                        <figure>
+                            <?php 
+                            if (!empty($data['profilePic'])) {
+                                $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($data['profilePic']);
+                                if (file_exists($profilePicPath)) {
+                                    echo '<img src="' . $profilePicPath . '" alt="profile" width="250px" height="250px">';
+                                } else {
+                                    echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
+                                }
                             } else {
                                 echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
                             }
-                        } else {
-                            echo '<img src="../images/JobSeeker.png" alt="profile" width="250px" height="250px">';
-                        }
-                        ?>
-                    </figure>
-                </div>
-            </section>
+                            ?>
+                        </figure>
+                    </div>
+                </section>
             </div>
         </section>
 
@@ -90,22 +90,35 @@ if (!$data) {
                     </p>
                 </div>
                 <br>
-            
 
             <!-- ===== ===== Language Container ===== ===== -->
             <div class="languages">
                 <h1 class="heading">Proficiency</h1>
-                <?php $languages = explode(",", $data['language']); ?>
-                <h1>Proficiency Languages</h1>
-                <ul>
-                <?php if (!empty($languages)): ?>
-                    <?php foreach ($languages as $index => $langs): ?>
-                        <?php if ($index >= 0): ?>
-                            <li><?php echo htmlspecialchars($langs); ?></li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                </ul>
+                <h2 style="font-size:18px;">Proficiency Languages</h2>
+                <div class="lang-container">
+                    <?php 
+                    $languages = explode(",", $data['language']); 
+                    if (!empty($languages[0])): 
+                        foreach ($languages as $lang): 
+                            $langParts = explode('|', trim($lang));
+                            if (count($langParts) == 2):
+                                $languageName = trim($langParts[0]);
+                                $proficiency = trim($langParts[1]);
+                                $percentage = ($proficiency / 10) * 100;
+                    ?>
+                        <div class="lang-item">
+                            <span class="lang-name"><?php echo htmlspecialchars($languageName); ?></span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="--percentage: <?php echo $percentage; ?>%"></div>
+                                <span class="progress-level"><?php echo $proficiency; ?>/10</span>
+                            </div>
+                        </div>
+                    <?php 
+                            endif;
+                        endforeach; 
+                    endif; 
+                    ?>
+                </div>
             </div>
         </section>
 
@@ -206,6 +219,7 @@ if (!$data) {
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </ul>
+                        <br>
                         <h1 class="heading">Soft Skills</h1>
                         <?php $softSkills = explode(", ", $data['softSkill']); ?>
                         <ul>
