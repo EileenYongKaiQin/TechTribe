@@ -462,7 +462,7 @@ button:hover {
     background-color: #e0f7fa;
     border-radius: 15px;
     z-index: 100;
-    margin-top: 17.5%; /* Space below the arrow */
+    margin-top: 12.5%; /* Space below the arrow */
     left: 2px; /* Align dropdown menu to the left */
     box-shadow:  2px 2px 5px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -792,7 +792,7 @@ button:hover {
                     </div>
                     <div id="dropdownMenu" class="dropdown-menu">
                         <ul>
-                            <li onclick="viewProfile()">View Profile</li>
+                            <!-- <li onclick="viewProfile()">View Profile</li> -->
                             <!-- <li onclick="searchChat()">Search Chat</li> -->
                             <!-- <li onclick="deleteChat()">Delete Chat</li> -->
                             <li onclick="report()">Report</li>
