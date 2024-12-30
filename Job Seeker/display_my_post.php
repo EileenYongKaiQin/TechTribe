@@ -21,7 +21,7 @@
             echo '<div class="user-info-post"">';
                 // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
                 echo '<div class="picture">';
-                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">';
+                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '">';
                         if (!empty($row['profilePic'])) {
                             $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($row['profilePic']);
                             // Check if the file exists, else use default
@@ -34,7 +34,7 @@
                     echo '</a>';
                 echo '</div>';
                 echo '<div class="name">';
-                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
+                    echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
                 echo '</div>';
             echo '</div>';
 

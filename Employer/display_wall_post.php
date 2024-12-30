@@ -62,7 +62,7 @@ if ($result->num_rows > 0) {
 
         echo '<div class="user-info-post">';
         echo '<div class="picture">';
-            echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">';
+            echo '<a href="view_jobseeker_profile.php?userID=' . $row['userID'] . '">';
                 if (!empty($row['profilePic'])) {
                     $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($row['profilePic']);
                     // Check if the file exists, else use default
