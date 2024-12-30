@@ -239,62 +239,62 @@ window.onclick = function(event) {
     }
 };
 
-// function editMessage(messageID, messageElement, senderRole, userID) {
-//     // Get the current message text without the ellipsis and time
-//     const originalMessage = messageElement.innerText
-//         .replace(/⋮\s*/, '') // Remove the ellipsis
-//         .replace(/\s+\d{1,2}:\d{2}\s*[ap]m/i, '') // Remove the time (format like 9:23 pm)
-//         .replace(/(Edit|Delete)\s*/g, '') // Remove 'Edit' and 'Delete' options
-//         .replace(/\(edited.*\)/, '') // Remove the (edited...) part if it exists
-//         .trim(); // Trim whitespace from the ends
+function editMessage(messageID, messageElement, senderRole, userID) {
+    // Get the current message text without the ellipsis and time
+    const originalMessage = messageElement.innerText
+        .replace(/⋮\s*/, '') // Remove the ellipsis
+        .replace(/\s+\d{1,2}:\d{2}\s*[ap]m/i, '') // Remove the time (format like 9:23 pm)
+        .replace(/(Edit|Delete)\s*/g, '') // Remove 'Edit' and 'Delete' options
+        .replace(/\(edited.*\)/, '') // Remove the (edited...) part if it exists
+        .trim(); // Trim whitespace from the ends
     
     
-//     // Set the original message in the modal input
-//     const editMessageInput = document.getElementById("editMessageInput");
-//     editMessageInput.value = originalMessage; // Set the input value to the current message
+    // Set the original message in the modal input
+    const editMessageInput = document.getElementById("editMessageInput");
+    editMessageInput.value = originalMessage; // Set the input value to the current message
     
-//     // Show the modal
-//     const editMessageModal = document.getElementById("editMessageModal");
-//     editMessageModal.style.display = "block";
+    // Show the modal
+    const editMessageModal = document.getElementById("editMessageModal");
+    editMessageModal.style.display = "block";
 
-//     // Save the edit
-//     const saveEditButton = document.getElementById("saveEditButton");
-//     saveEditButton.onclick = () => {
-//         location.reload()
-//         const newMessage = editMessageInput.value.trim() + " (edited)";
-//         if (newMessage && newMessage !== originalMessage) {
-//             // Update message in the database
-//             fetch("../database/chat.php", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//                 body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
-//             }).then(response => response.json())
-//             .then(data => {
-//                 if (data.status === "success") {
-//                     // Update the message in the UI, appending the new time format
-//                     const currentTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // 12-hour format
-//                     messageElement.innerText = `Edited: ${newMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
-//                     location.reload()
-//                     //   // Recreate edit and delete buttons
+    // Save the edit
+    const saveEditButton = document.getElementById("saveEditButton");
+    saveEditButton.onclick = () => {
+        location.reload()
+        const newMessage = editMessageInput.value.trim() + " (edited)";
+        if (newMessage && newMessage !== originalMessage) {
+            // Update message in the database
+            fetch("../database/chat.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
+            }).then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Update the message in the UI, appending the new time format
+                    const currentTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // 12-hour format
+                    messageElement.innerText = `Edited: ${newMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
+                    location.reload()
+                    //   // Recreate edit and delete buttons
                     
-//                 } else {
-//                     alert("Failed to edit message.");
-//                 }
-//             });
-//         }
-//     };
+                } else {
+                    alert("Failed to edit message.");
+                }
+            });
+        }
+    };
 
-//     // Close the modal when the user clicks on <span> (x)
-//     const modalCloseBtn = document.getElementById("modalCloseBtn");
-//     modalCloseBtn.onclick = closeEditModal;
+    // Close the modal when the user clicks on <span> (x)
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    modalCloseBtn.onclick = closeEditModal;
     
-//     // Close the modal when clicking outside of it
-//     window.onclick = function(event) {
-//         if (event.target === editMessageModal) {
-//             closeEditModal();
-//         }
-//     };
-// }
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === editMessageModal) {
+            closeEditModal();
+        }
+    };
+}
 
 function closeEditModal() {
     const editMessageModal = document.getElementById("editMessageModal");
