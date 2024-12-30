@@ -4,7 +4,7 @@
     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
     $postsPerPage = 10;  // Display 10 posts per page
     $offset = ($page - 1) * $postsPerPage;
-    $sql = "SELECT wp.*, js.fullName, js.contactNo, js.email 
+    $sql = "SELECT wp.*, js.fullName, js.contactNo, js.email, js.profilePic
         FROM wallPost wp
         INNER JOIN jobSeeker js ON wp.userID = js.userID
         WHERE wp.userID = '$userID'
@@ -21,8 +21,17 @@
             echo '<div class="user-info-post"">';
                 // echo '<img src="'. htmlspecialchars($row['profilePic']) . '" alt="Profile Picture" class="profile-pic">';
                 echo '<div class="picture">';
-                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">
-                    <img src="../images/JobSeeker.png" alt="Profile Picture" class="profile-pic"></a>';
+                    echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '">';
+                        if (!empty($row['profilePic'])) {
+                            $profilePicPath = "../uploads/profile_pictures/" . htmlspecialchars($row['profilePic']);
+                            // Check if the file exists, else use default
+                            $imageSrc = file_exists($profilePicPath) ? $profilePicPath : "../images/JobSeeker.png";
+                        } else {
+                            // Use default if profilePic is empty
+                            $imageSrc = "../images/JobSeeker.png";
+                        }
+                        echo '<img src="' . $imageSrc . '" alt="Profile Picture" class="profile-pic">';
+                    echo '</a>';
                 echo '</div>';
                 echo '<div class="name">';
                     echo '<a href="visit_job_seeker.php?userID=' . $row['userID'] . '"><h3>' . htmlspecialchars($row['fullName']) . '</h3></a>';
