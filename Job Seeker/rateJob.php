@@ -62,6 +62,7 @@
             background: #8EFAAB; /* Green color */
             cursor: pointer;
             color: #FFFFFF; /* Make text white */
+            margin-left: 40%;
         }
 
         .required {

@@ -90,7 +90,6 @@ button {
     color: #000000;
     border: none;
     transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
-
 }
 
 button:hover {
