@@ -389,7 +389,7 @@ ob_start();
                     }
                         echo "    </div>
                         <h3 class='card-title'>{$row['jobTitle']}</h3>
-                        <p><strong>Applicant Name:</strong><a href='visit_job_seeker.php?userID={$userID}'> {$row['applicantName']}</a></p>
+                        <p><strong>Applicant Name:</strong><a href='view_jobseeker_profile.php?userID={$userID}'> {$row['applicantName']}</a></p>
                         <p><strong>Location:</strong> {$row['location']}</p>
                         <p><strong>Application ID:</strong> {$row['applicationID']}</p>
                         <p><strong>Applied On:</strong> {$row['applyDate']}</p>
