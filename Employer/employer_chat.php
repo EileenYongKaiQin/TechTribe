@@ -876,7 +876,7 @@ document.addEventListener("click", function (event) {
 
     function viewProfile() {
         const jobSeekerID = "<?php echo $jobSeekerID; ?>"; // Pass the jobSeekerID from PHP to JavaScript
-        window.location.href = "../Job Seeker/visit_job_seeker.php?userID=" + jobSeekerID; // Redirect to the profile page
+        window.location.href = "../Employer/view_jobseeker_profile.php?userID=" + jobSeekerID; // Redirect to the profile page
     }
 
     function toggleDateFilter() {
