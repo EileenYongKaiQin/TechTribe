@@ -35,6 +35,27 @@ $userID = $_SESSION['userID']; // Get userID from session
 
 // Handle the POST request (for saving a message)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (isset($_POST['checkTimestampLimit']) && $_POST['checkTimestampLimit'] === 'true') {
+        // Check the timestamp limit for a specific message
+        $messageID = $_POST['messageID'];
+
+        $stmt = $con->prepare("SELECT timestampLimit FROM message WHERE id = ?");
+        $stmt->bind_param("i", $messageID);
+        if ($stmt->execute()) {
+            $result = $stmt->get_result();
+            if ($row = $result->fetch_assoc()) {
+                echo json_encode(['status' => 'success', 'timestampLimit' => $row['timestampLimit']]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Message not found']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to check timestamp limit']);
+        }
+        $stmt->close();
+        exit;
+    }
+
     $senderRole = $_POST['senderRole'];  // job_seeker or employer
     $messageContents = $_POST['messageContents'];  // The message content
     $messageID = isset($_POST['messageID']) ? $_POST['messageID'] : null;

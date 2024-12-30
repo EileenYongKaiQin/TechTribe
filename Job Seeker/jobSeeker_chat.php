@@ -888,6 +888,205 @@ document.addEventListener("click", function (event) {
     }
 }
 
+
+function toggleEditDeleteMenu(messageElement, messageID, senderRole) {
+    // Check if the menu already exists
+    let menu = messageElement.querySelector(".edit-delete-menu");
+
+    // If the menu doesn't exist, create it
+    if (!menu) {
+        menu = document.createElement("div");
+        menu.classList.add("edit-delete-menu");
+
+        // Create and append Edit button
+        const editButton = document.createElement("button");
+        editButton.innerText = "Edit";
+        editButton.classList.add("edit-button"); // Add class for Edit button
+        editButton.onclick = () => {
+            editMessage(messageID, messageElement, senderRole);
+            menu.style.display = "none"; // Close the menu after editing
+        };
+        menu.appendChild(editButton);
+
+        // Create and append Delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "Delete";
+        deleteButton.classList.add("delete-button"); // Add class for Delete button
+        deleteButton.onclick = () => {
+            deleteMessage(messageID, messageElement, senderRole);
+            menu.style.display = "none"; // Close the menu after deleting
+        };
+        menu.appendChild(deleteButton);
+
+        messageElement.appendChild(menu); // Append the menu to the message element
+    }
+
+    // Toggle menu visibility
+    if (menu.style.display === "block") {
+        menu.style.display = "none"; // Hide the menu if it's already visible
+    } else {
+        // Show the menu
+        menu.style.display = "block";
+
+        // Close the menu when clicking anywhere else
+        document.addEventListener("click", function handleClickOutside(event) {
+            if (!messageElement.contains(event.target) && menu) {
+                menu.style.display = "none"; // Hide the menu
+                document.removeEventListener("click", handleClickOutside); // Remove listener after closing
+            }
+        });
+    }
+}
+
+
+function editMessage(messageID, messageElement, senderRole, userID) {
+    // Fetch the timestampLimit from the database
+    fetch("../database/chat.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `checkTimestampLimit=true&messageID=${messageID}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            const timestampLimit = new Date(data.timestampLimit);
+            const currentTime = new Date();
+
+            if (currentTime > timestampLimit) {
+                showModal("You cannot edit this message after 15 minutes.");
+                return;
+            }
+            // Get the current message text without the ellipsis and time
+            const originalMessage = messageElement.innerText
+                .replace(/⋮\s*/, '') // Remove the ellipsis
+                .replace(/\s+\d{1,2}:\d{2}\s*[ap]m/i, '') // Remove the time (format like 9:23 pm)
+                .replace(/(Edit|Delete)\s*/g, '') // Remove 'Edit' and 'Delete' options
+                .replace(/\(edited.*\)/, '') // Remove the (edited...) part if it exists
+                .trim(); // Trim whitespace from the ends
+            
+            
+            // Set the original message in the modal input
+            const editMessageInput = document.getElementById("editMessageInput");
+            editMessageInput.value = originalMessage; // Set the input value to the current message
+            
+            // Show the modal
+            const editMessageModal = document.getElementById("editMessageModal");
+            editMessageModal.style.display = "block";
+
+            // Save the edit
+            const saveEditButton = document.getElementById("saveEditButton");
+            saveEditButton.onclick = () => {
+                location.reload()
+                const newMessage = editMessageInput.value.trim() + " (edited)";
+                if (newMessage && newMessage !== originalMessage) {
+                    // Update message in the database
+                    fetch("../database/jobSeekerChat.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
+                    }).then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            // Update the message in the UI, appending the new time format
+                            const currentTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // 12-hour format
+                            messageElement.innerText = `Edited: ${newMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
+                            location.reload()
+                            //   // Recreate edit and delete buttons
+                            
+                        } else {
+                            alert("Failed to edit message.");
+                        }
+                    });
+                }
+            };
+        } else {
+            alert("Unable to fetch timestamp limit.");
+        }
+    });
+
+    // Close the modal when the user clicks on <span> (x)
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    modalCloseBtn.onclick = closeEditModal;
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === editMessageModal) {
+            closeEditModal();
+        }
+    };
+}
+
+function deleteMessage(messageID, messageElement, currentUserRole, userID) {
+
+// Fetch the timestampLimit from the database
+fetch("../database/chat.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `checkTimestampLimit=true&messageID=${messageID}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {    
+            const timestampLimit = new Date(data.timestampLimit);
+            const currentTime = new Date();
+
+            if (currentTime > timestampLimit) {
+                showModal("You cannot delete this message after 15 minutes.");
+                return;
+            }
+                
+            currentMessageIDToDelete = messageID; // Store the message ID to delete
+            const deleteMessageModal = document.getElementById("deleteMessageModal");
+            deleteMessageModal.style.display = "block"; // Show the modal
+
+            // Confirm delete button click event
+            const confirmDeleteButton = document.getElementById("confirmDeleteButton");
+            confirmDeleteButton.onclick = () => {
+                location.reload(); // This will reload the page
+                // Send delete request to the server
+                fetch("../database/jobSeekerChat.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `userID=${userID}&senderRole=${currentUserRole}&messageID=${messageID}&delete=true`
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // Change the message content to "deleted"
+                        
+                        messageElement.innerText = "deleted"; 
+
+                        // Optionally, you can also disable the edit and delete buttons
+                        const existingButtons = messageElement.querySelectorAll("button");
+                        existingButtons.forEach(button => button.remove()); // Remove buttons or disable them
+                        location.reload(); // This will reload the page
+                        
+                    } else {
+                        alert("Failed to delete message.");
+                    }
+                });
+            };
+        } else {
+            alert("Unable to fetch timestamp limit.");
+        }
+    });
+
+    // Cancel button click event
+    const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+    cancelDeleteButton.onclick = closeDeleteModal;
+
+    // Close the modal when the user clicks on <span> (x)
+    const modalCloseBtn = document.getElementById("deleteModalCloseBtn");
+    modalCloseBtn.onclick = closeDeleteModal;
+
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target === deleteMessageModal) {
+            closeDeleteModal();
+        }
+    };
+}
+
+
     function applyDateFilter() {
     const selectedDate = document.getElementById("filterDate").value;
     const formattedSelectedDate = formatDate(selectedDate); // Format the selected date
