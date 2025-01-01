@@ -953,7 +953,7 @@ function editMessage(messageID, messageElement, senderRole, userID) {
             const currentTime = new Date();
 
             if (currentTime > timestampLimit) {
-                showModal("You cannot edit this message after 15 minutes.");
+                showModal("You can only edit this message within 15 minutes.");
                 return;
             }
             // Get the current message text without the ellipsis and time
@@ -1031,7 +1031,7 @@ fetch("../database/chat.php", {
             const currentTime = new Date();
 
             if (currentTime > timestampLimit) {
-                showModal("You cannot delete this message after 15 minutes.");
+                showModal("You can only delete this message within 15 minutes.");
                 return;
             }
                 
