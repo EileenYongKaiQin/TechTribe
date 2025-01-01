@@ -976,20 +976,27 @@ function editMessage(messageID, messageElement, senderRole, userID) {
             // Save the edit
             const saveEditButton = document.getElementById("saveEditButton");
             saveEditButton.onclick = () => {
+                const newMessage = editMessageInput.value.trim(); // Trim spaces from the input value
+                if (!newMessage) { // Check if the input is empty or only contains spaces
+                    showModal("Message cannot be empty");   
+                    return; // Exit without making any changes
+                }
+
+
                 location.reload()
-                const newMessage = editMessageInput.value.trim() + " (edited)";
-                if (newMessage && newMessage !== originalMessage) {
+                const updatedMessage = newMessage + " (edited)";
+                if (updatedMessage && updatedMessage !== originalMessage) {
                     // Update message in the database
                     fetch("../database/jobSeekerChat.php", {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(newMessage)}&messageID=${messageID}`
+                        body: `userID=${userID}&senderRole=${senderRole}&messageContents=${encodeURIComponent(updatedMessage)}&messageID=${messageID}`
                     }).then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
                             // Update the message in the UI, appending the new time format
                             const currentTime = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }); // 12-hour format
-                            messageElement.innerText = `Edited: ${newMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
+                            messageElement.innerText = `Edited: ${updatedMessage} (at ${currentTime})`; // Message format: "Edited: <message> (at <time>)"
                             location.reload()
                             //   // Recreate edit and delete buttons
                             
