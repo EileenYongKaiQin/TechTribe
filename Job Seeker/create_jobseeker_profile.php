@@ -56,9 +56,11 @@ if(!empty($_POST))
         redirectWithStatus('invalid_email');
     }
 
-    if (!preg_match('/^[0-9]{10,12}$/', $contactNo)) {
+    $contactNo = preg_replace('/[^0-9]/', '', $contactNo);
+    if (!preg_match('/^[0-9]{9,10}$/', $contactNo)) {
         redirectWithStatus('invalid_phone');
     }
+    $contactNo = '+60' . $contactNo;
 
     if (!preg_match('/^[0-9]{1,2}$/', $age) || $age < 18 || $age > 80) {
         redirectWithStatus('invalid_age');
@@ -205,6 +207,47 @@ if(!empty($_POST))
             box-sizing: border-box;
             display: flex;
             align-items: center;
+        }
+        .phone-input-container {
+            position: relative;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .phone-input-container input {
+            width: 100%;
+            padding: 15px 15px 15px 65px !important;
+            border: 1px solid #ccc;
+            border-radius: 8px !important;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .country-code-prefix {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 15px;
+            color: #666;
+            border-right: 1px solid #ccc;
+            height: 50%;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .phone-input-container input:focus, 
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #AAE1DE;
+            border-width: 2px;
+            box-shadow: 0 0 0 2px rgba(170, 225, 222, 0.2);
+        }
+        .error .phone-input-container input {
+            border: 2px solid red !important;
         }
         .form-row input[type="file"] {
             width: 100%;
@@ -480,7 +523,10 @@ if(!empty($_POST))
             <div class="col-50-ri">
                 <div class="form-row">
                     <label for="contactNo" class="required">Contact No.</label>
-                    <input type="text" name="contactNo" placeholder="Enter Contact No." minlength='10' required maxlength='12' data-required="true">
+                    <div class="phone-input-container">
+                        <span class="country-code-prefix">+60</span>
+                        <input type="text" name="contactNo" id="contactNo" placeholder="Enter Contact No." minlength="9" maxlength="10"data-required="true">
+                    </div>
                     <div class="error-message">This field is required</div>
                 </div>
             </div>
@@ -730,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         'invalid_phone': {
             title: 'Invalid Phone Number',
-            message: 'Please enter a valid phone number (10-12 digits only).'
+            message: 'Please enter a valid phone number (9-10 digits only).'
         },
         'invalid_age': {
             title: 'Invalid Age',
