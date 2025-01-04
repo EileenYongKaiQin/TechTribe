@@ -9,7 +9,8 @@ if (!isset($_GET['date'], $_GET['employerID'], $_GET['userID'])) {
 
 $date = $_GET['date'];
 $employerID = $_GET['employerID'];
-$userID = $_GET['userID'];
+$userID = $_SESSION['userID']; // Get userID from session
+$jobSeekerID = $userID;
 
 // Validate date format
 if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
@@ -23,8 +24,8 @@ $sql = "
     FROM message
     WHERE DATE(timestamp) = ? 
       AND (
-          (userID = ? AND employerID = ?) 
-          OR (employerID = ? AND userID = ?)
+          (jobSeekerID = ? AND employerID = ?) 
+          OR (employerID = ? AND jobSeekerID = ?)
       )
     ORDER BY timestamp ASC
 ";
@@ -71,8 +72,8 @@ if ($result->num_rows > 0) {
             FROM message
             WHERE DATE(timestamp) = ? 
               AND (
-                  (userID = ? AND employerID = ?) 
-                  OR (employerID = ? AND userID = ?)
+                  (jobSeekerID = ? AND employerID = ?) 
+                  OR (employerID = ? AND jobSeekerID = ?)
               )
             ORDER BY timestamp ASC
         ";

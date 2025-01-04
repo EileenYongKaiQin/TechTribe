@@ -11,9 +11,10 @@ if (isset($_GET['query']) && isset($_GET['employerID']) && isset($_SESSION['user
     $query = '%' . $_GET['query'] . '%'; // Prepare for LIKE statement
     $employerID = $_GET['employerID'];
     $userID = $_SESSION['userID']; // Get userID from session
-
+    $jobSeekerID = $userID;
+    
     // Prepare and execute the query
-    $sql = "SELECT id, senderRole, messageContents, timestamp FROM message WHERE (messageContents LIKE ?) AND (employerID = ? AND userID = ?) ORDER BY timestamp DESC"; // Fetching recent messages first
+    $sql = "SELECT id, senderRole, messageContents, timestamp FROM message WHERE (messageContents LIKE ?) AND (employerID = ? AND jobSeekerID = ?) ORDER BY timestamp DESC"; // Fetching recent messages first
     if ($stmt = $con->prepare($sql)) {
         $stmt->bind_param("sss", $query, $employerID, $userID);
         if ($stmt->execute()) {
