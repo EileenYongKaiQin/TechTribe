@@ -102,7 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
     $jobSeekerID = $_GET['jobSeekerID'];
-    $sql = "SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message WHERE jobSeekerID = '".$jobSeekerID."' ORDER BY timestamp ASC";
+    $employerID = $userID;
+    $sql = "SELECT id, userID, senderRole, messageContents, DATE_FORMAT(timestamp, '%d %b %Y') AS formatted_date, timestamp FROM message WHERE jobSeekerID = '".$jobSeekerID."' AND employerID = '".$employerID."' ORDER BY timestamp ASC";
     $result = $con->query($sql);
 
     $message = array();
