@@ -430,7 +430,7 @@ if(!empty($_POST))
         <br>
         <br>
         
-        <h3 class="profile-h3">Work Experience</h3>
+        <h3 class="profile-h3">Company Details</h3>
         <div class="row">
             <div class="col-50-le">
                 <div class="form-row">
