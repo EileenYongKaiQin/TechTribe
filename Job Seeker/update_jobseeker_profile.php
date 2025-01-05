@@ -541,10 +541,10 @@ $displayPhone = preg_replace('/^\+60/', '', $data['contactNo']);
             </div>
             <div class="col-50-ri">
                 <div class="form-row">
-                    <label for="contactNo" class="required">Contact No.</label>
+                <label for="contactNo" class="required">Contact No.</label>
                     <div class="phone-input-container">
                         <span class="country-code-prefix">+60</span>
-                        <input type="text" name="contactNo" id="contactNo" placeholder="Enter Contact No." minlength="9" maxlength="10"data-required="true">
+                        <input type="text" name="contactNo" id="contactNo" placeholder="Enter Contact No." value="<?php echo htmlspecialchars($displayPhone); ?>" minlength="9" maxlength="10"data-required="true">
                     </div>
                     <div class="error-message">This field is required</div>
                 </div>

@@ -31,14 +31,14 @@ CREATE TABLE jobseeker (
 INSERT INTO jobSeeker (userID, fullName, email, contactNo, age, gender, race, location, state, 
 position, company, workExperience, language, hardSkill, softSkill, profilePic, accountStatus, warningHistory, suspensionEndDate) 
 VALUES 
-    ('JS001', 'Chua Ern Qi', 'ernqi@graduate.utm.my', '0123456789', '21', 'Female', 'Chinese', 'Kuala Lumpur', 'Selangor', 
+    ('JS001', 'Chua Ern Qi', 'ernqi@graduate.utm.my', '+601234567778', '21', 'Female', 'Chinese', 'Kuala Lumpur', 'Selangor', 
     'Worker', 'Company ABC', '2 years experience in IT', 'English|8, Malay|8, Mandarin|9', 'Java, C++, Python', 'Leadership Skill', NULL, 'Active', 0, NULL),
     
-    ('JS002', 'Jessie Chang', 'jessie@gmail.com', '012345678901', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor',
+    ('JS002', 'Jessie Chang', 'jessie@gmail.com', '+601234556666', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor',
      'Worker', 'Company ABC', '2 years in IT', 'English|6, Malay|7, Chinese|8', 'Javascript, PHP, Microsoft', 'Adaptability, Creativity', NULL, 'Active', 0, NULL),
      
-    ('JS003', 'Bernice Lim', 'bernice@gmail.com', '012345678913', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor', 
+    ('JS003', 'Bernice Lim', 'bernice@gmail.com', '+601234556996', '21', 'Female', 'Chinese', 'Johor Bahru', 'Johor', 
     'Worker', 'Company ABCD ', '2 years in Data Engineering', 'English|9, Malay|9, Chinese|10', 'C++, PHP, Java', 'Communication, Leadership', NULL, 'Active', 1, NULL),
     
-    ('JS004', 'Kek Jesslyn', 'kek@gmail.com', '12345678911', '21', 'Female', 'Chinese', 'Kota Syahbandar', 'Malacca', 
+    ('JS004', 'Kek Jesslyn', 'kek@gmail.com', '+601234557766', '21', 'Female', 'Chinese', 'Kota Syahbandar', 'Malacca', 
     'Worker', 'Company XYZ', '2 years in Data Engineering', 'English|7, Malay|8, Chinese|9', 'C++, Java, PHP', 'Communication, Leadership', NULL, 'Active', 2, NULL);

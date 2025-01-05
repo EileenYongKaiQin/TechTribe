@@ -22,6 +22,6 @@ CREATE TABLE employer (
 
 INSERT INTO employer (userID, fullName, email, contactNo, companyName, jobRole, companyAddress, profilePic, accountStatus, warningHistory, suspensionEndDate)
 VALUES ('EP001', 'Eileen Yong Kai Qin', 'eileen@gmail.com', '0123456789', 'FlexMatch', 'Developer', '123 Jalan Bukit, KL', NULL,'Active', 0, NULL),
-('EP002', 'Jessie', 'jc@gmail.com', '012345678901', 'Company ABC', 'Developer', 'No 1, Jalan Skudai', NULL,'Active', 0, NULL),
-('EP003', 'Alice', 'alice@gmail.com', '019876543212', 'Company ASD', 'Technician', 'No.1, Taman Universiti, Skudai 81300, Johor', NULL, 'Active', 3, NULL),
-('EP004', 'Nabilah', 'nabilah@gmail.com', '777700000023', 'Company ASD', 'Manager', 'Jalan 1, Taman 1, Johor Bahru', NULL, 'Active', 1, NULL);
+('EP002', 'Jessie', 'jc@gmail.com', '+601234567890', 'Company ABC', 'Developer', 'No 1, Jalan Skudai', NULL,'Active', 0, NULL),
+('EP003', 'Alice', 'alice@gmail.com', '+601987654321', 'Company ASD', 'Technician', 'No.1, Taman Universiti, Skudai 81300, Johor', NULL, 'Active', 3, NULL),
+('EP004', 'Nabilah', 'nabilah@gmail.com', '+60177000023', 'Company ASD', 'Manager', 'Jalan 1, Taman 1, Johor Bahru', NULL, 'Active', 1, NULL);
