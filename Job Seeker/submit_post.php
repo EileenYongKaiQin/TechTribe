@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nextID = 'WP' . str_pad((int)substr($lastID, 2) + 1, 4, '0', STR_PAD_LEFT);
     
 
-    $userID = $_SESSION['userID'];
+    $userID = $_POST['user_id'];
 
     // Retrieve form data
     $skillCategory = $_POST['skills'];

@@ -18,8 +18,12 @@
             <a href="job_seeker_wall.php" class="close-button">&times;</a>
             <h2>Create Wall Post</h2>            
         </div>
-
+        <?php 
+            $userID = $_SESSION['userID']; // Get the user ID from the session
+        ?>
         <form id="createPostForm"  onsubmit="confirmSubmit(event)" action="submit_post.php" method="POST">
+            <!-- Hidden input to include the user ID -->
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($userID); ?>">
             <label for="skills"><b>Skill</b><span class="required">*</span></label>
             <select id="skills" name="skills" required>
                 <option value="" disabled selected>Select a category</option>
