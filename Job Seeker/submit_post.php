@@ -9,8 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Generate the next ID (assuming the format is POST001)
     $nextID = 'WP' . str_pad((int)substr($lastID, 2) + 1, 4, '0', STR_PAD_LEFT);
     
-    // Set a fixed userID for testing
-    $userID = "JS001";
+
+    $userID = $_SESSION['userID'];
 
     // Retrieve form data
     $skillCategory = $_POST['skills'];
