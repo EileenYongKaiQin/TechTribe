@@ -53,7 +53,7 @@ if ($result->num_rows > 0) {
     $nextDateQuery = "
         SELECT DATE(timestamp) AS nextDate
         FROM message
-        WHERE DATE(timestamp) > ? AND ((userID = ? AND senderRole = 'employer' AND employerID = ?) OR (userID = ? AND senderRole = 'jobseeker' AND employerID = ?))
+        WHERE DATE(timestamp) > ? AND ((userID = ? AND senderRole = 'employer' AND employerID = ?) OR (userID = ? AND senderRole = 'job_seeker' AND employerID = ?))
         ORDER BY DATE(timestamp) ASC
         LIMIT 1
     ";
