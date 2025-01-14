@@ -1,7 +1,7 @@
 <?php
 // Include database configuration file
 include '../database/config.php';
-include 'jobSeeker1.php';
+include 'job_seeker_header.php';
 
 // Check if a report ID is passed via GET
 if (!isset($_GET['reportID'])) {

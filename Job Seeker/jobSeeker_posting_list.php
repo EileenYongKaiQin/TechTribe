@@ -1,6 +1,6 @@
 <?php
     include('../database/config.php');
-    include('jobSeeker1.php');
+    include('job_seeker_header.php');
 
     $sql = "SELECT * FROM jobPost WHERE endDate >= CURDATE()";
     $result = $con->query($sql);

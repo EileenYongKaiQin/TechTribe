@@ -18,7 +18,7 @@
 <body>
     <?php
     include('../database/config.php');
-    include('employer1.php');
+    include('employer_header.php');
 
     $formSubmitted = false;
     $errorMessage = '';

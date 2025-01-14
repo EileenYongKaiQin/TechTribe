@@ -1,6 +1,6 @@
 <?php
     include('../database/config.php');
-    include('jobSeeker1.php');
+    include('job_seeker_header.php');
 
     $sql = "SELECT h.historyID, jp.jobTitle, jp.salary, jp.location, jp.startDate, jp.endDate, jp.workingHour, jp.venue, jp.workingTimeStart, jp.workingTimeEnd, COALESCE(jr.rating, 0) AS isRated
             FROM jobHistory h

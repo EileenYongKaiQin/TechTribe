@@ -1,5 +1,5 @@
 <?php
-include('employer1.php');
+include('employer_header.php');
 
 function redirectWithStatus($status) {
     echo "<script>window.location.href='update_employer_profile.php?status=" . $status . "';</script>";

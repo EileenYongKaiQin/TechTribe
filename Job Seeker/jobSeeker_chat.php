@@ -1,7 +1,7 @@
 
 <?php
 include '../database/config.php';
-include 'jobSeeker1.php'; // Include session_start and user verification
+include 'job_seeker_header.php'; // Include session_start and user verification
 
 
 

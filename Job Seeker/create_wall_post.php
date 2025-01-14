@@ -10,7 +10,7 @@
 </head>
 <body>
     <?php   
-        include('JobSeeker1.php');
+        include('job_seeker_header.php');
     ?>
     <div class="main-content">
         

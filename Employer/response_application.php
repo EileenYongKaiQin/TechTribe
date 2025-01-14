@@ -317,7 +317,7 @@ ob_start();
         </style>
 </head>
 <body>
-    <?php include('employer1.php');?>
+    <?php include('employer_header.php');?>
 
     <div class="container">
         <h1 class="my-4">Job Applications</h1>

@@ -2,7 +2,7 @@
 ob_start(); // Start output buffering
 
 include('../database/config.php');
-include('employer1.php');
+include('employer_header.php');
 
 $successMessage = false;
 

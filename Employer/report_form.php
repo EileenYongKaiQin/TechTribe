@@ -1,6 +1,6 @@
 <?php 
     include('../database/config.php');
-    include('employer1.php');
+    include('employer_header.php');
 
     // Check if the user is logged in
     if (!isset($_SESSION['userID'])) {

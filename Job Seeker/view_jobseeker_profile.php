@@ -1,6 +1,6 @@
 <?php
 include('../database/config.php');
-include('jobSeeker1.php'); 
+include('job_seeker_header.php'); 
 
 if (!isset($_SESSION['userID'])) {
     header('Location: jobseeker_dashboard.php');

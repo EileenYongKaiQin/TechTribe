@@ -1,6 +1,6 @@
 <?php 
     include('../database/config.php');
-    include('jobSeeker1.php');
+    include('job_seeker_header.php');
 
     $jobPostID = isset($_GET['jobPostID']) ? $_GET['jobPostID'] : null;
     

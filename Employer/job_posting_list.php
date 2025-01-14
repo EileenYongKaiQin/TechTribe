@@ -123,7 +123,7 @@
 <body>
     <?php
         include('../database/config.php');
-        include('employer1.php');
+        include('employer_header.php');
 
         $userID = $_SESSION['userID']; // Ensure userID is stored in session upon login
 

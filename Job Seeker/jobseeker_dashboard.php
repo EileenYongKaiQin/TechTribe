@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-  <?php include 'jobSeeker1.php'; ?>
+  <?php include 'job_seeker_header.php'; ?>
 
   <!-- Main Content -->
   <div class="main-content">

@@ -31,7 +31,7 @@ $post = $result->fetch_assoc();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <?php include('JobSeeker1.php'); ?>
+    <?php include('job_seeker_header.php'); ?>
 
     <div class="main-content">
         <div class="header-bar">

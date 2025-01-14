@@ -146,7 +146,7 @@ textarea {
 </head>
 <body>
 <?php 
-include('jobSeeker1.php'); 
+include('job_seeker_header.php'); 
 ?>
     
 <div class="container">
